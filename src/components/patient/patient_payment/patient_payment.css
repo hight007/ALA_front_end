@@ -1,0 +1,88 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #FAFAFA;
+  font: 12pt "Tahoma";
+}
+
+* {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+.doubleUnderline {
+    text-decoration:underline;
+    border-bottom: 1px solid #000;
+}
+
+.page {
+  width: 21cm;
+  min-height: 29.7cm;
+  padding: 0cm;
+  margin: 0cm auto;
+  border: 0px #D3D3D3 solid;
+  border-radius: 0px;
+  background: white;
+  box-shadow: 0 0 0px rgba(0, 0, 0, 0.1);
+}
+
+.subpage {
+  padding: 0cm;
+  border: 0px red solid;
+  height: 297mm;
+  outline: 0cm #FFEAEA solid;
+}
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+  .page {
+    margin: 0;
+    border: initial;
+    border-radius: initial;
+    width: initial;
+    min-height: initial;
+    box-shadow: initial;
+    background: initial;
+    page-break-after: always;
+  }
+}
+
+.react-datepicker-wrapper,
+.react-datepicker__input-container ,
+.react-datepicker__input-container input {
+    display: block;
+    width: 100%;
+}
+
+.ReactModal__Html--open,
+.ReactModal__Body--open {
+  overflow: hidden;
+}
+
+.ReactModal__Overlay {
+  position: fixed;
+  z-index: 30;
+  top: 0;
+  left: 0;
+  /* width: 100vw;*/
+  /* height: 100vh; */
+  background: rgba(0, 0, 0, 0.0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ReactModal__Content {
+  background: rgba(0, 0, 0, 0.0);
+  outline: none;
+  width: 100rem;
+  max-width: calc(100vw - 2rem);
+  max-height: calc(100vh - 2rem);
+  box-shadow: 0 0 34px 0 rgba(0, 0, 0, 0.0);
+  overflow-y: auto;
+  position: relative;
+}
