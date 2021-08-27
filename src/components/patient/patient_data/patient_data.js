@@ -192,7 +192,7 @@ export default function Patient_data(props) {
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
-                      <label>ปีเกิด (Year of birth)</label><i style={{ marginLeft: 5 }} className="fas fa-calendar-week" />
+                      <label>ปีเกิด คศ. (Year of birth)</label><i style={{ marginLeft: 5 }} className="fas fa-calendar-week" />
                       <br></br>
                       <div>
                         <DatePicker
@@ -200,6 +200,8 @@ export default function Patient_data(props) {
                           onChange={(date) => {
                             setYear_of_birth(date)
                           }}
+                          minDate={moment().add(-100, 'year').toDate()}
+                          maxDate={moment().toDate()}
                           showYearPicker
                           dateFormat="yyyy"
                           className="form-control"

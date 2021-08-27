@@ -192,9 +192,15 @@ export default function Patient_history(props) {
 
   //Patient history
   const doGetPatientHistory = async () => {
-    const { patient_id } = props.match.params
-    const response = await httpClient.get(server.PANTIENT_HISTORY_URL + '/' + patient_id)
-    setlistTimeLine(response.data.result)
+    try {
+      const { patient_id } = props.match.params
+      const response = await httpClient.get(server.PANTIENT_HISTORY_URL + '/' + patient_id)
+      setlistTimeLine(response.data.result)
+    } catch (error) {
+      console.log(error);
+      setlistTimeLine([])
+    }
+
     // console.log(response.data.result);
   }
 

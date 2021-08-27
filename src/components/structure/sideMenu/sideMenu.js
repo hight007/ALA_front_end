@@ -130,7 +130,8 @@ class SideMenu extends Component {
               : "nav-link"
           }
         >
-          <i className="fas fa-hospital-user" />
+          <i className="fas fa-poll-h" />
+
           {" "}
           <p>
             รายงาน
@@ -139,17 +140,7 @@ class SideMenu extends Component {
         </a>
         <ul className="nav nav-treeview" style={{ display: "none" }}>
           <li className="nav-item">
-            <Link
-              to="/patient/patient_data"
-              className={
-                pathname === "/patient/patient_data"
-                  ? "nav-link active"
-                  : "nav-link"
-              }
-            >
-              <i className="far fa-circle nav-icon" />
-              <p>ข้อมูลคนไข้ / ลูกค้า</p>
-            </Link>
+
           </li>
         </ul>
       </li>
@@ -184,6 +175,7 @@ class SideMenu extends Component {
                   <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                     {this.renderPatient(pathname)}
                     {this.renderManageMaster(pathname)}
+                    {this.renderReport(pathname)}
                   </ul>
                 </nav>
                 {/* /.sidebar-menu */}

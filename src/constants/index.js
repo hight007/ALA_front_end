@@ -24,7 +24,7 @@ export const UPLOAD_PHOTO_FAIL_MESSAGE =
 
 export const apiUrl = "http://localhost:2009/api/ALA_clinic/";
 // export const apiUrl = "http://192.168.1.100:2009/api/ALA_clinic/";
-// export const apiUrl = "http://192.168.1.14:2009/api/ALA_clinic/";
+// export const apiUrl = "http://alaclinic.3bbddns.com:53141/api/ALA_clinic/";
 
 export const YES = "YES";
 export const NO = "NO";
@@ -55,7 +55,9 @@ export const server = {
 
   PANTIENT_HISTORY_URL: 'patient/patientHistory',
   PAYMENT_URL: 'payment/payment',
-  PAYMENT_LIST_URL: 'payment/payment_list'
+  PAYMENT_LIST_URL: 'payment/payment_list',
+
+  REPORT_GENERAL_URL:'report/general',
 };
 
 export const key = {
