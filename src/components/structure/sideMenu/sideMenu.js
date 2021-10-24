@@ -140,7 +140,17 @@ class SideMenu extends Component {
         </a>
         <ul className="nav nav-treeview" style={{ display: "none" }}>
           <li className="nav-item">
-
+            <Link
+              to="/report/daily_sales_report"
+              className={
+                pathname === "/report/daily_sales_report"
+                  ? "nav-link active"
+                  : "nav-link"
+              }
+            >
+              <i className="far fa-circle nav-icon" />
+              <p>รายงานรายการใช้บริการ</p>
+            </Link>
           </li>
         </ul>
       </li>

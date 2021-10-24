@@ -20,6 +20,9 @@ import patient_status from './components/patient/patient_status';
 import patient_historicalData from './components/patient/patient_historicalData';
 import patient_payment from './components/patient/patient_payment';
 
+//report 
+import daily_sales_report from './components/report/dailySalesReport';
+
 import {
   BrowserRouter as Router,
   Route,
@@ -31,6 +34,7 @@ import { connect } from "react-redux";
 import { key, YES } from './constants';
 import Swal from "sweetalert2";
 import * as moment from "moment";
+
 
 const isLoggedIn = () => {
   return localStorage.getItem(key.LOGIN_PASSED) === YES;
@@ -134,6 +138,9 @@ class App extends Component {
           <SecuredRoute path="/patient/patient_status" component={patient_status} />
           <SecuredRoute path="/patient/patient_historicalData" component={patient_historicalData} />
           <SecuredRoute path="/patient/payment/:patient_id" component={patient_payment} />
+
+          {/* report */}
+          <SecuredRoute path="/report/daily_sales_report" component={daily_sales_report} />
 
           <Route exact={true} path="/" component={this.redirectToLogin} />
           <Route exact={true} path="*" component={this.redirectToLogin} />
