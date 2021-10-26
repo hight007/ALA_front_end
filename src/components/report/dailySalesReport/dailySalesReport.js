@@ -108,12 +108,18 @@ export default function DailySalesReport() {
               <div>
                 {item.promotion_name + ' '}
                 <CurrencyFormat
-                  value={(item.promotion_price - item.discount)}
+                  value={(item.promotion_price)}
                   displayType={'text'}
                   thousandSeparator={true}
                   suffix={'฿'}
                   renderText={value => <label>ราคา : <b style={{ color: 'blue' }}>{value}</b>
-                    {item.discount > 0 ? <label style={{ color: 'red' }}>discount</label> : ''}
+                    {item.discount > 0 ? <label style={{ color: 'red' }}> discount {
+                      <CurrencyFormat
+                        value={(item.discount)}
+                        displayType={'text'}
+                        thousandSeparator={true}
+                        suffix={'฿'} />
+                    }</label> : ''}
                   </label>} />
               </div >
             ))

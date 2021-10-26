@@ -754,6 +754,32 @@ export default function Patient_payment(props) {
         return renderPrintPayment()
       }
 
+    } else {
+      if (payment_id) {
+        return (
+          <div className="card card-default">
+            <div className="card-header" style={{ backgroundColor: '#E9C070' }}>
+              <h3 className="card-title">รวมรายการใบเสร็จ</h3>
+              <div className="card-tools">
+                <button onClick={(e) => {
+                  e.preventDefault()
+                  prepareAddPantientHistory()
+                }} className="btn btn-success btn-xs"><i className="fas fa-plus-square" style={{ marginRight: 5 }} />เพิ่มรายการ</button>
+              </div>
+            </div>
+            <div className='card-footer'>
+              
+              <button className="btn btn-danger float-right" type="reset" onClick={(e) => {
+                e.preventDefault()
+                doCancelPayment()
+              }}>
+                ยกเลิก
+              </button>
+            </div>
+          </div>
+        )
+      }
+
     }
   }
   const renderEditPayment = () => {
