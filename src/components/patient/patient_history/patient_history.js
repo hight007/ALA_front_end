@@ -347,6 +347,7 @@ export default function Patient_history(props) {
   }
   const renderAddHistoricalData = () => {
     setMode('historical')
+    setListSelectedPromotions([])
     openModal()
   }
   const renderAddDiagnoseData = () => {
@@ -614,10 +615,10 @@ export default function Patient_history(props) {
           if (result.isConfirmed) {
             // console.log(listSelectedPromotions);
             var payment_id = ''
-            if (mode === 'diagnose') {
-              const response = await httpClient.post(server.PAYMENT_URL, { patient_id: patientData.patient_id, updater: localStorage.getItem(key.USER_NAME), })
-              payment_id = response.data.result.payment_id
-            }
+            // if (mode === 'diagnose') {
+            const response = await httpClient.post(server.PAYMENT_URL, { patient_id: patientData.patient_id, updater: localStorage.getItem(key.USER_NAME), })
+            payment_id = response.data.result.payment_id
+            // }
             for (let i = 0; i < listSelectedPromotions.length; i++) {
               const item = listSelectedPromotions[i];
               try {
@@ -632,9 +633,9 @@ export default function Patient_history(props) {
                   details: item.details,
                   updater: localStorage.getItem(key.USER_NAME),
                 }
-                if (mode === 'diagnose') {
-                  data.payment_id = payment_id
-                }
+                // if (mode === 'diagnose') {
+                data.payment_id = payment_id
+                // }
                 await httpClient.post(server.PANTIENT_HISTORY_URL, data)
 
               } catch (error) {

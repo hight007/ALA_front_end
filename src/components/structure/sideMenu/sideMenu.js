@@ -101,7 +101,7 @@ class SideMenu extends Component {
               <p>สถานะคนไข้ / ลูกค้า</p>
             </Link>
           </li>
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <Link
               to="/patient/patient_historicalData"
               className={
@@ -113,7 +113,7 @@ class SideMenu extends Component {
               <i className="far fa-circle nav-icon" />
               <p>บันทึกข้อมูลย้อนหลัง</p>
             </Link>
-          </li>
+          </li> */}
 
         </ul>
       </li>
@@ -150,6 +150,19 @@ class SideMenu extends Component {
             >
               <i className="far fa-circle nav-icon" />
               <p>รายงานรายการใช้บริการ</p>
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              to="/report/sales_analysis"
+              className={
+                pathname === "/report/sales_analysis"
+                  ? "nav-link active"
+                  : "nav-link"
+              }
+            >
+              <i className="far fa-circle nav-icon" />
+              <p>วิเคราะห์ข้อมูลยอดขาย</p>
             </Link>
           </li>
         </ul>

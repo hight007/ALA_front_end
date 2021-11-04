@@ -158,7 +158,7 @@ export default function DailySalesReport() {
       </div>
     )
   }
-
+ 
   return (
     <div className="content-wrapper">
       <section className="content-header">
@@ -180,10 +180,7 @@ export default function DailySalesReport() {
           <div className="row">
             <div className="col-12">
               <div className='card card-default'>
-                <div className="card-header">
-                  <h3 className="card-title">
-                  </h3>
-                </div>
+
                 <div className="card-body">
 
                   {renderOption()}
@@ -197,7 +194,6 @@ export default function DailySalesReport() {
           </div>
         </div>
       </section>
-
     </div>
   )
 }

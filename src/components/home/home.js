@@ -1,5 +1,6 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import Chart from "react-apexcharts";
 import { OK, server } from '../../constants';
 import { httpClient } from '../../utils/HttpClient';
@@ -88,7 +89,7 @@ export default function Home() {
             <div className="info-box mb-3">
               <span className="info-box-icon bg-warning elevation-1"><Icon icon="fa-solid:user-tie" /></span>
               <div className="info-box-content">
-                <span className="info-box-text">ลูกค้าวันนี้</span>
+                <Link to="/report/daily_sales_report" className="info-box-text">ลูกค้าวันนี้</Link>
                 {generalData.dailySales.length > 0 ? <span className="info-box-number">{generalData.dailySales[generalData.dailySales.length - 1].customer}</span> : <></>}
               </div>
               {/* /.info-box-content */}

@@ -20,8 +20,9 @@ import patient_status from './components/patient/patient_status';
 import patient_historicalData from './components/patient/patient_historicalData';
 import patient_payment from './components/patient/patient_payment';
 
-//report 
+//report
 import daily_sales_report from './components/report/dailySalesReport';
+import sales_analysis from './components/report/salesAnalysis';
 
 import {
   BrowserRouter as Router,
@@ -81,7 +82,7 @@ const SecuredRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={(props) =>
-      isLoggedIn() === true && isLoginTimeOut(8, "h") === false ? (
+      isLoggedIn() === true && isLoginTimeOut(12, "h") === false ? (
         <Component {...props} />
       ) : (
         <Redirect to="/login" />
@@ -141,6 +142,7 @@ class App extends Component {
 
           {/* report */}
           <SecuredRoute path="/report/daily_sales_report" component={daily_sales_report} />
+          <SecuredRoute path="/report/sales_analysis" component={sales_analysis} />
 
           <Route exact={true} path="/" component={this.redirectToLogin} />
           <Route exact={true} path="*" component={this.redirectToLogin} />

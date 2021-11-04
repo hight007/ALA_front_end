@@ -58,7 +58,8 @@ export const server = {
   PAYMENT_LIST_URL: 'payment/payment_list',
 
   REPORT_GENERAL_URL: 'report/general',
-  REPORT_DAILY_SALES_URL: 'report/dailtSalesDetail'
+  REPORT_DAILY_SALES_URL: 'report/dailtSalesDetail',
+  REPORT_SALES_ANALYSIS_URL: 'report/salesAnalysis',
 };
 
 export const key = {
