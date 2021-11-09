@@ -27,6 +27,7 @@ export const UPLOAD_PHOTO_FAIL_MESSAGE =
 // export const apiUrl = "http://alaclinic.3bbddns.com:53141/api/ALA_clinic/";
 export const apiUrl = "https://asia-southeast1-ala-clinic.cloudfunctions.net/alaclinicBackend/api/ALA_clinic/";
 
+
 export const YES = "YES";
 export const NO = "NO";
 export const OK = "ok";
