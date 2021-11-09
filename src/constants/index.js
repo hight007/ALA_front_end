@@ -24,7 +24,8 @@ export const UPLOAD_PHOTO_FAIL_MESSAGE =
 
 // export const apiUrl = "http://localhost:2009/api/ALA_clinic/";
 // export const apiUrl = "http://192.168.1.100:2009/api/ALA_clinic/";
-export const apiUrl = "http://alaclinic.3bbddns.com:53141/api/ALA_clinic/";
+// export const apiUrl = "http://alaclinic.3bbddns.com:53141/api/ALA_clinic/";
+export const apiUrl = "https://asia-southeast1-ala-clinic.cloudfunctions.net/alaclinicBackend/api/ALA_clinic/";
 
 export const YES = "YES";
 export const NO = "NO";
@@ -60,6 +61,8 @@ export const server = {
   REPORT_GENERAL_URL: 'report/general',
   REPORT_DAILY_SALES_URL: 'report/dailtSalesDetail',
   REPORT_SALES_ANALYSIS_URL: 'report/salesAnalysis',
+
+  REPORT_NEW_CUSTOMER_URL: 'report/dailyNewCustomer'
 };
 
 export const key = {

@@ -101,7 +101,7 @@ export default function Home() {
             <div className="info-box mb-3">
               <span className="info-box-icon bg-success elevation-1"><Icon icon="fa-solid:user-plus" /></span>
               <div className="info-box-content">
-                <span className="info-box-text">ลูกค้าใหม่วันนี้</span>
+                <Link to="/report/daily_new_customer" className="info-box-text">ลูกค้าใหม่วันนี้</Link>
                 {generalData.dailySales.length > 0 ? <span className="info-box-number">{generalData.dailySales[generalData.dailySales.length - 1].new_customer}</span> : <></>}
               </div>
               {/* /.info-box-content */}

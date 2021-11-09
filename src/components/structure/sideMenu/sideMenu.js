@@ -154,6 +154,19 @@ class SideMenu extends Component {
           </li>
           <li className="nav-item">
             <Link
+              to="/report/daily_new_customer"
+              className={
+                pathname === "/report/daily_new_customer"
+                  ? "nav-link active"
+                  : "nav-link"
+              }
+            >
+              <i className="far fa-circle nav-icon" />
+              <p>รายงานลูกค้าใหม่</p>
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
               to="/report/sales_analysis"
               className={
                 pathname === "/report/sales_analysis"
@@ -165,6 +178,7 @@ class SideMenu extends Component {
               <p>วิเคราะห์ข้อมูลยอดขาย</p>
             </Link>
           </li>
+          
         </ul>
       </li>
     )

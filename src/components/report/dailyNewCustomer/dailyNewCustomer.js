@@ -8,7 +8,12 @@ import { OK, server } from '../../../constants';
 import Swal from 'sweetalert2';
 import CurrencyFormat from 'react-currency-format';
 
-export default function DailySalesReport() {
+export default function DailyNewCustomer() {
+
+  useEffect(() => {
+    doGetDailyNewCustomer()
+  }, [])
+
   //date
   const [startDate, setStartDate] = useState(moment().toDate());
   const [endDate, setEndDate] = useState(moment().toDate());
@@ -17,11 +22,6 @@ export default function DailySalesReport() {
   const [tableHeader, settableHeader] = useState([])
   const [tableData, settableData] = useState([])
   const [servicesDetails, setservicesDetails] = useState([])
-
-  //useEffects
-  useEffect(() => {
-    doGetDailySalesData()
-  }, [])
 
   const onChange = (dates) => {
     const [start, end] = dates;
@@ -44,7 +44,7 @@ export default function DailySalesReport() {
             selectsRange
             isClearable={true}
             onCalendarClose={() => {
-              doGetDailySalesData()
+              doGetDailyNewCustomer()
             }}
           />
         </div>
@@ -52,29 +52,12 @@ export default function DailySalesReport() {
     )
   }
 
-  const doGetDailySalesData = async () => {
-    let result = await httpClient.get(server.REPORT_DAILY_SALES_URL + '/' + moment(startDate).format('DD-MMM-yyyy') + '&' + moment(endDate).format('DD-MMM-yyyy'))
-    if (result.data.api_result === OK) {
-      if (result.data.result.length > 0) {
-        let tableHeader = Object.keys(result.data.result[0])
-        tableHeader.push('Action')
-        settableHeader(tableHeader)
-        settableData(result.data.result)
-        setservicesDetails(result.data.servicesDetails)
-      } else {
-        settableHeader([])
-        settableData([])
-        setservicesDetails([])
-      }
-    } else {
-      settableHeader([])
-      settableData([])
-      setservicesDetails([])
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Something went wrong! Please try again',
-      })
+  const doGetDailyNewCustomer = async () => {
+    const response = await httpClient.get(server.REPORT_NEW_CUSTOMER_URL + '/' + moment(startDate).format('DD-MMM-yyyy') + '&' + moment(endDate).format('DD-MMM-yyyy'))
+    console.log(response.data);
+    if (response.data.api_result === OK) {
+      settableData(response.data.result)
+      setservicesDetails(response.data.servicesDetails)
     }
   }
 
@@ -82,7 +65,7 @@ export default function DailySalesReport() {
     const renderTableHeader = () => {
       return (
         <tr role="row">
-          <th>วันที่ให้บริการ</th>
+          <th>วันที่เป็นสมาชิค</th>
           <th>opd</th>
           <th>
             ชื่อ - นามสกุล ลูกค้า
@@ -132,7 +115,7 @@ export default function DailySalesReport() {
     const renderTableRow = () => {
       return tableData.map((item, index) => (
         <tr>
-          <td>{item.operate_date}</td>
+          <td>{moment(item.createdAt).format('DD-MMM-YYYY')}</td>
           <td>{item.patient_id}</td>
           <td>
             {item.first_name + ' ' + item.last_name}
@@ -159,14 +142,14 @@ export default function DailySalesReport() {
       </div>
     )
   }
-  
+
   return (
     <div className="content-wrapper">
       <section className="content-header">
         <div className="container-fluid">
           <div className="row mb-2">
             <div className="col-sm-6">
-              <h1>รายงานรายละเอียดการใช้บริการ</h1>
+              <h1>รายงานลูกค้าใหม่</h1>
             </div>
             <div className="col-sm-6">
               <ol className="breadcrumb float-sm-right">
