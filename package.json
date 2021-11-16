@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^12.1.10",
     "apexcharts": "^3.28.1",
     "axios": "^0.21.1",
+    "file-saver": "^2.0.5",
     "flatlist-react": "^1.5.0",
     "moment": "^2.29.1",
     "mqtt": "^4.2.8",
@@ -17,6 +18,8 @@
     "react-datepicker": "^4.3.0",
     "react-dom": "^17.0.2",
     "react-gauge-chart": "^0.3.0",
+    "react-json-csv": "^2.0.0",
+    "react-json-excel": "^1.1.0",
     "react-modal": "^3.14.3",
     "react-phone-input-2": "^2.14.0",
     "react-redux": "^7.2.4",
@@ -29,7 +32,8 @@
     "redux-thunk": "^2.3.0",
     "sweetalert2": "^11.0.8",
     "url-join": "^4.0.1",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "xlsx": "^0.17.4"
   },
   "scripts": {
     "start": "react-scripts start",

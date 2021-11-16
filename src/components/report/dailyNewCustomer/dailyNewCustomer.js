@@ -23,6 +23,10 @@ export default function DailyNewCustomer() {
   const [tableData, settableData] = useState([])
   const [servicesDetails, setservicesDetails] = useState([])
 
+  //loading effect
+  const [isLoad, setisLoad] = useState(false)
+
+
   const onChange = (dates) => {
     const [start, end] = dates;
     setStartDate(start);
@@ -44,6 +48,7 @@ export default function DailyNewCustomer() {
             selectsRange
             isClearable={true}
             onCalendarClose={() => {
+              setisLoad(true)
               doGetDailyNewCustomer()
             }}
           />
@@ -59,6 +64,7 @@ export default function DailyNewCustomer() {
       settableData(response.data.result)
       setservicesDetails(response.data.servicesDetails)
     }
+    setisLoad(false)
   }
 
   const renderTableResult = () => {
@@ -164,10 +170,18 @@ export default function DailyNewCustomer() {
           <div className="row">
             <div className="col-12">
               <div className='card card-default'>
-
+                <div className="card-header">
+                  <div className="overlay-wrapper" style={{ visibility: isLoad ? 'visible' : 'hidden' }}>
+                    <div className="overlay">
+                      <i className="fas fa-3x fa-sync-alt fa-spin">
+                      </i>
+                      <div className="text-bold pt-2">Loading...</div>
+                    </div>
+                  </div>
+                  {renderOption()}
+                </div>
                 <div className="card-body">
 
-                  {renderOption()}
                   {renderTableResult()}
                 </div>
                 <div className="card-footer">

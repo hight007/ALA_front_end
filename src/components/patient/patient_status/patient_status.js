@@ -382,7 +382,7 @@ export default function Patient_status(props) {
         <div className="container-fluid">
           <div className="row mb-2">
             <div className="col-sm-8">
-              <h1 className="m-0">สถานะคนไข้ / ลูกค้า <b>ที่กำลัง<strong style={{ color: 'red' }}>รอคิว</strong></b></h1>
+              <h1 className="m-0">สถานะคนไข้ / ลูกค้า</h1>
             </div>{/* /.col */}
             <div className="col-sm-4">
               <ol class="breadcrumb float-sm-right">
@@ -400,45 +400,34 @@ export default function Patient_status(props) {
         <div className="container-fluid">
           <div className='rows'>
             <div className='col-12'>
-              {renderPatientStatusWaiting()}
+              <div className='card card-default'>
+                <div className='card-header'>
+                  <h3 className="m-0">สถานะคนไข้ / ลูกค้า <b>ที่กำลัง<strong style={{ color: 'red' }}>รอคิว</strong></b></h3>
+                </div>
+                <div className='card-body'>
+                  {renderPatientStatusWaiting()}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="content-header">
-        <div className="container-fluid">
-          <div className="row mb-2">
-            <div className="col-sm-12">
-              <h1 className="m-0">สถานะคนไข้ / ลูกค้า <b>ที่กำลังเข้า<strong style={{ color: 'blue' }}>พบแพทย์</strong></b></h1>
-            </div>{/* /.col */}
-          </div>{/* /.row */}
-        </div>{/* /.container-fluid */}
-      </div>
-      <section className="content">
-        <div className="container-fluid">
-          <div className='rows'>
             <div className='col-12'>
-              {renderPatientStatusDiagnose()}
+              <div className='card card-default'>
+                <div className='card-header'>
+                  <h3 className="m-0">สถานะคนไข้ / ลูกค้า <b>ที่กำลังเข้า<strong style={{ color: 'blue' }}>พบแพทย์</strong></b></h3>
+                </div>
+                <div className='card-body'>
+                  {renderPatientStatusDiagnose()}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="content-header">
-        <div className="container-fluid">
-          <div className="row mb-2">
-            <div className="col-sm-12">
-              <h1 className="m-0">สถานะคนไข้ / ลูกค้า <b>ที่กำลังเข้า<strong style={{ color: 'green' }}>เข้าทำหัตถการ</strong></b></h1>
-            </div>{/* /.col */}
-          </div>{/* /.row */}
-        </div>{/* /.container-fluid */}
-      </div>
-      <section className="content">
-        <div className="container-fluid">
-          <div className='rows'>
             <div className='col-12'>
-              {renderPatientStatusOperate()}
+              <div className='card card-default'>
+                <div className='card-header'>
+                  <h3 className="m-0">สถานะคนไข้ / ลูกค้า <b>ที่กำลังเข้า<strong style={{ color: 'green' }}>เข้าทำหัตถการ</strong></b></h3>
+                </div>
+                <div className='card-body'>
+                  {renderPatientStatusOperate()}
+                </div>
+              </div>
             </div>
           </div>
         </div>

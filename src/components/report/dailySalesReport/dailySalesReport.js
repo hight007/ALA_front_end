@@ -4,9 +4,12 @@ import moment from 'moment';
 
 import "react-datepicker/dist/react-datepicker.css";
 import { httpClient } from '../../../utils/HttpClient';
-import { OK, server } from '../../../constants';
+import { OK, server, apiUrl } from '../../../constants';
 import Swal from 'sweetalert2';
 import CurrencyFormat from 'react-currency-format';
+
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
 
 export default function DailySalesReport() {
   //date
@@ -17,6 +20,12 @@ export default function DailySalesReport() {
   const [tableHeader, settableHeader] = useState([])
   const [tableData, settableData] = useState([])
   const [servicesDetails, setservicesDetails] = useState([])
+
+  //total prices
+  const [totalPrices, settotalPrices] = useState(0)
+
+  //loading effect
+  const [isLoad, setisLoad] = useState(false)
 
   //useEffects
   useEffect(() => {
@@ -44,6 +53,7 @@ export default function DailySalesReport() {
             selectsRange
             isClearable={true}
             onCalendarClose={() => {
+              setisLoad(true)
               doGetDailySalesData()
             }}
           />
@@ -61,6 +71,20 @@ export default function DailySalesReport() {
         settableHeader(tableHeader)
         settableData(result.data.result)
         setservicesDetails(result.data.servicesDetails)
+
+        var i = 0
+        var promotion_price = 0
+        result.data.servicesDetails.forEach(async serviceItems => {
+          var j = 0
+          i++
+          serviceItems.forEach(async item => {
+            promotion_price += item.promotion_price
+            j++
+            if (i === result.data.servicesDetails.length && j === serviceItems.length) {
+              settotalPrices(promotion_price)
+            }
+          });
+        });
       } else {
         settableHeader([])
         settableData([])
@@ -76,6 +100,7 @@ export default function DailySalesReport() {
         text: 'Something went wrong! Please try again',
       })
     }
+    setisLoad(false)
   }
 
   const renderTableResult = () => {
@@ -146,10 +171,32 @@ export default function DailySalesReport() {
       ))
     }
 
+    const renderTotalSales = () => {
+      if (servicesDetails.length > 0) {
+        return (
+          <tr>
+            <td style={{ textAlign: 'center' }} colspan="6">
+              <h3>รวมยอดขายทั้งหมด:
+                <CurrencyFormat
+                  value={totalPrices}
+                  displayType={'text'}
+                  thousandSeparator={true}
+                  suffix={'฿'}
+                  renderText={value => (
+                    <b style={{ color: 'green' }} className='doubleUnderline'>{value}</b>
+                  )} />
+              </h3>
+            </td>
+          </tr>
+        )
+      }
+
+    }
     return (
       <div className="card-body table-responsive p-0">
         <table className="table table-hover text-nowrap" role="grid">
           <thead>
+            {renderTotalSales()}
             {renderTableHeader()}
           </thead>
           <tbody>
@@ -159,7 +206,48 @@ export default function DailySalesReport() {
       </div>
     )
   }
-  
+
+  //export excel
+  const exportExcel = () => {
+    const doExportExcel = async () => {
+
+      const response = await httpClient.get(server.REPORT_DAILY_SALES_URL + '_csv/' + moment(startDate).format('DD-MMM-yyyy') + '&' + moment(endDate).format('DD-MMM-yyyy'))
+      if (response.data.api_result === OK) {
+        if (response.data.result.length > 0) {
+          const fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+          const fileExtension = ".xlsx";
+          const filename = 'รายงานรายละเอียดการใช้บริการ ตั้งแต่วันที่ ' + moment(startDate).format('DD-MMM-yyyy') + ' ถึง ' + moment(endDate).format('DD-MMM-yyyy')
+          const JSONdata = response.data.result
+
+          const ws = XLSX.utils.json_to_sheet(JSONdata);
+          const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+          const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+          const data = new Blob([excelBuffer], { type: fileType });
+          FileSaver.saveAs(data, filename + fileExtension);
+        } else {
+          Swal.fire({
+            icon: 'warning',
+            title: 'warning',
+            text: 'ไม่มีข้อมูลในวันที่นี',
+          })
+        }
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'ไม่สามารถส่งออกรายงานได้ โปรดติดต่อเว็บแอดมิน',
+        })
+      }
+    }
+
+    return (
+      <button onClick={() => { doExportExcel() }} className="btn btn-primary" >
+        <i className="fas fa-file-csv" style={{ marginRight: 5 }} />
+        ส่งออกรายงาน
+      </button>
+    )
+  }
+
   return (
     <div className="content-wrapper">
       <section className="content-header">
@@ -181,11 +269,28 @@ export default function DailySalesReport() {
           <div className="row">
             <div className="col-12">
               <div className='card card-default'>
-
+                <div className="card-header">
+                  <div className="card-tools">
+                    <ul className="nav nav-pills ml-auto">
+                      <li className="nav-item">
+                        {exportExcel()}
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="overlay-wrapper" style={{ visibility: isLoad ? 'visible' : 'hidden' }}>
+                    <div className="overlay">
+                      <i className="fas fa-3x fa-sync-alt fa-spin">
+                      </i>
+                      <div className="text-bold pt-2">Loading...</div>
+                    </div>
+                  </div>
+                  {renderOption()}
+                </div>
                 <div className="card-body">
 
-                  {renderOption()}
+
                   {renderTableResult()}
+
                 </div>
                 <div className="card-footer">
 
