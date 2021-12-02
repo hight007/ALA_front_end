@@ -62,7 +62,9 @@ export const server = {
   REPORT_DAILY_SALES_URL: 'report/dailtSalesDetail',
   REPORT_SALES_ANALYSIS_URL: 'report/salesAnalysis',
 
-  REPORT_NEW_CUSTOMER_URL: 'report/dailyNewCustomer'
+  REPORT_NEW_CUSTOMER_URL: 'report/dailyNewCustomer',
+  CUSTOMER_IMAGE_URL: 'customer_images/images',
+
 };
 
 export const key = {

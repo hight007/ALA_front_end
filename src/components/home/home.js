@@ -129,6 +129,7 @@ export default function Home() {
     }
   }
 
+  
   return (
     <div className='content-wrapper'>
       <section className='content'>

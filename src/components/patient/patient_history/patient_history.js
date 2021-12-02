@@ -1,6 +1,6 @@
 import moment from 'moment';
-import React, { useState, useEffect, useRef } from 'react'
-import { key, OK, server } from "../../../constants";
+import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { key, OK, server, apiUrl } from "../../../constants";
 import { httpClient } from '../../../utils/HttpClient';
 import Modal from 'react-modal';
 import './patient_history.css'
@@ -8,9 +8,15 @@ import './patient_history.css'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+import DropZone from "../../../utils/DropZone"
+import ProgressBar from "@ramonak/react-progress-bar";
+
 import _ from "lodash";
 import CurrencyFormat from 'react-currency-format';
 import Swal from 'sweetalert2';
+
+import Zoom from 'react-medium-image-zoom'
+import 'react-medium-image-zoom/dist/styles.css'
 
 function useForceUpdate() {
   const [value, setValue] = useState(0); // integer state
@@ -50,6 +56,16 @@ export default function Patient_history(props) {
   const [listSelectedPromotions, setListSelectedPromotions] = useState([])
 
   const [listTimeLine, setlistTimeLine] = useState([])
+
+  //upload image
+  const [modeAddImages, setmodeAddImages] = useState(false)
+  const [history_id, sethistory_id] = useState(null)
+  const [images, setimages] = useState(null)
+  const [image_description, setimage_description] = useState(null)
+  const [progress, setprogress] = useState(0)
+
+  //images
+  const [images_id_list, setimages_id_list] = useState(null)
 
   const debounceSearch = useRef(_.debounce((e, valueIsOpen, selected_category) => findPromotionsData(e, valueIsOpen, selected_category), 500)).current;
   const searchChanged = (e, valueIsOpen, selected_category) => {
@@ -96,6 +112,7 @@ export default function Patient_history(props) {
     doGetAgent()
     doGetPatientHistory()
     doGetCategories()
+    doGetCustomerImages()
   }, [])
 
   const doGetPatientData = async () => {
@@ -203,7 +220,6 @@ export default function Patient_history(props) {
 
     // console.log(response.data.result);
   }
-
   const renderTimeLine = () => {
     if (listTimeLine.length > 0) {
       let distinctDateTimeline = []
@@ -260,6 +276,34 @@ export default function Patient_history(props) {
         })
       }
 
+      const renderCustomerImages = (history_id) => {
+        if (images_id_list) {
+          if (images_id_list[history_id]) {
+            return images_id_list[history_id].map((item) => (
+              <div className="col-4" >
+                <div className="card card-default">
+                  <div className="card-footer">
+                    <a target="_blank" href={apiUrl + server.CUSTOMER_IMAGE_URL + '/' + item} className="btn btn-primary btn-xs">
+                      <i class="far fa-file-image"></i>
+                    </a>
+                    <button onClick={() => {
+                      doDeleteCustomerImages(item)
+                    }} style={{ marginBottom: 5 }} className="btn btn-danger btn-xs float-right">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+                  <div className="card-body">
+                    <Zoom>
+                      <img style={{ width: '100%' }} src={apiUrl + server.CUSTOMER_IMAGE_URL + '/' + item} />
+                    </Zoom>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        }
+      }
+
       const renderTimeLineOnDate = (date) => {
         let listTimeLineOnDate = []
         for (let i = 0; i < listTimeLine.length; i++) {
@@ -268,6 +312,8 @@ export default function Patient_history(props) {
             listTimeLineOnDate.push(item)
           }
         }
+
+
 
         return listTimeLineOnDate.map(item => (
           <div>
@@ -283,14 +329,24 @@ export default function Patient_history(props) {
                   {item.discount > 0 ? ' , ราคาที่ลด : ' + item.discount : ''}</p>
                 {item.agent !== '' ? <p>ผู้แนะนำ : {item.agent}</p> : <></>}
                 <p>อัพเดทโดย : {item.updater}</p>
+                <div className="row">
+                  {renderCustomerImages(item.history_id)}
+                </div>
               </div>
               <div class="timeline-footer">
                 <div>
                   <button onClick={(e) => {
                     e.preventDefault();
+                    addImage(item.history_id)
+                  }}
+                    style={{ marginLeft: 5 }} className="btn btn-success btn-xs">
+                    <i className="fas fa-images" />
+
+                  </button>
+                  <button onClick={(e) => {
+                    e.preventDefault();
                     doDeleteTimeLine(item.history_id)
-                  }} style={{ marginLeft: 5 }} className="btn btn-danger btn-xs"><i className="fas fa-trash-alt" /></button>
-                  {/* <button className="btn btn-danger btn-xs float-right">Delete</button> */}
+                  }} style={{ marginLeft: 5 }} className="btn btn-danger btn-xs float-right"><i className="fas fa-trash-alt" /></button>
                 </div>
               </div>
             </div>
@@ -309,7 +365,6 @@ export default function Patient_history(props) {
       ))
     }
   }
-
   const renderPatientHistory = () => {
     return (
       <div className="card card-primary">
@@ -341,6 +396,12 @@ export default function Patient_history(props) {
     setListPromotions([])
     setSelectedPromotion_category('all')
     setIsModalOpen(false)
+    //image
+    sethistory_id(null)
+    setimages(null)
+    setimage_description(null)
+    setmodeAddImages(false)
+    setprogress(0)
   }
   const openModal = () => {
     setIsModalOpen(true)
@@ -820,6 +881,136 @@ export default function Patient_history(props) {
     )
   }
 
+  //add image
+  const addImage = (history_id) => {
+    sethistory_id(history_id)
+    setmodeAddImages(true)
+  }
+  const doUploadImages = async () => {
+    for (let i = 0; i < images.length; i++) {
+      var formData = new FormData();
+      const image = images[i];
+      await formData.append("image", image);
+      await formData.append("updater", localStorage.getItem(key.USER_NAME))
+      await formData.append("history_id", history_id);
+      await formData.append("patient_id", patientData.patient_id);
+      await formData.append("image_description", '');
+      const result = await httpClient.post(server.CUSTOMER_IMAGE_URL, formData)
+      setprogress(parseInt(((i + 1) / images.length) * 100))
+    }
+    doGetCustomerImages()
+    setInterval(() => {
+      closeModal()
+    }, 1200);
+  }
+  const renderProgress = () => {
+    if (progress > 0) {
+      return (
+        <div style={{ width: '100%' }}>
+          <ProgressBar width='100%' bgColor='blue' completed={progress} />
+        </div>
+      )
+    }
+  }
+  const renderAddImages = () => {
+    return (
+      <Modal
+        isOpen={modeAddImages}
+        style={{
+          content: {
+            transform: 'translate(0%, 0%)',
+            overlfow: 'scroll' // <-- This tells the modal to scrol
+          },
+        }}
+        className="content-wrapper"
+      >
+        <div style={{ margin: '5%', marginTop: '10%', padding: '0%', backgroundColor: 'rgba(0,0,0,0)', overflow: 'auto' }}>
+          <div className={'card card-dark'}>
+            <div className="card-header">
+              <h2 className="card-title">อัพโหลดรูปภาพ</h2>
+              <div class="card-tools">
+                <button type="button" className="btn btn-tool" onClick={(e) => {
+                  e.preventDefault()
+                  closeModal();
+                }}><i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+            <div className='card-body' style={{ textAlign: 'center' }}><img src="/img/ALA_logo.png" /></div>
+            <div className='card-body'>
+              <div className="input-group" style={{ marginTop: 15, overflow: 'auto' }}>
+                <DropZone parentCallback={setimages} />
+              </div>
+              {renderProgress()}
+            </div>
+            <div className='card-footer'>
+              <button onClick={(e) => {
+                e.preventDefault()
+                doUploadImages()
+              }} className="btn btn-primary">ตกลง</button>
+              <button onClick={(e) => {
+                e.preventDefault();
+                closeModal();
+              }} className="btn btn-default float-right">ยกเลิก</button>
+            </div>
+          </div>
+        </div>
+      </Modal>
+    )
+  }
+
+  const doDeleteCustomerImages = async (id) => {
+    // console.log(id);
+    Swal.fire({
+      title: 'ต้องการลบรูปนี้?',
+      text: "ถ้าลบแลวจะไม่สามารถกู้คืนได้นะ",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ลบเลย!',
+      cancelButtonText: 'ไม่ลบละเปลี่ยนใจ'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const result = await httpClient.delete(server.CUSTOMER_IMAGE_URL, { data: { id } })
+        doGetCustomerImages()
+        Swal.fire(
+          'ลบเรียบร้อย!',
+          'รูปนี้ถูกลบแล้ว',
+          'success'
+        )
+      }
+    })
+
+
+  }
+  //get images
+  const doGetCustomerImages = async () => {
+    const { patient_id } = props.match.params
+    const response = await httpClient.get(server.CUSTOMER_IMAGE_URL + '_customer' + '/' + patient_id)
+    console.log(response.data);
+
+
+    if (response.data.result && response.data.api_result === OK) {
+      var image_obj = {}
+      for (let index = 0; index < response.data.list_history_id.length; index++) {
+        const item = response.data.list_history_id[index];
+        image_obj[item.history_id] = []
+      }
+
+      for (let i = 0; i < response.data.result.length; i++) {
+        const item = response.data.result[i];
+        var t = image_obj[item.history_id]
+        t.push(item.id)
+        image_obj[item.history_id] = t
+      }
+
+      console.log(image_obj);
+      setimages_id_list(image_obj)
+    }
+  }
+
+
   return (
     <div className='content-wrapper'>
       <div className="content-header">
@@ -829,7 +1020,7 @@ export default function Patient_history(props) {
               <h1 className="m-0">ประวัติคนไข้ / ลูกค้า</h1>
             </div>{/* /.col */}
             <div className="col-sm-6">
-
+              {renderAddImages()}
             </div>{/* /.col */}
           </div>{/* /.row */}
         </div>{/* /.container-fluid */}
