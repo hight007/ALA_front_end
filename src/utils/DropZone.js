@@ -54,7 +54,7 @@ export default function DropZone({ parentCallback }) {
         }
     }
     const { getRootProps, getInputProps } = useDropzone({
-        accept: '.jpg',
+        accept: 'image/*',
         onDrop: acceptedFiles => {
             setFiles(acceptedFiles.map(file => Object.assign(file, {
                 preview: URL.createObjectURL(file)

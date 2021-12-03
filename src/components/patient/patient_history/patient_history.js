@@ -18,6 +18,8 @@ import Swal from 'sweetalert2';
 import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
 
+import { isMobile } from 'react-device-detect';
+
 function useForceUpdate() {
   const [value, setValue] = useState(0); // integer state
   return () => setValue(value => value + 1); // update the state to force render
@@ -280,7 +282,7 @@ export default function Patient_history(props) {
         if (images_id_list) {
           if (images_id_list[history_id]) {
             return images_id_list[history_id].map((item) => (
-              <div className="col-4" >
+              <div className={isMobile ? "col-6" : "col-4"} >
                 <div className="card card-default">
                   <div className="card-footer">
                     <a target="_blank" href={apiUrl + server.CUSTOMER_IMAGE_URL + '/' + item} className="btn btn-primary btn-xs">
@@ -398,7 +400,7 @@ export default function Patient_history(props) {
     setIsModalOpen(false)
     //image
     sethistory_id(null)
-    setimages(null)
+    setimages([])
     setimage_description(null)
     setmodeAddImages(false)
     setprogress(0)
@@ -883,25 +885,40 @@ export default function Patient_history(props) {
 
   //add image
   const addImage = (history_id) => {
-    sethistory_id(history_id)
     setmodeAddImages(true)
+    setimages([])
+    sethistory_id(history_id)
+
   }
   const doUploadImages = async () => {
-    for (let i = 0; i < images.length; i++) {
-      var formData = new FormData();
-      const image = images[i];
-      await formData.append("image", image);
-      await formData.append("updater", localStorage.getItem(key.USER_NAME))
-      await formData.append("history_id", history_id);
-      await formData.append("patient_id", patientData.patient_id);
-      await formData.append("image_description", '');
-      const result = await httpClient.post(server.CUSTOMER_IMAGE_URL, formData)
-      setprogress(parseInt(((i + 1) / images.length) * 100))
+    const imageConversion = require("image-conversion")
+    if (images.length > 0) {
+      for (let i = 0; i < images.length; i++) {
+        var formData = new FormData();
+        const image = images[i];
+        await imageConversion.compressAccurately(image, {
+          size: 200,    //The compressed image size is 100kb
+          accuracy: 1,
+          scale: 0.2,
+        }).then(async img => {
+          await formData.append("image", img);
+          // console.log(res);
+          // await formData.append("image", image);
+          await formData.append("updater", localStorage.getItem(key.USER_NAME))
+          await formData.append("history_id", history_id);
+          await formData.append("patient_id", patientData.patient_id);
+          await formData.append("image_description", '');
+          const result = await httpClient.post(server.CUSTOMER_IMAGE_URL, formData)
+          console.log(result.data);
+          setprogress(parseInt(((i + 1) / images.length) * 100))
+        })
+
+      }
+      doGetCustomerImages()
+      setTimeout(() => {
+        closeModal()
+      }, 1000);
     }
-    doGetCustomerImages()
-    setInterval(() => {
-      closeModal()
-    }, 1200);
   }
   const renderProgress = () => {
     if (progress > 0) {
@@ -1028,11 +1045,10 @@ export default function Patient_history(props) {
       <section className="content">
         <div className="container-fluid">
           <div className='row'>
-
-            <div className='col-5'>
+            <div className={isMobile ? 'col-12' : 'col-5'}>
               {renderPatientData()}
             </div>
-            <div className='col-7'>
+            <div className={isMobile ? 'col-12' : 'col-7'}>
               {renderPatientHistory()}
             </div>
             <div className='col-12'>
