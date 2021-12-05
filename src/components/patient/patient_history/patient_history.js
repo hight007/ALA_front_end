@@ -897,9 +897,9 @@ export default function Patient_history(props) {
         var formData = new FormData();
         const image = images[i];
         await imageConversion.compressAccurately(image, {
-          size: 200,    //The compressed image size is 100kb
+          size: 400,    //The compressed image size is 100kb
           accuracy: 1,
-          scale: 0.2,
+          scale: 0.7,
         }).then(async img => {
           await formData.append("image", img);
           // console.log(res);
