@@ -437,6 +437,33 @@ export default function Patient_data(props) {
 
   //find patient
   const renderFindPatientData = () => {
+    const resetPantientStatus = (patient_id) => {
+      Swal.fire({
+        title: 'ต้องการรีเซ็ตสถานะคนไข้?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'รีเซ็ต',
+        cancelButtonText: 'ยกเลิก',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+
+          await httpClient.put(server.PATIENT_DATA_URL, {
+            patient_id,
+            status: 'open',
+          })
+
+          const e = {
+            target: {
+              value: 'opd=' + patient_id
+            }
+          }
+          console.log(e.target.value);
+          findPatientData(e)
+        }
+      })
+    }
     const renderPatientData = (item, idx) => {
       return (
         <div className="col-md-4">
@@ -468,6 +495,12 @@ export default function Patient_data(props) {
               </li>
               <li class="list-group-item">
                 <b>สถานะ </b> <label style={{ color: 'red' }} className={item.status != 'open' ? 'float-right text-center' : 'float-right text-center text-muted'}>{item.status}</label>
+                <button className="btn btn-primary btn-xs" onClick={(e) => {
+                  e.preventDefault()
+                  resetPantientStatus(item.patient_id)
+                }
+                }
+                ><i className="fas fa-redo" /></button>
               </li>
               <button className="btn btn-primary btn-block" onClick={(e) => {
                 e.preventDefault();
