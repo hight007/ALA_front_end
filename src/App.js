@@ -24,6 +24,10 @@ import patient_payment from './components/patient/patient_payment';
 import daily_sales_report from './components/report/dailySalesReport';
 import sales_analysis from './components/report/salesAnalysis';
 import daily_new_customer from './components/report/dailyNewCustomer';
+import report_appointment from './components/report/appointment'
+
+//appointment
+import appointment from './components/appointment'
 
 import {
   BrowserRouter as Router,
@@ -145,6 +149,10 @@ class App extends Component {
           <SecuredRoute path="/report/daily_sales_report" component={daily_sales_report} />
           <SecuredRoute path="/report/sales_analysis" component={sales_analysis} />
           <SecuredRoute path="/report/daily_new_customer" component={daily_new_customer} />
+          <SecuredRoute path="/report/appointment" component={report_appointment} />
+
+          {/* appointment */}
+          <SecuredRoute path="/appointment/:patient_id" component={appointment} />
 
           <Route exact={true} path="/" component={this.redirectToLogin} />
           <Route exact={true} path="*" component={this.redirectToLogin} />

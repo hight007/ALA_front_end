@@ -19,6 +19,7 @@ import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
 
 import { isMobile } from 'react-device-detect';
+import { Link } from 'react-router-dom';
 
 function useForceUpdate() {
   const [value, setValue] = useState(0); // integer state
@@ -69,6 +70,9 @@ export default function Patient_history(props) {
   //images
   const [images_id_list, setimages_id_list] = useState(null)
 
+  //loading effect
+  const [isLoad, setisLoad] = useState(false)
+
   const debounceSearch = useRef(_.debounce((e, valueIsOpen, selected_category) => findPromotionsData(e, valueIsOpen, selected_category), 500)).current;
   const searchChanged = (e, valueIsOpen, selected_category) => {
     e.persist();
@@ -110,12 +114,18 @@ export default function Patient_history(props) {
   }
 
   useEffect(() => {
-    doGetPatientData()
-    doGetAgent()
-    doGetPatientHistory()
-    doGetCategories()
-    doGetCustomerImages()
+    init()
   }, [])
+
+  const init = async () => {
+    setisLoad(true)
+    await doGetPatientData()
+    await doGetAgent()
+    await doGetPatientHistory()
+    await doGetCategories()
+    await doGetCustomerImages()
+    setisLoad(false)
+  }
 
   const doGetPatientData = async () => {
     const { patient_id } = props.match.params
@@ -153,6 +163,7 @@ export default function Patient_history(props) {
         {/* <div class="card-header">
           <h3 class="card-title">ประวัติ</h3>
         </div> */}
+
         <div className="card-body box-profile">
           <h3 className="profile-username text-center">{patientData.first_name + ' ' + patientData.last_name}</h3>
           <p className="text-muted text-center">{patientData.job}</p>
@@ -186,6 +197,9 @@ export default function Patient_history(props) {
                 <p className="text-muted">
                   {patientData.drug_allergy == '' ? 'ไม่มี' : patientData.chronic_disease}
                 </p>
+                <hr />
+                <b>นัดหมาย </b> <label className={'float-right text-center text-muted'}><Link to={"/appointment/" + patientData.patient_id} className="btn btn-primary btn-xs">นัดหมาย</Link></label>
+
               </div>
               {/* /.card-body */}
             </div>
@@ -285,7 +299,7 @@ export default function Patient_history(props) {
               <div className={isMobile ? "col-6" : "col-4"} >
                 <div className="card card-default">
                   <div className="card-footer">
-                    <a target="_blank" href={apiUrl + server.CUSTOMER_IMAGE_URL + '/' + item} className="btn btn-primary btn-xs">
+                    <a target="_blank" href={apiUrl + server.CUSTOMER_FULL_IMAGE_URL + '/' + item} className="btn btn-primary btn-xs">
                       <i class="far fa-file-image"></i>
                     </a>
                     <button onClick={() => {
@@ -296,7 +310,7 @@ export default function Patient_history(props) {
                   </div>
                   <div className="card-body">
                     <Zoom>
-                      <img style={{ width: '100%' }} src={apiUrl + server.CUSTOMER_IMAGE_URL + '/' + item} />
+                      <img style={{ width: '100%' , objectFit : 'cover' }} src={apiUrl + server.CUSTOMER_IMAGE_URL + '/' + item} />
                     </Zoom>
                   </div>
                 </div>
@@ -1044,6 +1058,13 @@ export default function Patient_history(props) {
       </div>
       <section className="content">
         <div className="container-fluid">
+          <div className="overlay-wrapper" style={{ visibility: isLoad ? 'visible' : 'hidden' }}>
+            <div className="overlay">
+              <i className="fas fa-3x fa-sync-alt fa-spin">
+              </i>
+              <div className="text-bold pt-2">Loading...</div>
+            </div>
+          </div>
           <div className='row'>
             <div className={isMobile ? 'col-12' : 'col-5'}>
               {renderPatientData()}

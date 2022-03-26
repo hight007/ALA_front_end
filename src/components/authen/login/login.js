@@ -14,6 +14,7 @@ class Login extends Component {
     this.state = {
       username: '',
       password: '',
+      isLoad: false,
     }
   }
 
@@ -36,6 +37,7 @@ class Login extends Component {
 
   doLogin = async () => {
     try {
+
       const response = await httpClient.post(server.LOGIN_URL, this.state)
       if (response.data.api_result === OK) {
         localStorage.setItem(key.LOGIN_PASSED, YES);
@@ -59,10 +61,12 @@ class Login extends Component {
         <div className="login-box">
           {/* /.login-logo */}
           <div className="card card-outline card-default">
+
             <div className="card-header text-center">
               <img style={{ width: '100%', height: '100%' }} src="/img/ALA_logo.png" />
             </div>
             <div className="card-body">
+              
               {/* <p className="login-box-msg">Sign in to start your session</p> */}
               <form>
                 <div className="input-group mb-3">
@@ -93,12 +97,21 @@ class Login extends Component {
                   </div>
                   {/* /.col */}
                   <div className="col-4">
-                    <button onClick={(e) => {
+                    <button onClick={async (e) => {
                       e.preventDefault();
-                      this.doLogin()
+                      this.setState({ isLoad: true });
+                      await this.doLogin()
+                      this.setState({ isLoad: false });
                     }} type="submit" className="btn btn-primary btn-block">Sign In</button>
                   </div>
                   {/* /.col */}
+                </div>
+                <div className="overlay-wrapper" style={{ visibility: this.state.isLoad ? 'visible' : 'hidden' }}>
+                  <div className="overlay">
+                    <i className="fas fa-3x fa-sync-alt fa-spin">
+                    </i>
+                    <div className="text-bold pt-2">Loading...</div>
+                  </div>
                 </div>
               </form>
               {/* /.social-auth-links */}

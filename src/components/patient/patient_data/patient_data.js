@@ -508,6 +508,7 @@ export default function Patient_data(props) {
               }}>
                 <b>นัดตรวจ</b>
               </button>
+              <Link to={'/appointment/' + item.patient_id} className="btn btn-secondary btn-block">นัดหมาย</Link>
               <Link to={'/patient/patient_history/' + item.patient_id} className="btn btn-dark btn-block">ประวัติการใช้บริการ</Link>
               <Link to={'/patient/payment/' + item.patient_id} className="btn btn-success btn-block">ประวัติการจ่ายเงิน</Link>
               <button onClick={(e) => {

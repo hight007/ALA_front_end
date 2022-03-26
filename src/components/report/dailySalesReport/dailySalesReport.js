@@ -10,6 +10,7 @@ import CurrencyFormat from 'react-currency-format';
 
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
+import { Link } from 'react-router-dom';
 
 export default function DailySalesReport() {
   //date
@@ -29,6 +30,7 @@ export default function DailySalesReport() {
 
   //useEffects
   useEffect(() => {
+    setisLoad(true)
     doGetDailySalesData()
   }, [])
 
@@ -108,7 +110,6 @@ export default function DailySalesReport() {
       return (
         <tr role="row">
           <th>วันที่ให้บริการ</th>
-          <th>opd</th>
           <th>
             ชื่อ - นามสกุล ลูกค้า
           </th>
@@ -158,9 +159,8 @@ export default function DailySalesReport() {
       return tableData.map((item, index) => (
         <tr>
           <td>{item.operate_date}</td>
-          <td>{item.patient_id}</td>
           <td>
-            {item.first_name + ' ' + item.last_name}
+            <Link to={`/patient/patient_history/${item.patient_id}`}>{item.first_name + ' ' + item.last_name}</Link>
           </td>
           <td>
             {(moment().format('YYYY') - item.year_of_birth) + ' ปี'}

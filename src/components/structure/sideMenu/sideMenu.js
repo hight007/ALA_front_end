@@ -178,7 +178,19 @@ class SideMenu extends Component {
               <p>วิเคราะห์ข้อมูลยอดขาย</p>
             </Link>
           </li>
-          
+          <li className="nav-item">
+            <Link
+              to="/report/appointment"
+              className={
+                pathname === "/report/appointment"
+                  ? "nav-link active"
+                  : "nav-link"
+              }
+            >
+              <i className="far fa-circle nav-icon" />
+              <p>การนัดหมายของลูกค้า</p>
+            </Link>
+          </li>
         </ul>
       </li>
     )

@@ -8,6 +8,7 @@ import CurrencyFormat from 'react-currency-format';
 import Swal from 'sweetalert2';
 import Modal from 'react-modal';
 import _ from "lodash";
+import { Link } from 'react-router-dom';
 
 export default function Patient_payment(props) {
   const [patientData, setPatientData] = useState([])
@@ -65,7 +66,7 @@ export default function Patient_payment(props) {
     setPromotion_startPrice(0)
     setPromotion_price(0)
     setResetRadio(false)
-    console.log(selectedPromotion_category);
+
     if (e.target.value != '') {
       let response = await httpClient.get(server.FIND_PROMOTIONS_DATA_URL + '/' + e.target.value + '/' + valueIsOpen + '/' + selected_category)
       if (response.data.result.length > 0 && response.data.api_result === OK) {
@@ -466,6 +467,9 @@ export default function Patient_payment(props) {
                 </li>
                 <li class="list-group-item">
                   <b>สถานะ </b> <label style={{ color: 'red' }} className={patientData.status != 'operate' ? 'float-right text-center' : 'float-right text-center text-muted'}>{patientData.status}</label>
+                </li>
+                <li class="list-group-item">
+                  <b>นัดหมาย </b> <label className={'float-right text-center text-muted'}><Link to={"/appointment/" + patientData.patient_id} className="btn btn-primary btn-xs">นัดหมาย</Link></label>
                 </li>
 
               </div>

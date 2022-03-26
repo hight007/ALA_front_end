@@ -7,10 +7,12 @@ import { httpClient } from '../../../utils/HttpClient';
 import { OK, server } from '../../../constants';
 import Swal from 'sweetalert2';
 import CurrencyFormat from 'react-currency-format';
+import { Link } from 'react-router-dom';
 
 export default function DailyNewCustomer() {
 
   useEffect(() => {
+    setisLoad(true)
     doGetDailyNewCustomer()
   }, [])
 
@@ -72,7 +74,6 @@ export default function DailyNewCustomer() {
       return (
         <tr role="row">
           <th>วันที่เป็นสมาชิค</th>
-          <th>opd</th>
           <th>
             ชื่อ - นามสกุล ลูกค้า
           </th>
@@ -122,9 +123,8 @@ export default function DailyNewCustomer() {
       return tableData.map((item, index) => (
         <tr>
           <td>{moment(item.createdAt).format('DD-MMM-YYYY')}</td>
-          <td>{item.patient_id}</td>
           <td>
-            {item.first_name + ' ' + item.last_name}
+            <Link to={`/patient/patient_history/${item.patient_id}`}>{item.first_name + ' ' + item.last_name}</Link>
           </td>
           <td>
             {(moment().format('YYYY') - item.year_of_birth) + ' ปี'}
