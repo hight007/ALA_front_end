@@ -22,9 +22,9 @@ export const NETWORK_TIMEOUT_MESSAGE =
 export const UPLOAD_PHOTO_FAIL_MESSAGE =
   "An error has occurred. The photo was unable to upload.";
 
-export const apiUrl = "http://localhost:2009/api/ALA_clinic/";
+// export const apiUrl = "http://localhost:2009/api/ALA_clinic/";
 // export const apiUrl = "http://alaclinic.3bbddns.com:53141/api/ALA_clinic/";
-// export const apiUrl = "https://asia-southeast1-ala-clinic.cloudfunctions.net/alaclinicBackend/api/ALA_clinic/";
+export const apiUrl = "https://asia-southeast1-ala-clinic.cloudfunctions.net/alaclinicBackend/api/ALA_clinic/";
 
 
 export const YES = "YES";
