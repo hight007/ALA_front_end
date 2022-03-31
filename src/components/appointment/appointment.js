@@ -156,7 +156,7 @@ export default function Appointment(props) {
           const { patient_id } = props.match.params
           const appointmentData = {
             patient_id,
-            appointment_date: appointmentDate,
+            appointment_date: moment(appointmentDate).format('YYYY-MM-DD'),
             appointment_description: appointmentDescription,
             updater: localStorage.getItem(key.USER_NAME)
           }
