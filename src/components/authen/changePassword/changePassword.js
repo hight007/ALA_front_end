@@ -4,6 +4,8 @@ import Swal from "sweetalert2";
 import { key, server, OK } from "../../../constants";
 import { httpClient } from "../../../utils/HttpClient";
 import * as action from "../../../actions/app.action";
+import { Navigate } from "react-router-dom";
+
 
 class ChangePassword extends Component {
   constructor(props) {
@@ -26,7 +28,8 @@ class ChangePassword extends Component {
           title: 'Yeah...',
           text: 'Your password has been changed',
         }).then(() => {
-          this.props.history.push("/Login");
+          // this.props.history.push("/Login");
+          window.location.replace("/Login")
           localStorage.removeItem(key.LOGIN_PASSED);
           localStorage.removeItem(key.API_KEY);
           localStorage.removeItem(key.USER_NAME);
@@ -138,7 +141,8 @@ class ChangePassword extends Component {
                     type="submit"
                     onClick={(e) => {
                       e.preventDefault();
-                      this.props.history.goBack();
+                      // this.props.history.goBack();
+                      window.history.go(-1)
                     }}
                     className="btn btn-default float-right"
                   >

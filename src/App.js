@@ -9,156 +9,140 @@ import Header from './components/structure/header'
 import Footer from './components/structure/footer'
 import SideMenu from './components/structure/sideMenu'
 
-//web master
-import userMaster from './components/master/user';
-import promotionsMaster from './components/master/promotions';
+// //web master
+import UserMaster from './components/master/user';
+import PromotionsMaster from './components/master/promotions';
+import MasterProduct from './components/master/Product';
 
-//patient
-import patient_data from './components/patient/patient_data';
-import patient_history from './components/patient/patient_history';
-import patient_status from './components/patient/patient_status';
-import patient_historicalData from './components/patient/patient_historicalData';
-import patient_payment from './components/patient/patient_payment';
+// //patient
+import Patient_data from './components/patient/patient_data';
+import Patient_history from './components/patient/patient_history';
+import Patient_status from './components/patient/patient_status';
+import Patient_historicalData from './components/patient/patient_historicalData';
+import Patient_payment from './components/patient/patient_payment';
 
-//report
-import daily_sales_report from './components/report/dailySalesReport';
-import sales_analysis from './components/report/salesAnalysis';
-import daily_new_customer from './components/report/dailyNewCustomer';
-import report_appointment from './components/report/appointment'
+// //report
+import Daily_sales_report from './components/report/dailySalesReport';
+import Sales_analysis from './components/report/salesAnalysis';
+import Daily_new_customer from './components/report/dailyNewCustomer';
+import Report_appointment from './components/report/appointment'
+import Report_stock from './components/report/Stock';
 
-//appointment
-import appointment from './components/appointment'
+// //appointment
+import Appointment from './components/appointment'
 
-import {
-  BrowserRouter as Router,
-  Route,
-  Redirect,
-  Switch,
-} from "react-router-dom";
+import { BrowserRouter, useNavigate, Navigate, Route, Routes } from "react-router-dom";
 import { setApp } from "./actions/app.action";
 import { connect } from "react-redux";
 import { key, YES } from './constants';
 import Swal from "sweetalert2";
 import * as moment from "moment";
 
-
-const isLoggedIn = () => {
-  return localStorage.getItem(key.LOGIN_PASSED) === YES;
-};
-
-const isPowerUser = () => {
-  if (
-    localStorage.getItem(key.USER_LV) === "power" ||
-    localStorage.getItem(key.USER_LV) === "admin"
-  ) {
-    return true;
-  } else {
-    return false;
-  }
-};
-
-const isLoginTimeOut = (value, unit) => {
-  const loginTime = moment(localStorage.getItem(key.TIME_LOGIN))
-    .add(value, unit)
-    .toDate();
-  if (loginTime < moment()) {
-    localStorage.removeItem(key.LOGIN_PASSED);
-    localStorage.removeItem(key.USER_NAME);
-    localStorage.removeItem(key.USER_LV);
-    localStorage.removeItem(key.TOKEN)
-    localStorage.removeItem(key.TIME_LOGIN);
-
-    Swal.fire({
-      icon: "info",
-      title: "Login timeout",
-      text: "Please re login again...",
-      showCancelButton: false,
-    }).then(() => {
-      window.location.replace("../login");
-    });
-    return true;
-  } else {
-    return false;
-  }
-};
-
-// Protected Route
-const SecuredRoute = ({ component: Component, ...rest }) => (
-  <Route
-    {...rest}
-    render={(props) =>
-      isLoggedIn() === true && isLoginTimeOut(12, "h") === false ? (
-        <Component {...props} />
-      ) : (
-        <Redirect to="/login" />
-      )
-    }
-  />
-);
-
-const SecuredLVRoute = ({ component: Component, ...rest }) => (
-  <Route
-    {...rest}
-    render={(props) =>
-      isLoggedIn() === true && isLoginTimeOut(1, "h") === false ? (
-        isPowerUser() === true ? (
-          <Component {...props} />
-        ) : (
-          <Redirect to="/home" />
-        )
-      ) : (
-        <Redirect to="/login" />
-      )
-    }
-  />
-);
+//stock
+import StockIssues from './components/stock/StockIssues';
+import StockRecieve from './components/stock/StockRecieve';
 
 class App extends Component {
-
-  componentDidMount() {
-    this.props.setApp(this);
-  }
-
-  redirectToLogin = () => {
-    return <Redirect to="/login" />;
-  };
-
   render() {
+    const showElement = (element) => {
+      const isLogined = localStorage.getItem(key.LOGIN_PASSED);
+      if (isLogined == YES) {
+        return element;
+      }
+    };
+
+    function RequireAuth(props) {
+      const navigate = useNavigate();
+      // check permission
+      if (localStorage.getItem(key.LOGIN_PASSED) != YES) {
+        window.location.replace('/Login');
+      }
+
+      //check time to login
+      const loginTime = moment(localStorage.getItem(key.TIME_LOGIN)).format(
+        "DD-MMM-yyyy HH:mm:ss"
+      );
+      if (moment().diff(moment(loginTime), "h") > 4) {
+
+
+        Swal.fire({
+          icon: "warning",
+          title: "Oops...",
+          text: "เวลาการเข้าใช้งานหมดอายุ โปรดลงชื่อเข้าใช้ใหม่",
+        }).then(() => {
+          localStorage.removeItem(key.LOGIN_PASSED);
+          localStorage.removeItem(key.USER_NAME);
+          localStorage.removeItem(key.TIME_LOGIN);
+          localStorage.removeItem(key.USER_LV);
+          localStorage.removeItem(key.TOKEN);
+          // navigate("/Login");
+          window.location.replace('/Login')
+          return <Navigate to="/Login" />;
+        });
+      }
+
+      //check user level
+      if (props.userLevel) {
+        const userLevel = localStorage.getItem(key.USER_LV)
+        if (!props.userLevel.includes(userLevel)) {
+          navigate("/Home");
+          Swal.fire({
+            icon: "warning",
+            title: "Oops...",
+            text: "ระดับไม่เพียงพอต่อการเข้าถึง",
+          }).then(() => {
+            return <Navigate to="/Home" />;
+          });
+        }
+
+      }
+
+      return props.children;
+    }
+
     return (
-      <Router>
-        {isLoggedIn() && <Header />}
-        {isLoggedIn() && <SideMenu />}
-        <Switch>
-          <Route path="/login" component={Login} />
-          <Route path="/register" component={Register} />
-          <SecuredRoute path="/changePassword" component={ChangePassword} />
-          <SecuredRoute path="/home" component={Home} />
+      <BrowserRouter>
+        {/* <Header /> */}
+        {showElement(<Header />)}
+        {showElement(<SideMenu />)}
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/Home" element={<RequireAuth><Home /></RequireAuth>} />
+          <Route path="/changePassword" element={<RequireAuth><ChangePassword /></RequireAuth>} />
 
           {/* Master */}
-          <SecuredLVRoute path="/master/user" component={userMaster} />promotionsMaster
-          <SecuredLVRoute path="/master/promotions" component={promotionsMaster} />
+          <Route path="/master/user" element={<RequireAuth userLevel={["admin", "power"]}><UserMaster /></RequireAuth>} />
+          <Route path="/master/promotions" element={<RequireAuth userLevel={["admin", "power"]}><PromotionsMaster /></RequireAuth>} />
+          <Route path="/master/product" element={<RequireAuth userLevel={["admin", "power"]}><MasterProduct /></RequireAuth>} />
 
           {/* patient*/}
-          <SecuredRoute path="/patient/patient_data" component={patient_data} />
-          <SecuredRoute path="/patient/patient_history/:patient_id" component={patient_history} />
-          <SecuredRoute path="/patient/patient_status" component={patient_status} />
-          <SecuredRoute path="/patient/patient_historicalData" component={patient_historicalData} />
-          <SecuredRoute path="/patient/payment/:patient_id" component={patient_payment} />
+          <Route path="/patient/patient_data" element={<RequireAuth><Patient_data /></RequireAuth>} />
+          <Route path="/patient/patient_history/:patient_id" element={<RequireAuth><Patient_history /></RequireAuth>} />
+          <Route path="/patient/patient_status" element={<RequireAuth><Patient_status /></RequireAuth>} />
+          <Route path="/patient/patient_historicalData" element={<RequireAuth><Patient_historicalData /></RequireAuth>} />
+          <Route path="/patient/payment/:patient_id" element={<RequireAuth><Patient_payment /></RequireAuth>} />
 
           {/* report */}
-          <SecuredRoute path="/report/daily_sales_report" component={daily_sales_report} />
-          <SecuredRoute path="/report/sales_analysis" component={sales_analysis} />
-          <SecuredRoute path="/report/daily_new_customer" component={daily_new_customer} />
-          <SecuredRoute path="/report/appointment" component={report_appointment} />
+          <Route path="/report/daily_sales_report" element={<RequireAuth><Daily_sales_report/></RequireAuth>} />
+          <Route path="/report/sales_analysis" element={<RequireAuth><Sales_analysis/></RequireAuth>} />
+          <Route path="/report/daily_new_customer" element={<RequireAuth><Daily_new_customer/></RequireAuth>} />
+          <Route path="/report/appointment" element={<RequireAuth><Report_appointment/></RequireAuth>} />
+          <Route path="/report/stock" element={<RequireAuth><Report_stock /></RequireAuth>} />
+          
+
+          {/* Stock */}
+          <Route path="/stock/recieve" element={<RequireAuth><StockRecieve /></RequireAuth>} />
+          <Route path="/stock/issues" element={<RequireAuth><StockIssues /></RequireAuth>} />
 
           {/* appointment */}
-          <SecuredRoute path="/appointment/:patient_id" component={appointment} />
+          <Route path="/appointment/:patient_id" component={<RequireAuth><Appointment/></RequireAuth>} />
 
-          <Route exact={true} path="/" component={this.redirectToLogin} />
-          <Route exact={true} path="*" component={this.redirectToLogin} />
-        </Switch>
-        {isLoggedIn() && <Footer />}
-      </Router>
+          <Route exact={true} path="/" element={<Navigate to="/Login" />} />
+          <Route exact={true} path="*" element={<Navigate to="/Login" />} />
+        </Routes>
+        {showElement(<Footer />)}
+      </BrowserRouter>
     );
   }
 }

@@ -7,8 +7,11 @@ import FlatList from 'flatlist-react';
 import _ from "lodash";
 import Modal from 'react-modal';
 import './patient_historicalData.css'
+import { useNavigate,} from "react-router-dom";
 
 export default function Patient_historicalData(props) {
+  const navigate = useNavigate();
+
   //State
   const [patientData, setPatientData] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -68,7 +71,7 @@ export default function Patient_historicalData(props) {
               </li>
               <button className="btn btn-primary btn-block" onClick={(e) => {
                 e.preventDefault();
-                props.history.push('/patient/patient_history/' + item.patient_id)
+                navigate('/patient/patient_history/' + item.patient_id)
               }}>
                 <b>เพิ่มประวัติย้อนหลัง</b>
               </button>

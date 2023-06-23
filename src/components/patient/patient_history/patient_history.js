@@ -4,6 +4,7 @@ import { key, OK, server, apiUrl } from "../../../constants";
 import { httpClient } from '../../../utils/HttpClient';
 import Modal from 'react-modal';
 import './patient_history.css'
+import { useParams } from "react-router-dom";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -20,6 +21,7 @@ import 'react-medium-image-zoom/dist/styles.css'
 
 import { isMobile } from 'react-device-detect';
 import { Link } from 'react-router-dom';
+import { useNavigate, } from "react-router-dom";
 
 function useForceUpdate() {
   const [value, setValue] = useState(0); // integer state
@@ -27,6 +29,8 @@ function useForceUpdate() {
 }
 
 export default function Patient_history(props) {
+  const navigate = useNavigate();
+  const params = useParams();
 
   //forceUpdate
   const forceUpdate = useForceUpdate();
@@ -128,7 +132,7 @@ export default function Patient_history(props) {
   }
 
   const doGetPatientData = async () => {
-    const { patient_id } = props.match.params
+    const { patient_id } = params
     const response = await httpClient.get(server.PATIENT_DATA_URL + '/' + patient_id)
     if (response.data.api_result === OK) {
       setPatientData(response.data.result)
@@ -226,7 +230,7 @@ export default function Patient_history(props) {
   //Patient history
   const doGetPatientHistory = async () => {
     try {
-      const { patient_id } = props.match.params
+      const { patient_id } = params
       const response = await httpClient.get(server.PANTIENT_HISTORY_URL + '/' + patient_id)
       setlistTimeLine(response.data.result)
     } catch (error) {
@@ -237,6 +241,9 @@ export default function Patient_history(props) {
     // console.log(response.data.result);
   }
   const renderTimeLine = () => {
+    if (!listTimeLine) {
+      return
+    }
     if (listTimeLine.length > 0) {
       let distinctDateTimeline = []
       for (let i = 0; i < listTimeLine.length; i++) {
@@ -310,7 +317,7 @@ export default function Patient_history(props) {
                   </div>
                   <div className="card-body">
                     <Zoom>
-                      <img style={{ width: '100%' , objectFit : 'cover' }} src={apiUrl + server.CUSTOMER_IMAGE_URL + '/' + item} />
+                      <img style={{ width: '100%', objectFit: 'cover' }} src={apiUrl + server.CUSTOMER_IMAGE_URL + '/' + item} />
                     </Zoom>
                   </div>
                 </div>
@@ -737,7 +744,7 @@ export default function Patient_history(props) {
                 }
                 let transactionResponse = await httpClient.post(server.PROCESS_TRANSACTION_URL, transactionData)
                 let response = await httpClient.put(server.PATIENT_DATA_URL, transactionData)
-                props.history.push('/patient/patient_status')
+                navigate('/patient/patient_status')
               } else {
                 doGetPatientHistory();
                 closeModal();
@@ -1017,10 +1024,8 @@ export default function Patient_history(props) {
   }
   //get images
   const doGetCustomerImages = async () => {
-    const { patient_id } = props.match.params
+    const { patient_id } = params
     const response = await httpClient.get(server.CUSTOMER_IMAGE_URL + '_customer' + '/' + patient_id)
-    console.log(response.data);
-
 
     if (response.data.result && response.data.api_result === OK) {
       var image_obj = {}

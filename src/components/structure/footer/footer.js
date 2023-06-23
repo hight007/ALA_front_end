@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import packagejson from "../../../../package.json"
 
 class Footer extends Component {
   render() {
@@ -6,7 +7,7 @@ class Footer extends Component {
       <footer className="main-footer">
         <strong>Copyright © 2021 Hightokung, </strong>  All rights reserved.
         <div className="float-right d-none d-sm-inline-block">
-          <b>This website is powered by</b><a target="_blank" href='https://www.facebook.com/TheHight'> Highto Kung Nuttee</a>
+          <b>Version</b><a target="_blank" href='https://www.facebook.com/TheHight'> {packagejson.version}</a>
         </div>
       </footer>
     )

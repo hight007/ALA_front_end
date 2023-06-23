@@ -9,8 +9,13 @@ import Swal from 'sweetalert2';
 import Modal from 'react-modal';
 import _ from "lodash";
 import { Link } from 'react-router-dom';
+import { useParams } from "react-router-dom";
+import { useNavigate, } from "react-router-dom";
 
 export default function Patient_payment(props) {
+  const navigate = useNavigate();
+  const params = useParams();
+
   const [patientData, setPatientData] = useState([])
   const [paymentHistory, setpaymentHistory] = useState([])
   const [listPantientHistory, setlistPantientHistory] = useState([])
@@ -118,7 +123,7 @@ export default function Patient_payment(props) {
     }
   }
   const doGetPatientData = async () => {
-    const { patient_id } = props.match.params
+    const { patient_id } = params
     const response = await httpClient.get(server.PATIENT_DATA_URL + '/' + patient_id)
     // console.log(response);
     if (response.data.api_result === OK) {
@@ -128,7 +133,7 @@ export default function Patient_payment(props) {
     }
   }
   const doGetPaymentList = async () => {
-    const { patient_id } = props.match.params
+    const { patient_id } = params
     const response = await httpClient.get(server.PAYMENT_LIST_URL + '/' + patient_id + '/')
     if (response.data.api_result === OK) {
       setpaymentHistory(response.data.result)
@@ -221,7 +226,7 @@ export default function Patient_payment(props) {
             if (result.isConfirmed) {
               doGetPaymentData(payment_id, await doGetPaymentList(), true)
             } else {
-              props.history.push('/patient/patient_status')
+              navigate('/patient/patient_status')
             }
 
           })
@@ -264,7 +269,7 @@ export default function Patient_payment(props) {
               title: 'Yeah...',
               text: 'การยกเลิกการจ่ายเงินเสร็จสิ้น',
             }).then(() => {
-              props.history.push('/patient/patient_status')
+              navigate('/patient/patient_status')
             })
           } else {
             Swal.fire({

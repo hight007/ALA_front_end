@@ -4,12 +4,14 @@ import { httpClient } from '../../../utils/HttpClient';
 import FlatList from 'flatlist-react';
 import moment from 'moment';
 import Swal from 'sweetalert2';
+import { useNavigate, } from "react-router-dom";
 
 export default function Patient_status(props) {
   const [patientWaitingData, setPatientWaitingData] = useState([])
   const [patientDiagnoseData, setPatientDiagnoseData] = useState([])
   const [patientOperateData, setPatientOperateData] = useState([])
 
+  const navigate = useNavigate();
 
   useEffect(() => {
     doGetPatientData()
@@ -157,7 +159,7 @@ export default function Patient_status(props) {
           let response = await httpClient.put(server.PATIENT_DATA_URL, transactionData)
 
           if (transactionResponse.data.api_result === OK && response.data.api_result === OK) {
-            props.history.push('/patient/patient_history/' + item.patient_id)
+            navigate('/patient/patient_history/' + item.patient_id)
           } else {
             Swal.fire({
               icon: 'error',
@@ -281,7 +283,7 @@ export default function Patient_status(props) {
               </li>
               <button className="btn btn-success btn-block" onClick={(e) => {
                 e.preventDefault();
-                props.history.push('/patient/patient_history/' + item.patient_id)
+                navigate('/patient/patient_history/' + item.patient_id)
               }}>
                 <b>เข้าพบแพทย์ต่อ...</b>
               </button>
@@ -347,7 +349,7 @@ export default function Patient_status(props) {
               </li>
               <button className="btn btn-success btn-block" onClick={(e) => {
                 e.preventDefault();
-                props.history.push('/patient/payment/' + item.patient_id)
+                navigate('/patient/payment/' + item.patient_id)
               }}>
                 <b>จ่ายเงิน</b>
               </button>

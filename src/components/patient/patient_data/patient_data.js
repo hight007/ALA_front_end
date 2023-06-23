@@ -216,7 +216,6 @@ export default function Patient_data(props) {
                       <br></br>
                       <textarea className="form-control"
                         type="text"
-                        className="form-control"
                         placeholder="กรอกยาหรืออาหารที่แพ้ (Enter drug allergy)"
                         value={drug_allergy}
                         onChange={(e) => {
@@ -230,7 +229,6 @@ export default function Patient_data(props) {
                       <br></br>
                       <textarea className="form-control"
                         type="text"
-                        className="form-control"
                         placeholder="กรอกยาที่ใช้ประจำ (Enter regular medication)"
                         value={regular_medication}
                         onChange={(e) => {
@@ -244,7 +242,6 @@ export default function Patient_data(props) {
                       <br></br>
                       <textarea className="form-control"
                         type="text"
-                        className="form-control"
                         placeholder="กรอกโรคประจำตัว (Enter chronic disease)"
                         value={chronic_disease}
                         onChange={(e) => {
@@ -258,7 +255,6 @@ export default function Patient_data(props) {
                       <br></br>
                       <textarea className="form-control"
                         type="text"
-                        className="form-control"
                         placeholder="กรอกอาชีพ (Job)"
                         value={patientjob}
                         onChange={(e) => {

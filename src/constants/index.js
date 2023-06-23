@@ -68,7 +68,22 @@ export const server = {
 
   APPOINTMENT_URL: 'appointment/appointment',
   APPOINTMENT_PANTIENT_URL: 'appointment/appointment_pantient',
-  APPOINTMENT_DATE_URL : 'appointment/appointment_date',
+  APPOINTMENT_DATE_URL: 'appointment/appointment_date',
+
+  product: {
+    product: 'product/product',
+    sugressionProductType: 'product/sugressionProductType',
+    findProduct: 'product/findProduct'
+  },
+
+  stock: {
+    stock: 'stock/stock',
+    issue: 'stock/issue',
+    stockTracking: 'stock/stockTracking',
+    detail: 'stock/detail',
+    summary: 'stock/summary',
+
+  }
 };
 
 export const key = {

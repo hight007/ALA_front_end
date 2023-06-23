@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { key, OK, server } from '../../constants'
 import { httpClient } from '../../utils/HttpClient'
+import { useParams } from "react-router-dom";
 
 import Calendar from 'react-calendar';
 // import "react-calendar/dist/Calendar.css";
@@ -13,6 +14,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import Swal from 'sweetalert2'
 
 export default function Appointment(props) {
+  const params = useParams();
+
   const [patientData, setPatientData] = useState([])
   const [appointmentDate, setappointmentDate] = useState(null)
   const [appointmentDescription, setappointmentDescription] = useState('')
@@ -28,7 +31,7 @@ export default function Appointment(props) {
   }, [])
 
   const doGetPatientData = async () => {
-    const { patient_id } = props.match.params
+    const { patient_id } = params
     const response = await httpClient.get(server.PATIENT_DATA_URL + '/' + patient_id)
     if (response.data.api_result === OK) {
       setPatientData(response.data.result)
@@ -153,7 +156,7 @@ export default function Appointment(props) {
         confirmButtonText: 'ตกลง'
       }).then(async (result) => {
         if (result.isConfirmed) {
-          const { patient_id } = props.match.params
+          const { patient_id } = params
           const appointmentData = {
             patient_id,
             appointment_date: moment(appointmentDate).format('YYYY-MM-DD'),
@@ -190,7 +193,7 @@ export default function Appointment(props) {
 
   const getAppointment = async () => {
     try {
-      const { patient_id } = props.match.params
+      const { patient_id } = params
       const response = await httpClient.get(server.APPOINTMENT_PANTIENT_URL + `/${patient_id}`)
       // console.log(response.data.result);
       setappointmentData(response.data.result)
@@ -258,7 +261,7 @@ export default function Appointment(props) {
       confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const { patient_id } = props.match.params
+        const { patient_id } = params
         const response = await httpClient.delete(server.APPOINTMENT_URL, {
           data: {
             patient_id,

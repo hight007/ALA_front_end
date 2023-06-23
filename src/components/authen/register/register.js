@@ -30,7 +30,7 @@ class Register extends Component {
         const response = await httpClient.post(server.REGISTER_URL, this.state)
         if (response.data.api_result === OK) {
           Swal.fire('Yeah!', 'Register completed', 'success')
-          this.props.history.push('/login')
+          window.location.replace('/login')
         } else {
           Swal.fire('Error!', 'Register failed', 'error')
         }
