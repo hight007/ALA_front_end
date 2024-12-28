@@ -13,7 +13,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import Swal from 'sweetalert2'
 
-export default function Appointment(props) {
+export default function Appointment() {
   const params = useParams();
 
   const [patientData, setPatientData] = useState([])
@@ -25,14 +25,17 @@ export default function Appointment(props) {
   const [isLoad, setisLoad] = useState(false)
 
   useEffect(() => {
+    
     setisLoad(true)
     doGetPatientData()
     getAppointment()
   }, [])
 
-  const doGetPatientData = async () => {
+  const doGetPatientData = async () => {  
     const { patient_id } = params
     const response = await httpClient.get(server.PATIENT_DATA_URL + '/' + patient_id)
+    console.log(response.data);
+    
     if (response.data.api_result === OK) {
       setPatientData(response.data.result)
     } else {

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import Home from './components/home/'
-import Login from './components/authen/login/login'
-import Register from './components/authen/register/register'
-import ChangePassword from './components/authen/changePassword/changePassword'
+import Home from './components/home/';
+import Login from './components/authen/login/login';
+import Register from './components/authen/register/register';
+import ChangePassword from './components/authen/changePassword/changePassword';
 
 //web structure
-import Header from './components/structure/header'
-import Footer from './components/structure/footer'
-import SideMenu from './components/structure/sideMenu'
+import Header from './components/structure/header';
+import Footer from './components/structure/footer';
+import SideMenu from './components/structure/sideMenu';
 
 // //web master
 import UserMaster from './components/master/user';
@@ -29,7 +29,7 @@ import Report_appointment from './components/report/appointment'
 import Report_stock from './components/report/Stock';
 
 // //appointment
-import Appointment from './components/appointment'
+import Appointment from './components/appointment/appointment';
 
 import { BrowserRouter, useNavigate, Navigate, Route, Routes } from "react-router-dom";
 import { setApp } from "./actions/app.action";
@@ -106,6 +106,9 @@ class App extends Component {
         {showElement(<Header />)}
         {showElement(<SideMenu />)}
         <Routes>
+          {/* appointment */}
+          <Route path="/appointment/:patient_id" element={<RequireAuth><Appointment/></RequireAuth>} />
+
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/Home" element={<RequireAuth><Home /></RequireAuth>} />
@@ -135,9 +138,7 @@ class App extends Component {
           <Route path="/stock/recieve" element={<RequireAuth><StockRecieve /></RequireAuth>} />
           <Route path="/stock/issues" element={<RequireAuth><StockIssues /></RequireAuth>} />
 
-          {/* appointment */}
-          <Route path="/appointment/:patient_id" component={<RequireAuth><Appointment/></RequireAuth>} />
-
+          
           <Route exact={true} path="/" element={<Navigate to="/Login" />} />
           <Route exact={true} path="*" element={<Navigate to="/Login" />} />
         </Routes>
