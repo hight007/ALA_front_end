@@ -26,12 +26,10 @@ class User extends Component {
       if (result.data.result.length > 0) {
         this.setState({
           tableData: result.data.result,
-          // tableHeader: Object.keys(result.data.result[0]),
         })
       } else {
         this.setState({
           tableData: [],
-          // tableHeader: Object.keys(result.data.result[0]),
         })
       }
     } else {
@@ -62,7 +60,7 @@ class User extends Component {
       text: "ต้องการลบผู้ใช้งาน : " + username + ", ลบแล้วจะไม่สามารถนำผู้ใช้งานคืนมาได้",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
+      confirmButtonColor: '#C5953A',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
@@ -74,7 +72,7 @@ class User extends Component {
         let response = await httpClient.delete(server.USER_URL, { data })
         Swal.fire(
           'ลบข้อผู้ใช้งานสำเร็จ!',
-          'ผู้ใช้งาน '  +username + ' ถูกลบสำเร็จ',
+          'ผู้ใช้งาน ' + username + ' ถูกลบสำเร็จ',
           'success'
         ).then(() => this.doGetUser())
       }
@@ -83,8 +81,8 @@ class User extends Component {
 
   renderTableRow = () => {
     const generateTableData = (data) => {
-      return this.state.tableHeader.map((header) => (
-        <td>
+      return this.state.tableHeader.map((header, idx) => (
+        <td key={idx} className="align-middle" style={{ padding: '14px 16px' }}>
           {renderRow(data, header)}
         </td>
       ))
@@ -92,28 +90,51 @@ class User extends Component {
 
     const renderRow = (data, header) => {
       if (header == 'lastLogOn') {
-        return moment(data[header]).format('DD-MMM-YYYY HH:mm:ss')
+        return (
+          <span className="text-muted">
+            <i className="far fa-clock mr-1" style={{ color: '#C5953A' }} />
+            {moment(data[header]).format('DD-MMM-YYYY HH:mm:ss')}
+          </span>
+        )
       } else {
         switch (header) {
           case 'levelUser':
             return renderOptions(data[header], data['username'])
           case 'Action':
-            return <button onClick={(e) => {
-              e.preventDefault()
-              this.doDeleteUser(data.username)
-            }} className='btn btn-danger'>Delete</button>
+            return (
+              <button
+                onClick={(e) => {
+                  e.preventDefault()
+                  this.doDeleteUser(data.username)
+                }}
+                className="btn btn-sm btn-outline-danger px-3"
+                style={{ borderRadius: '8px', fontWeight: 500 }}
+              >
+                <i className="fas fa-trash-alt mr-1" /> Delete
+              </button>
+            )
 
           default:
-            return data[header]
+            return <span style={{ fontWeight: header === 'username' ? 600 : 400, color: '#1E2430' }}>{data[header]}</span>
         }
       }
     }
 
     const renderOptions = (levelUser, username) => {
       return (
-        <select className="form-control" onChange={(e) => {
-          this.doChangeLevel(e.target.value, username)
-        }}>
+        <select
+          className="form-control form-control-sm"
+          style={{
+            borderRadius: '8px',
+            borderColor: '#E9C070',
+            minWidth: '120px',
+            fontWeight: 500,
+            color: '#1E2430'
+          }}
+          onChange={(e) => {
+            this.doChangeLevel(e.target.value, username)
+          }}
+        >
           <option selected={levelUser == 'admin' ? true : false}>
             admin
           </option>
@@ -133,16 +154,38 @@ class User extends Component {
       )
     }
 
-    return this.state.tableData.map((item) => (
-      <tr>{generateTableData(item)}</tr>
+    if (this.state.tableData.length === 0) {
+      return (
+        <tr>
+          <td colSpan={this.state.tableHeader.length || 5} className="text-center py-5 text-muted">
+            <i className="fas fa-users-slash fa-2x mb-2 d-block" style={{ color: '#E9C070' }} />
+            ไม่พบข้อมูลผู้ใช้งาน
+          </td>
+        </tr>
+      )
+    }
+
+    return this.state.tableData.map((item, idx) => (
+      <tr key={idx}>{generateTableData(item)}</tr>
     ))
   }
 
   renderTableHeader = () => {
-    return this.state.tableHeader.map((item) => (
-      <th className="sorting"
+    return this.state.tableHeader.map((item, idx) => (
+      <th
+        key={idx}
+        className="sorting"
         rowSpan={1}
-        colSpan={1}>
+        colSpan={1}
+        style={{
+          backgroundColor: '#1E2430',
+          color: '#E9C070',
+          borderBottom: '2px solid #C5953A',
+          padding: '14px 16px',
+          fontWeight: 600,
+          textTransform: 'capitalize'
+        }}
+      >
         {item}
       </th>
     ))
@@ -152,9 +195,9 @@ class User extends Component {
     Swal.fire({
       title: 'ต้องการเปลี่ยนระดับข้อมผู้ใช้งานหรือไม่?',
       showCancelButton: true,
+      confirmButtonColor: '#C5953A',
       confirmButtonText: `Change`,
     }).then(async (result) => {
-      /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         const changedData = {
           levelUser,
@@ -173,44 +216,57 @@ class User extends Component {
 
   render() {
     return (
-      <div className="content-wrapper">
+      <div className="content-wrapper" style={{ backgroundColor: '#F8F9FC', minHeight: '100vh', paddingBottom: '2rem' }}>
         <section className="content-header">
           <div className="container-fluid">
-            <div className="row mb-2">
+            <div className="row mb-3 align-items-center">
               <div className="col-sm-6">
-                <h1>User manage</h1>
+                <h1 className="m-0" style={{ color: '#1E2430', fontWeight: 700, fontSize: '1.75rem' }}>
+                  <i className="fas fa-users-cog mr-2" style={{ color: '#C5953A' }} />
+                  จัดการผู้ใช้งาน (User Management)
+                </h1>
               </div>
-              <div className="col-sm-6">
-                <ol className="breadcrumb float-sm-right">
-                  {/* <li className="breadcrumb-item"><a href="#">Home</a></li>
-                  <li className="breadcrumb-item active">General Form</li> */}
-                </ol>
+              <div className="col-sm-6 text-sm-right">
+                <span className="badge px-3 py-2" style={{ backgroundColor: '#1E2430', color: '#E9C070', borderRadius: '20px', fontSize: '0.9rem' }}>
+                  <i className="fas fa-user-check mr-1" /> ทั้งหมด {this.state.tableData.length} บัญชี
+                </span>
               </div>
             </div>
-          </div>{/* /.container-fluid */}
+          </div>
         </section>
         <section className="content">
           <div className="container-fluid">
             <div className="row">
               <div className="col-12">
-                <div className="card card-primary">
-                  <div className="card-header">
-
+                <div className="card shadow-sm border-0" style={{ borderRadius: '16px', overflow: 'hidden' }}>
+                  <div className="card-header d-flex align-items-center justify-content-between" style={{ backgroundColor: '#1E2430', color: '#FFFFFF', padding: '16px 24px', borderBottom: '3px solid #E9C070' }}>
+                    <h3 className="card-title m-0" style={{ fontWeight: 600, fontSize: '1.1rem', color: '#E9C070' }}>
+                      <i className="fas fa-id-badge mr-2" /> รายชื่อผู้ใช้งานในระบบ
+                    </h3>
                   </div>
-                  <div className="card-body">
-                    <div className="input-group input-group-sm">
-                      <input
-                        onChange={(e) => this.searchChanged(e)}
-                        type="search"
-                        className="form-control input-lg"
-                        placeholder="Enter search keyword"
-                        style={{ borderRadius: 10 }}
-                      />
+                  <div className="card-body" style={{ padding: '24px' }}>
+                    <div className="row mb-4">
+                      <div className="col-md-6 col-lg-5">
+                        <div className="input-group">
+                          <div className="input-group-prepend">
+                            <span className="input-group-text" style={{ backgroundColor: '#1E2430', color: '#E9C070', border: '1px solid #1E2430', borderTopLeftRadius: '10px', borderBottomLeftRadius: '10px' }}>
+                              <i className="fas fa-search" />
+                            </span>
+                          </div>
+                          <input
+                            onChange={(e) => this.searchChanged(e)}
+                            type="search"
+                            className="form-control"
+                            placeholder="ค้นหาชื่อผู้ใช้งาน (Search username)..."
+                            style={{ borderTopRightRadius: '10px', borderBottomRightRadius: '10px', height: '42px' }}
+                          />
+                        </div>
+                      </div>
                     </div>
-                    <div className="card-body table-responsive p-0">
+                    <div className="table-responsive" style={{ borderRadius: '12px', border: '1px solid #EDF2F7' }}>
                       <table
                         id="example2"
-                        className="table table-hover text-nowrap"
+                        className="table table-hover text-nowrap mb-0"
                         role="grid"
                         aria-describedby="example2_info"
                       >
@@ -224,9 +280,6 @@ class User extends Component {
                         </tbody>
                       </table>
                     </div>
-                  </div>
-                  <div className="card-footer">
-
                   </div>
                 </div>
               </div>

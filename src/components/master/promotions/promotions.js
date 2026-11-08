@@ -61,7 +61,7 @@ export default function Promotions(props) {
       text: "กรุณาตรวจสอบให้แน่ใจก่อนกดตกลง",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
+      confirmButtonColor: '#C5953A',
       cancelButtonColor: '#d33',
       confirmButtonText: 'ตกลง',
       cancelButtonText: 'ยกเลิก',
@@ -110,10 +110,9 @@ export default function Promotions(props) {
   }
   const renderAddNewPromotion = () => {
     const renderSuggestPromotionCategory = () => {
-      return listPromotion_category.map((item) => (
-        <option value={item.promotion_category}></option>
-      )
-      )
+      return listPromotion_category.map((item, idx) => (
+        <option key={idx} value={item.promotion_category}></option>
+      ))
     }
 
     const renderIsOpen = () => {
@@ -121,108 +120,133 @@ export default function Promotions(props) {
         return (
           <div className="col-sm-12">
             <div className="form-group">
-              <label>สถานะการขาย (Sales status)</label>
+              <label style={{ fontWeight: 600, color: '#1E2430' }}>
+                <i className="fas fa-toggle-on mr-1" style={{ color: '#C5953A' }} /> สถานะการขาย (Sales status)
+              </label>
               <div className="input-group">
-                <select className="form-control"
+                <select
+                  className="form-control"
+                  style={{ borderRadius: '10px', height: '42px' }}
                   value={isOpen}
                   onChange={(e) => {
                     setIsOpen(e.target.value)
-                  }}>
+                  }}
+                >
                   <option value="true">เปิดการขาย</option>
                   <option value="false">เลิกขาย</option>
                 </select>
               </div>
             </div>
           </div>
-
         )
       }
     }
     return (
       <Modal
         isOpen={isOpenModal}
-        style={{
-          content: {
-            transform: 'translate(0%, 0%)',
-            overlfow: 'scroll' // <-- This tells the modal to scrol
-          },
-        }}
-        className="content-wrapper"
+        onRequestClose={closeModal}
+        ariaHideApp={false}
       >
-        <div style={{ margin: '5%', marginTop: '10%', padding: '0%', backgroundColor: 'rgba(0,0,0,0)', overflow: 'auto' }}>
-          <div className={mode === 'add' ? "card card-success" : "card card-warning"}>
-            <div className="card-header">
-              <h2 className="card-title">{mode === 'add' ? 'เพิ่มข้อมูลโปรโมชั่นใหม่' : 'แก้ไขข้อมูลโปรโมชั่น'}</h2>
-              <div className="card-tools">
-                <button type="button" class="btn btn-tool" onClick={(e) => {
-                  e.preventDefault()
-                  closeModal();
-                }}><i class="fas fa-times"></i>
-                </button>
+        <div className="card shadow-lg border-0 m-0" style={{ borderRadius: '20px', overflow: 'hidden' }}>
+          <div
+            className="card-header d-flex align-items-center justify-content-between"
+            style={{
+              backgroundColor: '#1E2430',
+              color: '#E9C070',
+              padding: '18px 24px',
+              borderBottom: '3px solid #C5953A'
+            }}
+          >
+            <h3 className="card-title m-0" style={{ fontWeight: 600, fontSize: '1.25rem', color: '#E9C070' }}>
+              <i className={mode === 'add' ? "fas fa-plus-circle mr-2" : "fas fa-edit mr-2"} />
+              {mode === 'add' ? 'เพิ่มข้อมูลโปรโมชั่นใหม่' : 'แก้ไขข้อมูลโปรโมชั่น'}
+            </h3>
+            <button
+              type="button"
+              className="btn btn-sm"
+              style={{ color: '#E9C070', fontSize: '1.1rem' }}
+              onClick={(e) => {
+                e.preventDefault()
+                closeModal();
+              }}
+            >
+              <i className="fas fa-times"></i>
+            </button>
+          </div>
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            if (mode === 'add') {
+              doAddPromotions()
+            } else {
+              doUpdatePromotions()
+            }
+          }}>
+            <div className="card-body" style={{ padding: '24px' }}>
+              <div className="text-center mb-4">
+                <img src="/img/ALA_logo.png" alt="ALA Clinic" style={{ maxHeight: '80px', borderRadius: '12px' }} />
               </div>
-            </div>
-            <div className='card-body' style={{ textAlign: 'center' }}><img src="/img/ALA_logo.png" /></div>
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              if (mode === 'add') {
-                doAddPromotions()
-              } else {
-                doUpdatePromotions()
-              }
-            }}>
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-sm-6">
-                    <div className="form-group">
-                      <label>หมวดหมู่โปรโมชั่น (Promotion category)</label>
-                      <input type="text"
-                        required
-                        value={promotion_category}
-                        list="promotion_category"
-                        onChange={(e) => {
-                          setPromotion_category(e.target.value)
-                        }}
-                        className="form-control"
-                        placeholder="กรอกหมวดหมู่โปรโมชั่น (Enter promotion category)" />
-                    </div>
-                    <datalist id="promotion_category">
-                      {renderSuggestPromotionCategory()}
-                    </datalist>
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="form-group">
+                    <label style={{ fontWeight: 600, color: '#1E2430' }}>หมวดหมู่โปรโมชั่น (Promotion category)</label>
+                    <input
+                      type="text"
+                      required
+                      value={promotion_category}
+                      list="promotion_category"
+                      onChange={(e) => {
+                        setPromotion_category(e.target.value)
+                      }}
+                      className="form-control"
+                      style={{ borderRadius: '10px', height: '42px' }}
+                      placeholder="กรอกหมวดหมู่โปรโมชั่น"
+                    />
                   </div>
-                  <div className="col-sm-6">
-                    <div className="form-group">
-                      <label>ชื่อโปรโมชั่น (Promotion name)</label>
-                      <input type="text"
-                        required
-                        value={promotion_name}
-                        onChange={(e) => {
-                          setPromotion_name(e.target.value)
-                        }}
-                        className="form-control"
-                        placeholder="กรอกชื่อโปรโมชั่น (Enter promotion name)" />
-                    </div>
+                  <datalist id="promotion_category">
+                    {renderSuggestPromotionCategory()}
+                  </datalist>
+                </div>
+                <div className="col-sm-6">
+                  <div className="form-group">
+                    <label style={{ fontWeight: 600, color: '#1E2430' }}>ชื่อโปรโมชั่น (Promotion name)</label>
+                    <input
+                      type="text"
+                      required
+                      value={promotion_name}
+                      onChange={(e) => {
+                        setPromotion_name(e.target.value)
+                      }}
+                      className="form-control"
+                      style={{ borderRadius: '10px', height: '42px' }}
+                      placeholder="กรอกชื่อโปรโมชั่น"
+                    />
                   </div>
-                  <div className="col-sm-3">
-                    <div className="form-group">
-                      <label>จำนวนหน่วย (Unit quantity)</label>
-                      <input
-                        className="form-control"
-                        value={unit_quantity}
-                        type="number"
-                        step={1}
-                        min={0}
-                        onChange={(e) => {
-                          setUnit_quantity(e.target.value)
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-3">
-                    <label>ชื่อหน่วย (Unit_suffix)</label>
+                </div>
+                <div className="col-sm-3">
+                  <div className="form-group">
+                    <label style={{ fontWeight: 600, color: '#1E2430' }}>จำนวนหน่วย (Quantity)</label>
                     <input
                       className="form-control"
+                      style={{ borderRadius: '10px', height: '42px' }}
+                      value={unit_quantity}
+                      type="number"
+                      step={1}
+                      min={0}
+                      onChange={(e) => {
+                        setUnit_quantity(e.target.value)
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="col-sm-3">
+                  <div className="form-group">
+                    <label style={{ fontWeight: 600, color: '#1E2430' }}>ชื่อหน่วย (Unit)</label>
+                    <input
+                      className="form-control"
+                      style={{ borderRadius: '10px', height: '42px' }}
                       value={unit_suffix}
                       list="unit_suffix"
+                      placeholder="เช่น cc, ครั้ง"
                       onChange={(e) => {
                         setUnit_suffix(e.target.value)
                       }}
@@ -234,46 +258,71 @@ export default function Promotions(props) {
                       <option value="mg" />
                     </datalist>
                   </div>
-                  <div className="col-sm-6">
-                    <div className="form-group">
-                      <label>ราคาโปรโมชั่น (Promotion price)</label>
-                      <CurrencyFormat
-                        className="form-control"
-                        value={promotion_price} thousandSeparator={true} suffix={'฿'}
-                        isNumericString={true}
-                        onValueChange={(values) => {
-                          setPromotion_price(values.floatValue)
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-12">
-                    <div className="form-group">
-                      <label>รายละเอียดโปรโมชั่น (Promotion detail)</label>
-                      <textarea type="text"
-                        value={promotion_detail}
-                        onChange={(e) => {
-                          setPromotion_detail(e.target.value)
-                        }}
-                        className="form-control"
-                        placeholder="กรอกรายละเอียดโปรโมชั่น (Enter promotion detail)" />
-                    </div>
-                  </div>
-                  {renderIsOpen()}
                 </div>
+                <div className="col-sm-6">
+                  <div className="form-group">
+                    <label style={{ fontWeight: 600, color: '#1E2430' }}>ราคาโปรโมชั่น (Promotion price)</label>
+                    <CurrencyFormat
+                      className="form-control"
+                      style={{ borderRadius: '10px', height: '42px', fontWeight: 600, color: '#C5953A' }}
+                      value={promotion_price}
+                      thousandSeparator={true}
+                      suffix={' ฿'}
+                      isNumericString={true}
+                      onValueChange={(values) => {
+                        setPromotion_price(values.floatValue)
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="col-sm-12">
+                  <div className="form-group">
+                    <label style={{ fontWeight: 600, color: '#1E2430' }}>รายละเอียดโปรโมชั่น (Promotion detail)</label>
+                    <textarea
+                      type="text"
+                      rows={3}
+                      value={promotion_detail}
+                      onChange={(e) => {
+                        setPromotion_detail(e.target.value)
+                      }}
+                      className="form-control"
+                      style={{ borderRadius: '10px' }}
+                      placeholder="กรอกรายละเอียดโปรโมชั่น"
+                    />
+                  </div>
+                </div>
+                {renderIsOpen()}
               </div>
-              {/* /.card-body */}
-              <div className="card-footer">
-                <button type="submit" className={mode === 'add' ? "btn btn-primary" : "btn btn-warning"}>{mode === 'add' ? 'ตกลง (Submit)' : 'อัพเดท (Update)'}</button>
-                <button type="reset" className="btn btn-default float-right" onClick={(e) => {
+            </div>
+            <div className="card-footer d-flex justify-content-between align-items-center" style={{ backgroundColor: '#F8F9FC', padding: '16px 24px' }}>
+              <button
+                type="reset"
+                className="btn btn-light px-4"
+                style={{ borderRadius: '10px', fontWeight: 500, border: '1px solid #CBD5E0' }}
+                onClick={(e) => {
                   e.preventDefault()
                   closeModal();
-                }}>ยกเลิก (Cancel)</button>
-              </div>
-            </form>
-          </div>
+                }}
+              >
+                ยกเลิก (Cancel)
+              </button>
+              <button
+                type="submit"
+                className="btn px-4"
+                style={{
+                  backgroundColor: '#C5953A',
+                  color: '#FFFFFF',
+                  borderRadius: '10px',
+                  fontWeight: 600
+                }}
+              >
+                <i className="fas fa-save mr-1" />
+                {mode === 'add' ? 'ตกลง (Submit)' : 'อัพเดท (Update)'}
+              </button>
+            </div>
+          </form>
         </div>
-      </Modal >
+      </Modal>
     )
   }
 
@@ -312,7 +361,7 @@ export default function Promotions(props) {
         text: promotion_name_t,
         icon: 'question',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
+        confirmButtonColor: '#C5953A',
         cancelButtonColor: '#d33',
         confirmButtonText: 'ใช่, ลบเลย!',
         cancelButtonText: 'ยกเลิก',
@@ -323,7 +372,7 @@ export default function Promotions(props) {
             text: "ลบแล้วลบเลยนะ โปรดระวัง",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#C5953A',
             cancelButtonColor: '#d33',
             confirmButtonText: 'ยืนยัน',
             cancelButtonText: 'ยกเลิก',
@@ -363,7 +412,7 @@ export default function Promotions(props) {
       text: promotion_name,
       icon: 'question',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
+      confirmButtonColor: '#C5953A',
       cancelButtonColor: '#d33',
       confirmButtonText: 'ใช่, อัพเดทเลย!',
       cancelButtonText: 'ยกเลิก',
@@ -406,7 +455,7 @@ export default function Promotions(props) {
         text: promotion_name_t,
         icon: 'question',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
+        confirmButtonColor: '#C5953A',
         cancelButtonColor: '#d33',
         confirmButtonText: 'ตกลง!',
         cancelButtonText: 'ยกเลิก',
@@ -437,148 +486,159 @@ export default function Promotions(props) {
   const renderFindPromotionsData = () => {
     const renderPromotionsData = (item, idx) => {
       return (
-        <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
-          <div className="card bg-light d-flex flex-fill">
-            <div className="card-header text-muted border-bottom-0">
-              {/* {'promotion id :' + item.promotion_id} */}
+        <div key={idx} className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column mb-4">
+          <div className="card shadow-sm border-0 d-flex flex-fill m-0" style={{ borderRadius: '16px', overflow: 'hidden', borderTop: '4px solid #E9C070' }}>
+            <div className="card-header d-flex justify-content-between align-items-center" style={{ backgroundColor: '#1E2430', color: '#E9C070', padding: '12px 20px' }}>
+              <span className="badge px-2 py-1" style={{ backgroundColor: 'rgba(233, 192, 112, 0.2)', color: '#E9C070', borderRadius: '6px', fontSize: '0.8rem' }}>
+                <i className="fas fa-tag mr-1" /> {item.promotion_category || 'ทั่วไป'}
+              </span>
+              <span className="badge px-2 py-1" style={{ backgroundColor: item.isOpen ? 'rgba(40, 167, 69, 0.2)' : 'rgba(220, 53, 69, 0.2)', color: item.isOpen ? '#48BB78' : '#F56565', borderRadius: '6px', fontSize: '0.8rem' }}>
+                <i className={item.isOpen ? "fas fa-check-circle mr-1" : "fas fa-ban mr-1"} />
+                {item.isOpen ? 'เปิดการขาย' : 'เลิกขาย'}
+              </span>
             </div>
-            <div className="card-body pt-0">
-              <div className="row">
-                <div className="col-12">
-                  <h2 className="lead text-xl"><b>{item.promotion_name}</b></h2>
-                  <p className="text-muted ">
-                    <b>หมวดหมู่โปรโมชั่น: </b>{item.promotion_category}
-                    <br></br>
-                    <b>รายละเอียด: </b>{item.promotion_detail}
-                  </p>
-                  <ul className="ml-4 mb-0 fa-ul text-muted">
-                    <li className="ml-4 mb-0 fa-ul text-muted">
-                      <span className="fa-li">
-                        <i className="fas fa-hand-holding-medical" />
-                      </span>
-                      <div >จำนวน : <b>{item.unit_quantity + ' ' + item.unit_suffix}</b></div>
+            <div className="card-body" style={{ padding: '20px' }}>
+              <h5 className="mb-2" style={{ fontWeight: 700, color: '#1E2430', fontSize: '1.15rem' }}>
+                {item.promotion_name}
+              </h5>
+              <p className="text-muted mb-3" style={{ fontSize: '0.9rem', minHeight: '40px' }}>
+                {item.promotion_detail || '-'}
+              </p>
 
-                      <span className="fa-li">
-                        <i className="fab fa-bitcoin" />
-                      </span>
-                      <CurrencyFormat value={item.promotion_price} displayType={'text'} thousandSeparator={true} suffix={'฿'}
-                        renderText={value => <div style={{}}>ราคา : <b>{value}</b></div>} />
-                      <span className="fa-li">
-                        <i className="fab fa-shopify" />
-                      </span>
-                      <div >สถานะ : <b style={{ color: item.isOpen ? 'green' : 'red' }}>{item.isOpen ? 'เปิดการขาย' : 'เลิกขาย'}</b></div>
-                      <br></br>
-
-                      <span className="fa-li">
-                        <i className="fas fa-user-cog" />
-                      </span>
-                      <div className="text-sm">แก้ไขโดย : {item.updater}</div>
-                      <span className="fa-li">
-                        <i className="far fa-clock" />
-                      </span>
-                      <div className="text-sm">เพิ่มเมื่อ : {moment(item.createdAt).format('DD-MM-YYYY hh:mm')}</div>
-                      <span className="fa-li">
-                        <i className="fas fa-clock" />
-                      </span>
-                      <div className="text-sm">แก้ไขเมื่อ : {moment(item.updatedAt).format('DD-MM-YYYY hh:mm')}</div>
-                    </li>
-                  </ul>
+              <div className="p-3 mb-3" style={{ backgroundColor: '#F8F9FC', borderRadius: '12px', border: '1px solid #EDF2F7' }}>
+                <div className="d-flex justify-content-between align-items-center mb-2">
+                  <span className="text-muted" style={{ fontSize: '0.85rem' }}>
+                    <i className="fas fa-hand-holding-medical mr-2" style={{ color: '#55C5D9' }} /> จำนวนหน่วย:
+                  </span>
+                  <strong style={{ color: '#1E2430' }}>{item.unit_quantity + ' ' + item.unit_suffix}</strong>
+                </div>
+                <div className="d-flex justify-content-between align-items-center">
+                  <span className="text-muted" style={{ fontSize: '0.85rem' }}>
+                    <i className="fas fa-coins mr-2" style={{ color: '#C5953A' }} /> ราคาโปรโมชั่น:
+                  </span>
+                  <CurrencyFormat
+                    value={item.promotion_price}
+                    displayType={'text'}
+                    thousandSeparator={true}
+                    suffix={' ฿'}
+                    renderText={value => <strong style={{ color: '#C5953A', fontSize: '1.1rem' }}>{value}</strong>}
+                  />
                 </div>
               </div>
+
+              <div className="text-muted" style={{ fontSize: '0.78rem' }}>
+                <div><i className="fas fa-user-cog mr-1" /> แก้ไขโดย: {item.updater || '-'}</div>
+                <div><i className="far fa-clock mr-1" /> เพิ่มเมื่อ: {moment(item.createdAt).format('DD-MM-YYYY HH:mm')}</div>
+                <div><i className="fas fa-history mr-1" /> แก้ไขเมื่อ: {moment(item.updatedAt).format('DD-MM-YYYY HH:mm')}</div>
+              </div>
             </div>
-            <div className="card-footer">
-              <div >
-                <button className="btn btn-sm btn-warning" onClick={(e) => {
+            <div className="card-footer d-flex justify-content-between align-items-center" style={{ backgroundColor: '#FFFFFF', borderTop: '1px solid #EDF2F7', padding: '12px 20px' }}>
+              <button
+                className="btn btn-sm px-3"
+                style={{ backgroundColor: '#E9C070', color: '#1E2430', borderRadius: '8px', fontWeight: 600 }}
+                onClick={(e) => {
                   e.preventDefault()
                   prepareUpdatePromotion(item.promotion_id, item.promotion_name)
-                }}>
-                  <i className="fas fa-edit" />
-
-                  {" อัพเดทโปรโมชั่น"}
-                </button>
-                <button className="btn btn-sm btn-danger float-right" onClick={(e) => {
+                }}
+              >
+                <i className="fas fa-edit mr-1" /> อัพเดทโปรโมชั่น
+              </button>
+              <button
+                className="btn btn-sm btn-outline-danger px-3"
+                style={{ borderRadius: '8px', fontWeight: 500 }}
+                onClick={(e) => {
                   e.preventDefault()
                   doDeletePromotion(item.promotion_id, item.promotion_name)
-                }}>
-                  <i className="fas fa-trash-alt" />
-                  {" ลบโปรโมชั่น"}
-                </button>
-              </div>
+                }}
+              >
+                <i className="fas fa-trash-alt mr-1" /> ลบโปรโมชั่น
+              </button>
             </div>
           </div>
         </div>
-
       );
     }
     const renderCategories = () => {
-      return listPromotion_category.map((item) => (
-        <option value={item.promotion_category}>{item.promotion_category}</option>
-      )
-      )
+      return listPromotion_category.map((item, idx) => (
+        <option key={idx} value={item.promotion_category}>{item.promotion_category}</option>
+      ))
     }
     return (
-      <div className="card card-default">
-        <div className="card-body">
-          <div className="row">
-            <div className="col-2">
-              <div className="input-group">
-                <select className="form-control"
-                  value={isOpen}
-                  onChange={async (e) => {
-                    setIsOpen(e.target.value)
-                    doGetPromotions(e.target.value, selectedPromotion_category)
-                  }}>
-                  <option value="all">ทั้งหมด</option>
-                  <option value="true">เปิดการขาย</option>
-                  <option value="false">เลิกขาย</option>
-                </select>
-              </div>
+      <div className="card shadow-sm border-0" style={{ borderRadius: '16px', overflow: 'hidden' }}>
+        <div className="card-header" style={{ backgroundColor: '#1E2430', color: '#E9C070', padding: '16px 24px', borderBottom: '3px solid #E9C070' }}>
+          <div className="row align-items-center">
+            <div className="col-md-3 col-sm-6 mb-2 mb-md-0">
+              <label className="small mb-1" style={{ color: '#E9C070' }}>สถานะการขาย</label>
+              <select
+                className="form-control"
+                style={{ borderRadius: '10px', height: '40px' }}
+                value={isOpen}
+                onChange={async (e) => {
+                  setIsOpen(e.target.value)
+                  doGetPromotions(e.target.value, selectedPromotion_category)
+                }}
+              >
+                <option value="all">ทั้งหมด (All Status)</option>
+                <option value="true">เปิดการขาย (Active)</option>
+                <option value="false">เลิกขาย (Closed)</option>
+              </select>
             </div>
-            <div className="col-3">
-              <select className="form-control"
+            <div className="col-md-3 col-sm-6 mb-2 mb-md-0">
+              <label className="small mb-1" style={{ color: '#E9C070' }}>หมวดหมู่โปรโมชั่น</label>
+              <select
+                className="form-control"
+                style={{ borderRadius: '10px', height: '40px' }}
                 value={selectedPromotion_category}
                 onChange={async (e) => {
                   await setSelectedPromotion_category(e.target.value)
                   doGetPromotions(isOpen, e.target.value)
-                }}>
-                <option value="all">ทั้งหมด</option>
+                }}
+              >
+                <option value="all">ทั้งหมด (All Categories)</option>
                 {renderCategories()}
               </select>
             </div>
-            <div className="col-7">
-              <div className="input-group">
+            <div className="col-md-6 col-sm-12">
+              <label className="small mb-1" style={{ color: '#E9C070' }}>ค้นหา & จัดการ</label>
+              <div className="d-flex">
                 <input
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       searchChanged(e, isOpen, selectedPromotion_category)
                     }
-                  }
-                  }
+                  }}
                   onChange={(e) => searchChanged(e, isOpen, selectedPromotion_category)}
                   type="search"
-                  className="form-control input-lg"
-                  placeholder="ค้นหาโปรโมชั่น"
-                  style={{ borderRadius: 10, marginRight: 10 }}
+                  className="form-control mr-2"
+                  placeholder="ค้นหาชื่อหรือหมวดหมู่โปรโมชั่น..."
+                  style={{ borderRadius: '10px', height: '40px' }}
                 />
                 <button
                   onClick={(e) => {
                     e.preventDefault();
                     setMode('add')
                     setIsOpenModal(true)
-                  }} className="btn btn-success btn-sm">
-                  เพิ่มโปรโมชั่น
+                  }}
+                  className="btn text-nowrap px-3"
+                  style={{ backgroundColor: '#C5953A', color: '#FFFFFF', borderRadius: '10px', fontWeight: 600, height: '40px' }}
+                >
+                  <i className="fas fa-plus mr-1" /> เพิ่มโปรโมชั่น
                 </button>
               </div>
             </div>
           </div>
-
         </div>
-        <div className="card-body pb-0">
+        <div className="card-body" style={{ backgroundColor: '#F8F9FC', padding: '24px' }}>
           <div className="row">
             <FlatList
               list={PromotionsData}
               renderItem={renderPromotionsData}
-              renderWhenEmpty={() => { return <></> }}
+              renderWhenEmpty={() => (
+                <div className="col-12 text-center py-5 text-muted">
+                  <i className="fas fa-tags fa-3x mb-3 d-block" style={{ color: '#E9C070' }} />
+                  ไม่พบรายการโปรโมชั่น
+                </div>
+              )}
             />
           </div>
         </div>
@@ -587,26 +647,31 @@ export default function Promotions(props) {
   }
 
   return (
-    <div className="content-wrapper">
+    <div className="content-wrapper" style={{ backgroundColor: '#F8F9FC', minHeight: '100vh', paddingBottom: '2rem' }}>
       <div className="content-header">
         <div className="container-fluid">
-          <div className="row mb-2">
+          <div className="row mb-3 align-items-center">
             <div className="col-sm-6">
-              <h1 className="m-0">จัดการโปรโมชั่น</h1>
-            </div>{/* /.col */}
-            <div className="col-sm-6">
-
-            </div>{/* /.col */}
-          </div>{/* /.row */}
-        </div>{/* /.container-fluid */}
+              <h1 className="m-0" style={{ color: '#1E2430', fontWeight: 700, fontSize: '1.75rem' }}>
+                <i className="fas fa-tags mr-2" style={{ color: '#C5953A' }} />
+                จัดการโปรโมชั่น (Promotions)
+              </h1>
+            </div>
+            <div className="col-sm-6 text-sm-right">
+              <span className="badge px-3 py-2" style={{ backgroundColor: '#1E2430', color: '#E9C070', borderRadius: '20px', fontSize: '0.9rem' }}>
+                <i className="fas fa-list-ul mr-1" /> ทั้งหมด {PromotionsData.length} รายการ
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
       <section className="content">
         <div className="container-fluid">
-          <div className='rows'>
-            <div className='col-12'>
+          <div className="row">
+            <div className="col-12">
               {renderAddNewPromotion()}
             </div>
-            <div className='col-12'>
+            <div className="col-12">
               {renderFindPromotionsData()}
             </div>
           </div>

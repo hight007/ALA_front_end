@@ -77,6 +77,23 @@ export default function Patient_history(props) {
   //loading effect
   const [isLoad, setisLoad] = useState(false)
 
+  const getStatusBadgeClass = (status) => {
+    switch (status) {
+      case 'open':
+        return 'ala-status-badge ala-status-open';
+      case 'waiting':
+        return 'ala-status-badge ala-status-wait';
+      case 'diagnose':
+        return 'ala-status-badge ala-status-diagnose';
+      case 'operate':
+        return 'ala-status-badge ala-status-operate';
+      case 'payment':
+        return 'ala-status-badge ala-status-payment';
+      default:
+        return 'ala-status-badge ala-status-open';
+    }
+  }
+
   const debounceSearch = useRef(_.debounce((e, valueIsOpen, selected_category) => findPromotionsData(e, valueIsOpen, selected_category), 500)).current;
   const searchChanged = (e, valueIsOpen, selected_category) => {
     e.persist();
@@ -163,64 +180,86 @@ export default function Patient_history(props) {
 
   const renderPatientData = () => {
     return (
-      <div className="card card-dark">
-        {/* <div class="card-header">
-          <h3 class="card-title">ประวัติ</h3>
-        </div> */}
+      <div className="card" style={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(233, 192, 112, 0.35)', boxShadow: '0 6px 20px rgba(30, 36, 48, 0.06)' }}>
+        <div className="card-header d-flex align-items-center justify-content-between" style={{ background: 'linear-gradient(135deg, #1E2430 0%, #2A3242 100%)', color: '#E9C070', borderBottom: '2px solid #C5953A', padding: '0.9rem 1.25rem' }}>
+          <h3 className="card-title mb-0 font-weight-bold" style={{ fontSize: '1.05rem' }}>
+            <i className="fas fa-id-badge mr-2" /> ข้อมูลผู้ป่วย (Patient Profile)
+          </h3>
+          <span className={getStatusBadgeClass(patientData.status)}>{patientData.status}</span>
+        </div>
 
         <div className="card-body box-profile">
-          <h3 className="profile-username text-center">{patientData.first_name + ' ' + patientData.last_name}</h3>
-          <p className="text-muted text-center">{patientData.job}</p>
+          <h3 className="profile-username text-center font-weight-bold mb-1" style={{ color: '#1E2430', fontSize: '1.35rem' }}>
+            {patientData.first_name + ' ' + patientData.last_name}
+          </h3>
+          <p className="text-muted text-center mb-3">
+            <i className="fas fa-briefcase mr-1" style={{ color: '#C5953A' }} /> {patientData.job || 'ไม่ระบุอาชีพ'}
+          </p>
           <ul className="list-group list-group-unbordered mb-3">
-            <li class="list-group-item">
-              <b>เพศ </b> <label className="float-right text-muted text-center">{patientData.sex}</label>
+            <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+              <span><i className="fas fa-venus-mars mr-2 text-muted" /><b>เพศ</b></span>
+              <span className="text-muted font-weight-bold">{patientData.sex}</span>
             </li>
-            <li class="list-group-item">
-              <b>โทรศัพท์ </b> <label className="float-right text-muted text-center">{patientData.telephone_number}</label>
+            <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+              <span><i className="fas fa-phone-alt mr-2 text-muted" /><b>โทรศัพท์</b></span>
+              <span className="text-dark font-weight-bold">{patientData.telephone_number}</span>
             </li>
-            <li class="list-group-item">
-              <b>อายุ </b> <label className="float-right text-muted text-center">{moment().format('yyyy') - patientData.year_of_birth}</label>
+            <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+              <span><i className="fas fa-birthday-cake mr-2 text-muted" /><b>อายุ</b></span>
+              <span className="text-muted">{moment().format('yyyy') - patientData.year_of_birth} ปี</span>
             </li>
-            <li class="list-group-item">
-              <b>สถานะ </b> <label style={{ color: 'red' }} className={patientData.status != 'diagnose' ? 'float-right text-center' : 'float-right text-center text-muted'}>{patientData.status}</label>
+            <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+              <span><i className="fas fa-heartbeat mr-2 text-muted" /><b>สถานะ</b></span>
+              <span className={getStatusBadgeClass(patientData.status)}>{patientData.status}</span>
             </li>
-            <div className="card card-default" style={{ marginTop: 10 }}>
-              {/* /.card-header */}
-              <div className="card-body">
-                <strong><i className="fas fa-skull-crossbones" /> ยาหรืออาหารที่แพ้</strong>
-                <p className="text-muted">
-                  {patientData.drug_allergy == '' ? 'ไม่มี' : patientData.drug_allergy}
-                </p>
-                <hr />
-                <strong><i className="fas fa-pills" /> ยาที่ใช้ประจำ</strong>
-                <p className="text-muted">
-                  {patientData.drug_allergy == '' ? 'ไม่มี' : patientData.regular_medication}
-                </p>
-                <hr />
-                <strong><i className="fas fa-disease" /> โรคประจำตัว</strong>
-                <p className="text-muted">
-                  {patientData.drug_allergy == '' ? 'ไม่มี' : patientData.chronic_disease}
-                </p>
-                <hr />
-                <b>นัดหมาย </b> <label className={'float-right text-center text-muted'}><Link to={"/appointment/" + patientData.patient_id} className="btn btn-primary btn-xs">นัดหมาย</Link></label>
-
-              </div>
-              {/* /.card-body */}
-            </div>
-
           </ul>
-        </div>
-        {/* /.card-body */}
 
-        <div className="card-footer">
+          <div className="card mb-0" style={{ borderRadius: '12px', backgroundColor: '#FAF8F5', border: '1px solid rgba(233, 192, 112, 0.4)' }}>
+            <div className="card-body p-3">
+              <strong className="d-block mb-1" style={{ color: '#bd2130' }}>
+                <i className="fas fa-skull-crossbones mr-1" /> ยาหรืออาหารที่แพ้
+              </strong>
+              <p className="text-muted mb-2">
+                {patientData.drug_allergy == '' ? 'ไม่มี' : patientData.drug_allergy}
+              </p>
+              <hr className="my-2" />
+              <strong className="d-block mb-1" style={{ color: '#1b7f91' }}>
+                <i className="fas fa-pills mr-1" /> ยาที่ใช้ประจำ
+              </strong>
+              <p className="text-muted mb-2">
+                {patientData.drug_allergy == '' ? 'ไม่มี' : patientData.regular_medication}
+              </p>
+              <hr className="my-2" />
+              <strong className="d-block mb-1" style={{ color: '#966919' }}>
+                <i className="fas fa-disease mr-1" /> โรคประจำตัว
+              </strong>
+              <p className="text-muted mb-2">
+                {patientData.drug_allergy == '' ? 'ไม่มี' : patientData.chronic_disease}
+              </p>
+              <hr className="my-2" />
+              <div className="d-flex justify-content-between align-items-center pt-1">
+                <b><i className="fas fa-calendar-check mr-1" style={{ color: '#C5953A' }} /> นัดหมาย</b>
+                <Link to={"/appointment/" + patientData.patient_id} className="btn btn-sm px-3" style={{ background: 'linear-gradient(135deg, #E9C070 0%, #C5953A 100%)', color: '#1E2430', fontWeight: 600, borderRadius: '8px' }}>
+                  <i className="fas fa-calendar-alt mr-1" /> จัดการนัดหมาย
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="card-footer bg-white d-flex justify-content-between align-items-center py-3">
           <button onClick={(e) => {
             e.preventDefault();
             renderAddHistoricalData()
-          }} className="btn btn-primary">เพิ่มประวัติย้อนหลัง</button>
+          }} className="btn btn-outline-dark px-3" style={{ borderRadius: '10px', fontWeight: 600 }}>
+            <i className="fas fa-history mr-1" style={{ color: '#C5953A' }} /> เพิ่มประวัติย้อนหลัง
+          </button>
           <button onClick={(e) => {
             e.preventDefault();
             renderAddDiagnoseData()
-          }} className="btn btn-success float-right">เริ่มการวินิจฉัย</button>
+          }} className="btn px-3" style={{ background: 'linear-gradient(135deg, #55C5D9 0%, #3aa8bc 100%)', color: '#fff', fontWeight: 600, borderRadius: '10px', border: 'none' }}>
+            <i className="fas fa-stethoscope mr-1" /> เริ่มการวินิจฉัย
+          </button>
         </div>
       </div>
     )
@@ -303,21 +342,21 @@ export default function Patient_history(props) {
         if (images_id_list) {
           if (images_id_list[history_id]) {
             return images_id_list[history_id].map((item) => (
-              <div className={isMobile ? "col-6" : "col-4"} >
-                <div className="card card-default">
-                  <div className="card-footer">
-                    <a target="_blank" href={apiUrl + server.CUSTOMER_FULL_IMAGE_URL + '/' + item} className="btn btn-primary btn-xs">
-                      <i class="far fa-file-image"></i>
+              <div className={isMobile ? "col-6 mb-2" : "col-4 mb-2"} key={item}>
+                <div className="card mb-0" style={{ borderRadius: '10px', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.08)' }}>
+                  <div className="card-header bg-light py-1 px-2 d-flex justify-content-between align-items-center">
+                    <a target="_blank" rel="noreferrer" href={apiUrl + server.CUSTOMER_FULL_IMAGE_URL + '/' + item} className="btn btn-outline-primary btn-xs" title="ดูภาพขนาดเต็ม">
+                      <i className="far fa-file-image"></i>
                     </a>
                     <button onClick={() => {
                       doDeleteCustomerImages(item)
-                    }} style={{ marginBottom: 5 }} className="btn btn-danger btn-xs float-right">
-                      <i class="fas fa-times"></i>
+                    }} className="btn btn-outline-danger btn-xs ml-auto" title="ลบรูปภาพ">
+                      <i className="fas fa-times"></i>
                     </button>
                   </div>
-                  <div className="card-body">
+                  <div className="card-body p-1">
                     <Zoom>
-                      <img style={{ width: '100%', objectFit: 'cover' }} src={apiUrl + server.CUSTOMER_IMAGE_URL + '/' + item} />
+                      <img style={{ width: '100%', borderRadius: '6px', objectFit: 'cover' }} src={apiUrl + server.CUSTOMER_IMAGE_URL + '/' + item} alt="Treatment" />
                     </Zoom>
                   </div>
                 </div>
@@ -336,41 +375,56 @@ export default function Patient_history(props) {
           }
         }
 
-
-
         return listTimeLineOnDate.map(item => (
-          <div>
-            <i className="fas fa-hand-holding-medical bg-success" />
-            <div class="timeline-item">
-              <span class="time">
-                <i class="fas fa-clock"></i>{moment(item.updatedAt).format('HH:mm')}</span>
-              <h2 class="timeline-header"><b>{item.promotionMaster.promotion_name}</b></h2>
-              <div class="timeline-body">
-                <p>{item.promotionMaster.promotion_detail}</p>
-                {item.details !== '' ? <p>รายละเอียด : {item.details}</p> : <></>}
-                <p>ราคาลูกค้า : <CurrencyFormat value={item.promotion_price} displayType={'text'} thousandSeparator={true} suffix={'฿'} renderText={value => <b style={{ color: 'blue' }}>{value}</b>} />
-                  {item.discount > 0 ? ' , ราคาที่ลด : ' + item.discount : ''}</p>
-                {item.agent !== '' ? <p>ผู้แนะนำ : {item.agent}</p> : <></>}
-                <p>อัพเดทโดย : {item.updater}</p>
-                <div className="row">
+          <div key={item.history_id}>
+            <i className="fas fa-hand-holding-medical" style={{ backgroundColor: '#55C5D9', color: '#fff' }} />
+            <div className="timeline-item">
+              <span className="time">
+                <i className="fas fa-clock mr-1"></i>{moment(item.updatedAt).format('HH:mm')} น.
+              </span>
+              <h2 className="timeline-header" style={{ backgroundColor: '#FAF8F5', borderBottom: '1px solid rgba(233,192,112,0.25)', color: '#1E2430' }}>
+                <i className="fas fa-spa mr-2" style={{ color: '#C5953A' }} />
+                <b>{item.promotionMaster.promotion_name}</b>
+              </h2>
+              <div className="timeline-body">
+                <p className="text-muted mb-2">{item.promotionMaster.promotion_detail}</p>
+                {item.details !== '' ? (
+                  <p className="mb-2">
+                    <span className="font-weight-bold text-dark"><i className="fas fa-file-alt mr-1 text-muted" />รายละเอียด : </span>
+                    {item.details}
+                  </p>
+                ) : <></>}
+                <p className="mb-2">
+                  <span className="font-weight-bold text-dark"><i className="fas fa-tag mr-1" style={{ color: '#C5953A' }} />ราคาลูกค้า : </span>
+                  <CurrencyFormat value={item.promotion_price} displayType={'text'} thousandSeparator={true} suffix={' ฿'} renderText={value => <b style={{ color: '#1b7f91', fontSize: '1.05rem' }}>{value}</b>} />
+                  {item.discount > 0 ? (
+                    <span className="badge badge-success ml-2 px-2 py-1">ส่วนลด {item.discount} ฿</span>
+                  ) : ''}
+                </p>
+                <div className="d-flex flex-wrap text-muted" style={{ fontSize: '0.85rem' }}>
+                  {item.agent !== '' ? <span className="mr-3"><i className="fas fa-user-tie mr-1" />ผู้แนะนำ : <b>{item.agent}</b></span> : <></>}
+                  <span><i className="fas fa-user-check mr-1" />อัพเดทโดย : <b>{item.updater}</b></span>
+                </div>
+                <div className="row mt-2">
                   {renderCustomerImages(item.history_id)}
                 </div>
               </div>
-              <div class="timeline-footer">
-                <div>
-                  <button onClick={(e) => {
-                    e.preventDefault();
-                    addImage(item.history_id)
-                  }}
-                    style={{ marginLeft: 5 }} className="btn btn-success btn-xs">
-                    <i className="fas fa-images" />
-
-                  </button>
-                  <button onClick={(e) => {
-                    e.preventDefault();
-                    doDeleteTimeLine(item.history_id)
-                  }} style={{ marginLeft: 5 }} className="btn btn-danger btn-xs float-right"><i className="fas fa-trash-alt" /></button>
-                </div>
+              <div className="timeline-footer bg-light px-3 py-2 d-flex justify-content-between align-items-center">
+                <button onClick={(e) => {
+                  e.preventDefault();
+                  addImage(item.history_id)
+                }}
+                  className="btn btn-sm px-3"
+                  style={{ backgroundColor: '#55C5D9', color: '#fff', borderRadius: '8px', fontWeight: 600 }}
+                >
+                  <i className="fas fa-images mr-1" /> เพิ่มรูปภาพ
+                </button>
+                <button onClick={(e) => {
+                  e.preventDefault();
+                  doDeleteTimeLine(item.history_id)
+                }} className="btn btn-outline-danger btn-sm ml-auto" style={{ borderRadius: '8px' }}>
+                  <i className="fas fa-trash-alt mr-1" /> ลบประวัติ
+                </button>
               </div>
             </div>
           </div>
@@ -379,27 +433,42 @@ export default function Patient_history(props) {
       }
 
       return distinctDateTimeline.map(item => (
-        <>
-          <div class="time-label">
-            <span class="bg-primary">{moment(item).format('DD MMM(MM) YYYY')}</span>
+        <React.Fragment key={item}>
+          <div className="time-label">
+            <span className="px-3 py-1" style={{ backgroundColor: '#1E2430', color: '#E9C070', borderRadius: '20px', border: '1px solid #C5953A', fontWeight: 600 }}>
+              <i className="far fa-calendar-alt mr-1" /> {moment(item).format('DD MMM (MM) YYYY')}
+            </span>
           </div>
           {renderTimeLineOnDate(item)}
-        </>
+        </React.Fragment>
       ))
     }
   }
   const renderPatientHistory = () => {
     return (
-      <div className="card card-primary">
+      <div className="card" style={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(233, 192, 112, 0.35)', boxShadow: '0 6px 20px rgba(30, 36, 48, 0.06)' }}>
+        <div className="card-header d-flex align-items-center justify-content-between" style={{ background: 'linear-gradient(135deg, #1E2430 0%, #2A3242 100%)', color: '#E9C070', borderBottom: '2px solid #C5953A', padding: '0.9rem 1.25rem' }}>
+          <h3 className="card-title mb-0 font-weight-bold" style={{ fontSize: '1.05rem' }}>
+            <i className="fas fa-stream mr-2" /> ประวัติการรักษา (Treatment Timeline)
+          </h3>
+          <button onClick={(e) => {
+            e.preventDefault();
+            renderAddDiagnoseData()
+          }} className="btn btn-sm px-3 ml-auto" style={{ background: 'linear-gradient(135deg, #E9C070 0%, #C5953A 100%)', color: '#1E2430', fontWeight: 700, borderRadius: '8px', border: 'none' }}>
+            <i className="fas fa-stethoscope mr-1" /> เริ่มการวินิจฉัย
+          </button>
+        </div>
         <div className="card-body">
           <div className="timeline">
             {renderTimeLine()}
             <div>
-              <i class="fas fa-clock bg-gray"></i>
+              <i className="fas fa-clock bg-gray"></i>
               <button onClick={(e) => {
                 e.preventDefault();
                 renderAddDiagnoseData()
-              }} className="btn btn-success float-right">เริ่มการวินิจฉัย</button>
+              }} className="btn px-4 float-right" style={{ background: 'linear-gradient(135deg, #55C5D9 0%, #3aa8bc 100%)', color: '#fff', fontWeight: 600, borderRadius: '10px', border: 'none' }}>
+                <i className="fas fa-stethoscope mr-1" /> เริ่มการวินิจฉัย
+              </button>
             </div>
           </div>
         </div>
@@ -450,7 +519,7 @@ export default function Patient_history(props) {
     const renderPromotions = () => {
       const searchPromotions = () => {
         return listPromotions.map((item) => (
-          <div className="form-check">
+          <div className="form-check ala-promo-item" key={item.promotion_id}>
             <input className="form-check-input"
               type="radio"
               checked={resetRadio ? false : null}
@@ -463,35 +532,40 @@ export default function Patient_history(props) {
                 setPromotion_name(item.promotion_name)
                 findPromotionPrice(item.promotion_id)
               }} />
-            <label className="form-check-label"><b>{item.promotion_name + ' ' + item.unit_quantity + ' ' + item.unit_suffix + ' '}</b>
-              <CurrencyFormat value={item.promotion_price} displayType={'text'} thousandSeparator={true} suffix={'฿'} renderText={value => <label>{','}<b style={{ color: 'blue' }}>{' ' + value}</b></label>} />
-              {' , ' + item.promotion_detail}</label>
+            <label className="form-check-label d-block">
+              <b className="text-dark">{item.promotion_name + ' ' + item.unit_quantity + ' ' + item.unit_suffix + ' '}</b>
+              <CurrencyFormat value={item.promotion_price} displayType={'text'} thousandSeparator={true} suffix={'฿'} renderText={value => <span className="ml-1 badge px-2 py-1" style={{ backgroundColor: 'rgba(85,197,217,0.16)', color: '#1b7f91', fontSize: '0.85rem' }}>{value}</span>} />
+              <span className="text-muted ml-2">{item.promotion_detail}</span>
+            </label>
           </div>
         ))
       }
       const renderCategories = () => {
         return listPromotion_category.map((item) => (
-          <option value={item.promotion_category}>{item.promotion_category}</option>
+          <option key={item.promotion_category} value={item.promotion_category}>{item.promotion_category}</option>
         )
         )
       }
       return (
         <>
           <div className="form-group">
-            <label>โปรโมชั่น</label>
+            <label className="font-weight-bold text-dark">
+              <i className="fas fa-tags mr-1" style={{ color: '#C5953A' }} /> เลือกหมวดหมู่และค้นหาโปรโมชั่น
+            </label>
             <div className="row">
-              <div className="col-4">
+              <div className="col-sm-4 mb-2 mb-sm-0">
                 <select className="form-control"
+                  style={{ borderRadius: '10px', borderColor: '#E9C070' }}
                   value={selectedPromotion_category}
                   onChange={async (e) => {
                     await setSelectedPromotion_category(e.target.value)
                     doGetPromotions(mode == 'diagnose' ? 'true' : 'all', e.target.value)
                   }}>
-                  <option value="all">ทั้งหมด</option>
+                  <option value="all">หมวดหมู่ทั้งหมด</option>
                   {renderCategories()}
                 </select>
               </div>
-              <div className="col-8">
+              <div className="col-sm-8">
                 <input
                   onChange={(e) => {
                     e.preventDefault()
@@ -503,19 +577,20 @@ export default function Patient_history(props) {
                       setResetRadio(true)
                       searchChanged(e, mode == 'diagnose' ? 'true' : 'all', selectedPromotion_category)
                     }
-                  }
-                  }
+                  }}
                   type="search"
-                  className="form-control input-lg"
-                  placeholder="ค้นหาโปรโมชั่น"
-                  style={{ borderRadius: 10, marginRight: 10 }}
+                  className="form-control"
+                  placeholder="พิมพ์ชื่อโปรโมชั่นเพื่อค้นหา..."
+                  style={{ borderRadius: '10px', borderColor: '#E9C070' }}
                 />
               </div>
             </div>
           </div>
-          <div className="form-group">
-            {searchPromotions()}
-          </div>
+          {listPromotions.length > 0 && (
+            <div className="form-group ala-promo-list-box">
+              {searchPromotions()}
+            </div>
+          )}
         </>
       )
     }
@@ -531,7 +606,7 @@ export default function Patient_history(props) {
 
     const renderAgentList = () => {
       return listAgent.map((item) => (
-        <option value={item.username}>{item.username}</option>
+        <option key={item.username} value={item.username}>{item.username}</option>
       ))
     }
 
@@ -612,53 +687,31 @@ export default function Patient_history(props) {
       if (listSelectedPromotions.length > 0) {
         const renderTableHeader = () => {
           return (
-            <tr role="row">
-              <th className="sorting" rowSpan={2} colSpan={1}>
-                ชื่อโปรโมชั่น
-              </th>
-              <th className="sorting" rowSpan={1} colSpan={1}>
-                ราคาเริ่มต้น
-              </th>
-              <th className="sorting" rowSpan={1} colSpan={1}>
-                ราคาลูกค้า
-              </th>
-              <th className="sorting" rowSpan={1} colSpan={1}>
-                รายละเอียด
-              </th>
-              <th className="sorting" rowSpan={1} colSpan={1}>
-                ผู้แนะนำ
-              </th>
-              <th className="sorting" rowSpan={1} colSpan={1}>
-                เครื่องมือ
-              </th>
+            <tr role="row" style={{ backgroundColor: '#1E2430', color: '#E9C070' }}>
+              <th className="sorting">ชื่อโปรโมชั่น</th>
+              <th className="sorting">ราคาเริ่มต้น</th>
+              <th className="sorting">ราคาลูกค้า</th>
+              <th className="sorting">รายละเอียด</th>
+              <th className="sorting">ผู้แนะนำ</th>
+              <th className="sorting text-center">เครื่องมือ</th>
             </tr>
           )
         }
 
         const renderTableRow = () => {
           return listSelectedPromotions.map((item, index) => (
-            <tr>
-              <td>
-                {item.promotion_name}
-              </td>
-              <td>
-                {item.promotion_startPrice}
-              </td>
-              <td>
-                {item.promotion_price}
-              </td>
-              <td>
-                {item.details}
-              </td>
-              <td>
-                {item.agent}
-              </td>
+            <tr key={index}>
+              <td className="font-weight-bold">{item.promotion_name}</td>
+              <td>{item.promotion_startPrice}</td>
+              <td className="font-weight-bold" style={{ color: '#1b7f91' }}>{item.promotion_price}</td>
+              <td>{item.details}</td>
+              <td>{item.agent || '-'}</td>
               <td className="text-center">
-                <button class="btn btn-danger" onClick={(e) => {
+                <button className="btn btn-outline-danger btn-sm" style={{ borderRadius: '8px' }} onClick={(e) => {
                   e.preventDefault()
                   removeListSelectedPromotions(index)
                 }}>
-                  <i className="fas fa-trash-alt" color='danger' />
+                  <i className="fas fa-trash-alt" />
                 </button>
               </td>
             </tr>
@@ -666,10 +719,10 @@ export default function Patient_history(props) {
         }
 
         return (
-          <div className="card-body table-responsive p-0">
+          <div className="table-responsive mt-2" style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.08)' }}>
             <table
               id="example2"
-              className="table table-hover text-nowrap"
+              className="table table-hover text-nowrap mb-0"
               role="grid"
               aria-describedby="example2_info"
             >
@@ -783,36 +836,49 @@ export default function Patient_history(props) {
         style={{
           content: {
             transform: 'translate(0%, 0%)',
-            overlfow: 'scroll' // <-- This tells the modal to scrol
+            overflow: 'auto',
+            borderRadius: '20px',
+            border: 'none',
+            padding: 0,
+            backgroundColor: 'transparent'
           },
         }}
-        className="content-wrapper"
+        className="ReactModal__Content"
       >
-        <div style={{ margin: '5%', marginTop: '10%', padding: '0%', backgroundColor: 'rgba(0,0,0,0)', overflow: 'auto' }}>
-          <div className={mode == 'diagnose' ? 'card card-success' : 'card card-primary'}>
-            <div className="card-header">
-              <h2 className="card-title">{mode == 'diagnose' ? 'เริ่มการวินิจฉัย' : 'เพิ่มข้อมูลประวัติคนไข้ย้อนหลัง'}</h2>
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool" onClick={(e) => {
+        <div style={{ padding: '0.5rem', backgroundColor: 'transparent', overflow: 'auto' }}>
+          <div className="card mb-0" style={{ borderRadius: '20px', overflow: 'hidden', border: '1px solid #E9C070', boxShadow: '0 20px 50px rgba(0,0,0,0.3)' }}>
+            <div className="card-header d-flex align-items-center justify-content-between" style={{ background: 'linear-gradient(135deg, #1E2430 0%, #2A3242 100%)', color: '#E9C070', borderBottom: '2px solid #C5953A', padding: '1rem 1.25rem' }}>
+              <h3 className="card-title mb-0 font-weight-bold" style={{ fontSize: '1.2rem' }}>
+                <i className={mode == 'diagnose' ? 'fas fa-stethoscope mr-2' : 'fas fa-history mr-2'} />
+                {mode == 'diagnose' ? 'เริ่มการวินิจฉัย (Clinical Diagnosis)' : 'เพิ่มข้อมูลประวัติคนไข้ย้อนหลัง (Add Historical Record)'}
+              </h3>
+              <div className="card-tools ml-auto">
+                <button type="button" className="btn btn-tool text-white" onClick={(e) => {
                   e.preventDefault()
                   closeModal();
-                }}><i class="fas fa-times"></i>
+                }}><i className="fas fa-times" style={{ fontSize: '1.1rem' }}></i>
                 </button>
               </div>
             </div>
-            <div className='card-body' style={{ textAlign: 'center' }}><img src="/img/ALA_logo.png" /></div>
-            <div className='card-body'>
+            <div className="card-body pb-0 pt-3" style={{ textAlign: 'center', background: 'linear-gradient(180deg, rgba(233,192,112,0.08) 0%, rgba(255,255,255,0) 100%)' }}>
+              <img src="/img/ALA_logo.png" alt="ALA Clinic" style={{ maxHeight: '64px', objectFit: 'contain' }} />
+            </div>
+            <div className='card-body pt-3'>
               <div className='row'>
-                <div className='col-6'>
+                <div className='col-sm-6'>
                   <div className="form-group">
-                    <label>วันที่ทำหัตถการ</label>
+                    <label className="font-weight-bold text-dark">
+                      <i className="far fa-calendar-alt mr-1" style={{ color: '#C5953A' }} /> วันที่ทำหัตถการ
+                    </label>
                     <DatePicker disabled={mode == 'diagnose' ? true : false} className="form-control" selected={operate_date} onChange={(date) => setOperate_date(date)} />
                   </div>
                 </div>
-                <div className='col-6'>
+                <div className='col-sm-6'>
                   <div className="form-group">
-                    <label>ผู้แนะนำ</label>
-                    <select className="form-control" onChange={(e) => {
+                    <label className="font-weight-bold text-dark">
+                      <i className="fas fa-user-tie mr-1" style={{ color: '#C5953A' }} /> ผู้แนะนำ
+                    </label>
+                    <select className="form-control" style={{ borderRadius: '10px' }} onChange={(e) => {
                       setAgent(e.target.value)
                     }}>
                       <option value=''>ไม่มี</option>
@@ -823,11 +889,12 @@ export default function Patient_history(props) {
                 <div className='col-12'>
                   {renderPromotions()}
                 </div>
-                <div className='col-6'>
+                <div className='col-sm-6'>
                   <div className="form-group">
-                    <label>ราคาโปรโมชั่นเริ่มต้น</label>
+                    <label className="font-weight-bold text-dark">ราคาโปรโมชั่นเริ่มต้น</label>
                     <CurrencyFormat
                       className="form-control"
+                      style={{ borderRadius: '10px' }}
                       value={promotion_startPrice}
                       thousandSeparator={true} suffix={'฿'}
                       isNumericString={true}
@@ -835,11 +902,12 @@ export default function Patient_history(props) {
                     />
                   </div>
                 </div>
-                <div className='col-6'>
+                <div className='col-sm-6'>
                   <div className="form-group">
-                    <label>ราคาโปรโมชั่นของลูกค้า</label>
+                    <label className="font-weight-bold text-dark">ราคาโปรโมชั่นของลูกค้า</label>
                     <CurrencyFormat
                       className="form-control"
+                      style={{ borderRadius: '10px', borderColor: '#55C5D9', fontWeight: 600 }}
                       value={promotion_price} thousandSeparator={true} suffix={'฿'}
                       isNumericString={true}
                       onValueChange={(values) => {
@@ -850,51 +918,58 @@ export default function Patient_history(props) {
                 </div>
                 <div className='col-12'>
                   <div className="form-group">
-                    <label>รายละเอียด</label>
-                    <textarea className='form-control' value={details} onChange={(e) => {
+                    <label className="font-weight-bold text-dark">รายละเอียดเพิ่มเติม</label>
+                    <textarea className='form-control' rows="2" style={{ borderRadius: '10px' }} value={details} onChange={(e) => {
                       setDetails(e.target.value)
                     }} />
                   </div>
                 </div>
                 <div className='col-12'>
-                  <button type="submit" className='btn btn-success' onClick={(e) => {
+                  <button type="submit" className='btn py-2' onClick={(e) => {
                     e.preventDefault();
                     addListSelectedPromotions()
-                  }} style={{ width: '100%' }}>เพิ่มโปรโมชั่น</button>
+                  }} style={{ width: '100%', background: 'linear-gradient(135deg, #E9C070 0%, #C5953A 100%)', color: '#1E2430', fontWeight: 700, borderRadius: '10px', border: 'none' }}>
+                    <i className="fas fa-plus-circle mr-2" /> เพิ่มโปรโมชั่นในรายการ
+                  </button>
                 </div>
               </div>
-              <div className="card-body">
-                <div className='row'>
-                  <h2 className="card-title">รวมผล Promotion ของลูกค้าวันที่ {moment(operate_date).format('DD/MM/YYYY')}</h2>
-                  <div className="col-12">
-                    {renderListSelectedPromotions()}
-                  </div>
-                </div>
+              <div className="mt-4">
+                <h5 className="font-weight-bold mb-2" style={{ color: '#1E2430' }}>
+                  <i className="fas fa-clipboard-list mr-2" style={{ color: '#C5953A' }} />
+                  รวมผล Promotion ของลูกค้าวันที่ {moment(operate_date).format('DD/MM/YYYY')}
+                </h5>
+                {renderListSelectedPromotions()}
               </div>
             </div>
 
-            <div className="card-footer">
-              <div className="row">
+            <div className="card-footer bg-light px-4 py-3">
+              <div className="row text-center mb-3 p-2" style={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid rgba(233,192,112,0.35)' }}>
                 <div className="col-sm-4">
-                  <b>รวมราคาทั้งหมด : {totalPromotionsPrice().totalPromotionsStartPrice}</b>
+                  <span className="text-muted d-block" style={{ fontSize: '0.85rem' }}>รวมราคาทั้งหมด</span>
+                  <b className="text-dark" style={{ fontSize: '1.1rem' }}>{totalPromotionsPrice().totalPromotionsStartPrice} ฿</b>
                 </div>
                 <div className="col-sm-4">
-                  <b>รวมราคาของลูกค้า : <label style={{ color: 'blue' }}>{totalPromotionsPrice().totalPromotionsPrice}</label></b>
+                  <span className="text-muted d-block" style={{ fontSize: '0.85rem' }}>รวมราคาของลูกค้า</span>
+                  <b style={{ color: '#1b7f91', fontSize: '1.2rem' }}>{totalPromotionsPrice().totalPromotionsPrice} ฿</b>
                 </div>
                 <div className="col-sm-4">
-                  <b>ราคาที่ประหยัดไป : {totalPromotionsPrice().totalPromotionsDiscountPrice}</b>
+                  <span className="text-muted d-block" style={{ fontSize: '0.85rem' }}>ราคาที่ประหยัดไป</span>
+                  <b className="text-success" style={{ fontSize: '1.1rem' }}>{totalPromotionsPrice().totalPromotionsDiscountPrice} ฿</b>
                 </div>
               </div>
-              <br></br>
-              <div>
+              <div className="d-flex justify-content-between align-items-center">
                 <button onClick={(e) => {
                   e.preventDefault()
                   submitPromotions()
-                }} className="btn btn-primary">ตกลง</button>
+                }} className="btn px-4 py-2" style={{ background: 'linear-gradient(135deg, #55C5D9 0%, #3aa8bc 100%)', color: '#fff', fontWeight: 700, borderRadius: '10px', border: 'none' }}>
+                  <i className="fas fa-check-circle mr-1" /> ยืนยันบันทึกข้อมูล (Submit)
+                </button>
                 <button onClick={(e) => {
                   e.preventDefault();
                   closeModal();
-                }} className="btn btn-default float-right">ยกเลิก</button>
+                }} className="btn btn-secondary px-4 py-2" style={{ borderRadius: '10px' }}>
+                  ยกเลิก
+                </button>
               </div>
             </div>
 
@@ -944,8 +1019,8 @@ export default function Patient_history(props) {
   const renderProgress = () => {
     if (progress > 0) {
       return (
-        <div style={{ width: '100%' }}>
-          <ProgressBar width='100%' bgColor='blue' completed={progress} />
+        <div className="mt-3" style={{ width: '100%' }}>
+          <ProgressBar width='100%' bgColor='#55C5D9' completed={progress} />
         </div>
       )
     }
@@ -957,39 +1032,49 @@ export default function Patient_history(props) {
         style={{
           content: {
             transform: 'translate(0%, 0%)',
-            overlfow: 'scroll' // <-- This tells the modal to scrol
+            overflow: 'auto',
+            borderRadius: '20px',
+            border: 'none',
+            padding: 0,
+            backgroundColor: 'transparent'
           },
         }}
-        className="content-wrapper"
+        className="ReactModal__Content"
       >
-        <div style={{ margin: '5%', marginTop: '10%', padding: '0%', backgroundColor: 'rgba(0,0,0,0)', overflow: 'auto' }}>
-          <div className={'card card-dark'}>
-            <div className="card-header">
-              <h2 className="card-title">อัพโหลดรูปภาพ</h2>
-              <div class="card-tools">
-                <button type="button" className="btn btn-tool" onClick={(e) => {
+        <div style={{ padding: '0.5rem', backgroundColor: 'transparent', overflow: 'auto' }}>
+          <div className="card mb-0" style={{ borderRadius: '20px', overflow: 'hidden', border: '1px solid #E9C070', boxShadow: '0 20px 50px rgba(0,0,0,0.3)' }}>
+            <div className="card-header d-flex align-items-center justify-content-between" style={{ background: 'linear-gradient(135deg, #1E2430 0%, #2A3242 100%)', color: '#E9C070', borderBottom: '2px solid #C5953A', padding: '1rem 1.25rem' }}>
+              <h3 className="card-title mb-0 font-weight-bold" style={{ fontSize: '1.15rem' }}>
+                <i className="fas fa-cloud-upload-alt mr-2" /> อัพโหลดรูปภาพการรักษา
+              </h3>
+              <div className="card-tools ml-auto">
+                <button type="button" className="btn btn-tool text-white" onClick={(e) => {
                   e.preventDefault()
                   closeModal();
-                }}><i class="fas fa-times"></i>
+                }}><i className="fas fa-times"></i>
                 </button>
               </div>
             </div>
-            <div className='card-body' style={{ textAlign: 'center' }}><img src="/img/ALA_logo.png" /></div>
+            <div className='card-body pb-0 pt-3' style={{ textAlign: 'center' }}>
+              <img src="/img/ALA_logo.png" alt="ALA Clinic" style={{ maxHeight: '60px', objectFit: 'contain' }} />
+            </div>
             <div className='card-body'>
-              <div className="input-group" style={{ marginTop: 15, overflow: 'auto' }}>
+              <div className="input-group" style={{ marginTop: 10, overflow: 'auto' }}>
                 <DropZone parentCallback={setimages} />
               </div>
               {renderProgress()}
             </div>
-            <div className='card-footer'>
+            <div className='card-footer bg-light d-flex justify-content-between align-items-center px-4 py-3'>
               <button onClick={(e) => {
                 e.preventDefault()
                 doUploadImages()
-              }} className="btn btn-primary">ตกลง</button>
+              }} className="btn px-4" style={{ background: 'linear-gradient(135deg, #E9C070 0%, #C5953A 100%)', color: '#1E2430', fontWeight: 700, borderRadius: '10px', border: 'none' }}>
+                <i className="fas fa-upload mr-1" /> ตกลง (Upload)
+              </button>
               <button onClick={(e) => {
                 e.preventDefault();
                 closeModal();
-              }} className="btn btn-default float-right">ยกเลิก</button>
+              }} className="btn btn-secondary px-4" style={{ borderRadius: '10px' }}>ยกเลิก</button>
             </div>
           </div>
         </div>
@@ -1051,15 +1136,21 @@ export default function Patient_history(props) {
     <div className='content-wrapper'>
       <div className="content-header">
         <div className="container-fluid">
-          <div className="row mb-2">
+          <div className="row mb-2 align-items-center">
             <div className="col-sm-6">
-              <h1 className="m-0">ประวัติคนไข้ / ลูกค้า</h1>
-            </div>{/* /.col */}
+              <h1 className="m-0 font-weight-bold" style={{ color: '#1E2430', fontSize: '1.6rem' }}>
+                <i className="fas fa-file-medical-alt mr-2" style={{ color: '#C5953A' }} />
+                ประวัติคนไข้ / ลูกค้า
+              </h1>
+              <p className="text-muted mb-0 mt-1" style={{ fontSize: '0.9rem' }}>
+                เวชระเบียน การวินิจฉัยโรค และประวัติการทำหัตถการ
+              </p>
+            </div>
             <div className="col-sm-6">
               {renderAddImages()}
-            </div>{/* /.col */}
-          </div>{/* /.row */}
-        </div>{/* /.container-fluid */}
+            </div>
+          </div>
+        </div>
       </div>
       <section className="content">
         <div className="container-fluid">

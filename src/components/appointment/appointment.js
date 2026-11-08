@@ -24,6 +24,23 @@ export default function Appointment() {
   //loading effect
   const [isLoad, setisLoad] = useState(false)
 
+  const getStatusBadgeClass = (status) => {
+    switch (status) {
+      case 'open':
+        return 'ala-status-badge ala-status-open';
+      case 'waiting':
+        return 'ala-status-badge ala-status-wait';
+      case 'diagnose':
+        return 'ala-status-badge ala-status-diagnose';
+      case 'operate':
+        return 'ala-status-badge ala-status-operate';
+      case 'payment':
+        return 'ala-status-badge ala-status-payment';
+      default:
+        return 'ala-status-badge ala-status-open';
+    }
+  }
+
   useEffect(() => {
     
     setisLoad(true)
@@ -46,71 +63,92 @@ export default function Appointment() {
 
   const renderPatientData = () => {
     return (
-      <div className="card card-dark">
+      <div className="card" style={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(233, 192, 112, 0.35)', boxShadow: '0 6px 20px rgba(30, 36, 48, 0.06)' }}>
+        <div className="card-header d-flex align-items-center justify-content-between" style={{ background: 'linear-gradient(135deg, #1E2430 0%, #2A3242 100%)', color: '#E9C070', borderBottom: '2px solid #C5953A', padding: '0.9rem 1.25rem' }}>
+          <h3 className="card-title mb-0 font-weight-bold" style={{ fontSize: '1.05rem' }}>
+            <i className="fas fa-id-card mr-2" /> ข้อมูลลูกค้า (Patient Information)
+          </h3>
+          <span className={getStatusBadgeClass(patientData.status)}>{patientData.status}</span>
+        </div>
         <div className="card-body box-profile">
-          <p className="text-muted text-center">{patientData.job}</p>
-          <ul className="list-group list-group-unbordered mb-3">
-            <div className="row">
-              <div className="col-sm-6">
-                <li class="list-group-item">
-                  <b>ชื่อ - นามสกุล </b> <label className="float-right text-muted text-center">{patientData.first_name + ' ' + patientData.last_name}</label>
+          <div className="row">
+            <div className="col-sm-6">
+              <ul className="list-group list-group-unbordered mb-3 mb-sm-0">
+                <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+                  <span><i className="fas fa-user mr-2 text-muted" /><b>ชื่อ - นามสกุล</b></span>
+                  <span className="font-weight-bold text-dark">{patientData.first_name + ' ' + patientData.last_name}</span>
                 </li>
-                <li class="list-group-item">
-                  <b>เพศ </b> <label className="float-right text-muted text-center">{patientData.sex}</label>
+                <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+                  <span><i className="fas fa-venus-mars mr-2 text-muted" /><b>เพศ</b></span>
+                  <span className="text-muted">{patientData.sex}</span>
                 </li>
-                <li class="list-group-item">
-                  <b>โทรศัพท์ </b> <label className="float-right text-muted text-center">{patientData.telephone_number}</label>
+                <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+                  <span><i className="fas fa-phone-alt mr-2 text-muted" /><b>โทรศัพท์</b></span>
+                  <span className="text-dark font-weight-bold">{patientData.telephone_number}</span>
                 </li>
-                <li class="list-group-item">
-                  <b>อายุ </b> <label className="float-right text-muted text-center">{moment().format('yyyy') - patientData.year_of_birth}</label>
+                <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+                  <span><i className="fas fa-birthday-cake mr-2 text-muted" /><b>อายุ</b></span>
+                  <span className="text-muted">{moment().format('yyyy') - patientData.year_of_birth} ปี</span>
                 </li>
-                <li class="list-group-item">
-                  <b>สถานะ </b> <label style={{ color: 'red' }} className={patientData.status != 'operate' ? 'float-right text-center' : 'float-right text-center text-muted'}>{patientData.status}</label>
+                <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+                  <span><i className="fas fa-heartbeat mr-2 text-muted" /><b>สถานะ</b></span>
+                  <span className={getStatusBadgeClass(patientData.status)}>{patientData.status}</span>
                 </li>
-                <li class="list-group-item">
-                  <b>จ่ายเงิน </b> <label className={'float-right text-center text-muted'}><Link to={"/patient/payment/" + patientData.patient_id} className="btn btn-success btn-xs">จ่ายเงิน</Link></label>
+                <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+                  <span><i className="fas fa-file-invoice-dollar mr-2 text-muted" /><b>จ่ายเงิน</b></span>
+                  <Link to={"/patient/payment/" + patientData.patient_id} className="btn btn-success btn-sm px-3" style={{ borderRadius: '8px', fontWeight: 600 }}>
+                    <i className="fas fa-cash-register mr-1" /> ไปหน้าจ่ายเงิน
+                  </Link>
                 </li>
-
-              </div>
-              <div className="col-sm-6">
-                <div className="card card-default">
-                  {/* /.card-header */}
-                  <div className="card-body">
-                    <strong><i className="fas fa-skull-crossbones" /> ยาหรืออาหารที่แพ้</strong>
-                    <p className="text-muted">
-                      {patientData.drug_allergy == '' ? 'ไม่มี' : patientData.drug_allergy}
-                    </p>
-                    <hr />
-                    <strong><i className="fas fa-pills" /> ยาที่ใช้ประจำ</strong>
-                    <p className="text-muted">
-                      {patientData.drug_allergy == '' ? 'ไม่มี' : patientData.regular_medication}
-                    </p>
-                    <hr />
-                    <strong><i className="fas fa-disease" /> โรคประจำตัว</strong>
-                    <p className="text-muted">
-                      {patientData.drug_allergy == '' ? 'ไม่มี' : patientData.chronic_disease}
-                    </p>
-                  </div>
-                  {/* /.card-body */}
+              </ul>
+            </div>
+            <div className="col-sm-6">
+              <div className="card h-100 mb-0" style={{ borderRadius: '12px', backgroundColor: '#FAF8F5', border: '1px solid rgba(233, 192, 112, 0.4)' }}>
+                <div className="card-body">
+                  <strong className="d-block mb-1" style={{ color: '#bd2130' }}>
+                    <i className="fas fa-skull-crossbones mr-1" /> ยาหรืออาหารที่แพ้
+                  </strong>
+                  <p className="text-muted mb-2">
+                    {patientData.drug_allergy == '' ? 'ไม่มี' : patientData.drug_allergy}
+                  </p>
+                  <hr className="my-2" />
+                  <strong className="d-block mb-1" style={{ color: '#1b7f91' }}>
+                    <i className="fas fa-pills mr-1" /> ยาที่ใช้ประจำ
+                  </strong>
+                  <p className="text-muted mb-2">
+                    {patientData.drug_allergy == '' ? 'ไม่มี' : patientData.regular_medication}
+                  </p>
+                  <hr className="my-2" />
+                  <strong className="d-block mb-1" style={{ color: '#966919' }}>
+                    <i className="fas fa-disease mr-1" /> โรคประจำตัว
+                  </strong>
+                  <p className="text-muted mb-0">
+                    {patientData.drug_allergy == '' ? 'ไม่มี' : patientData.chronic_disease}
+                  </p>
                 </div>
               </div>
             </div>
-          </ul>
+          </div>
         </div>
-        {/* /.card-body */}
       </div>
     )
   }
 
   const renderCreateAppointment = () => {
     return (
-      <div className="card card-default">
-        {/* <div className="card-header"></div> */}
-        <div className="card-body">
+      <div className="card h-100" style={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(233, 192, 112, 0.35)', boxShadow: '0 6px 20px rgba(30, 36, 48, 0.06)' }}>
+        <div className="card-header d-flex align-items-center" style={{ background: 'linear-gradient(135deg, #1E2430 0%, #2A3242 100%)', color: '#E9C070', borderBottom: '2px solid #C5953A', padding: '0.9rem 1.25rem' }}>
+          <h3 className="card-title mb-0 font-weight-bold" style={{ fontSize: '1.05rem' }}>
+            <i className="fas fa-calendar-plus mr-2" /> เพิ่มข้อมูลการนัดหมายใหม่
+          </h3>
+        </div>
+        <div className="card-body d-flex flex-column">
           <div className="form-group">
-            <label>วันที่นัดหมาย :</label>
+            <label className="font-weight-bold text-dark">
+              <i className="far fa-calendar-alt mr-1" style={{ color: '#C5953A' }} /> วันที่นัดหมาย :
+            </label>
             <DatePicker
-              placeholderText="เลือกวันนัดหมาย"
+              placeholderText="เลือกวันนัดหมาย..."
               selected={appointmentDate}
               onChange={(date) => {
                 setappointmentDate(date)
@@ -120,19 +158,33 @@ export default function Appointment() {
               dateFormat="dd-MMM-yyyy"
               className="form-control"
             />
-
-            <br></br>
           </div>
           <div className="form-group">
-            <label>คำอธิบายการนัดหมาย :</label>
-            <input value={appointmentDescription} className="form-control" onChange={(e) => {
-              setappointmentDescription(e.target.value)
-            }} rows="3" />
+            <label className="font-weight-bold text-dark">
+              <i className="fas fa-comment-medical mr-1" style={{ color: '#55C5D9' }} /> คำอธิบายการนัดหมาย :
+            </label>
+            <input
+              value={appointmentDescription}
+              className="form-control"
+              placeholder="ระบุรายละเอียด เช่น ติดตามผลหัตถการ, เติมโบท็อกซ์..."
+              style={{ borderRadius: '10px' }}
+              onChange={(e) => {
+                setappointmentDescription(e.target.value)
+              }}
+              rows="3"
+            />
           </div>
-          <button className="btn btn-primary" onClick={() => {
-            doAppointment()
-          }} style={{ width: '100%' }}> ตกลง</button>
-
+          <div className="mt-auto pt-2">
+            <button
+              className="btn py-2"
+              onClick={() => {
+                doAppointment()
+              }}
+              style={{ width: '100%', background: 'linear-gradient(135deg, #E9C070 0%, #C5953A 100%)', color: '#1E2430', fontWeight: 700, borderRadius: '10px', border: 'none', boxShadow: '0 4px 12px rgba(197, 149, 58, 0.25)' }}
+            >
+              <i className="fas fa-check-circle mr-2" /> บันทึกวันนัดหมาย (ตกลง)
+            </button>
+          </div>
         </div>
       </div>
     )
@@ -206,12 +258,15 @@ export default function Appointment() {
   }
 
   const renderAppointment = () => {
-    // if (appointmentData.length > 0) {
-
     return (
-      <div className="card card-dark">
-        <div className="card-header">
-          <h3 class="card-title">ตารางนัดของลูกค้า</h3>
+      <div className="card h-100" style={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(233, 192, 112, 0.35)', boxShadow: '0 6px 20px rgba(30, 36, 48, 0.06)' }}>
+        <div className="card-header d-flex align-items-center justify-content-between" style={{ background: 'linear-gradient(135deg, #1E2430 0%, #2A3242 100%)', color: '#E9C070', borderBottom: '2px solid #C5953A', padding: '0.9rem 1.25rem' }}>
+          <h3 className="card-title mb-0 font-weight-bold" style={{ fontSize: '1.05rem' }}>
+            <i className="fas fa-calendar-alt mr-2" /> ตารางนัดของลูกค้า (Appointment Calendar)
+          </h3>
+          <span className="badge px-3 py-1 ml-auto" style={{ backgroundColor: 'rgba(233,192,112,0.2)', color: '#E9C070', borderRadius: '20px' }}>
+            คลิกวันที่ที่มีนัดเพื่อยกเลิกนัดหมาย
+          </span>
         </div>
         <div className="card-body">
           <div className='calendar-container'>
@@ -232,14 +287,14 @@ export default function Appointment() {
                   const item = appointmentData[index];
                   if (moment(item.appointment_date).format("DD-MM-YYYY") === moment(date).format("DD-MM-YYYY")) {
                     return (
-                      <>
-                        <label style={{ fontWeight: 'bold', marginLeft: 10 }}>
-                          มีนัด
-                        </label>
-                        <p>
+                      <div className="mt-1">
+                        <span className="badge px-2 py-1" style={{ backgroundColor: '#1E2430', color: '#E9C070', borderRadius: '6px', fontSize: '0.7rem' }}>
+                          <i className="fas fa-bell mr-1" /> มีนัด
+                        </span>
+                        <p className="mb-0 mt-1 text-dark" style={{ fontSize: '0.75rem', lineHeight: 1.2 }}>
                           {item.appointment_description}
                         </p>
-                      </>
+                      </div>
                     )
                   }
                 }
@@ -249,7 +304,6 @@ export default function Appointment() {
         </div>
       </div>
     )
-    // }
   }
 
   const doDeleteDate = async (date) => {
@@ -303,15 +357,20 @@ export default function Appointment() {
     <div className="content-wrapper">
       <div className="content-header">
         <div className="container-fluid">
-          <div className="row mb-2">
-            <div className="col-sm-6">
-              <h1 className="m-0">นัดหมายลูกค้า</h1>
-            </div>{/* /.col */}
-            <div className="col-sm-6">
-
-            </div>{/* /.col */}
-          </div>{/* /.row */}
-        </div>{/* /.container-fluid */}
+          <div className="row mb-2 align-items-center">
+            <div className="col-sm-8">
+              <h1 className="m-0 font-weight-bold" style={{ color: '#1E2430', fontSize: '1.6rem' }}>
+                <i className="fas fa-calendar-check mr-2" style={{ color: '#C5953A' }} />
+                นัดหมายลูกค้า
+              </h1>
+              <p className="text-muted mb-0 mt-1" style={{ fontSize: '0.9rem' }}>
+                กำหนดวันนัดหมายติดตามผลการรักษาและตรวจสอบตารางนัดของลูกค้า
+              </p>
+            </div>
+            <div className="col-sm-4">
+            </div>
+          </div>
+        </div>
       </div>
       <section className='content'>
         <div className='container-fluid'>
@@ -326,10 +385,10 @@ export default function Appointment() {
               </div>
               {renderPatientData()}
             </div>
-            <div className="col-12">
+            <div className="col-lg-4 col-12 mb-3">
               {renderCreateAppointment()}
             </div>
-            <div className="col-12">
+            <div className="col-lg-8 col-12 mb-3">
               {renderAppointment()}
             </div>
           </div>

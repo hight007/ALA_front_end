@@ -52,6 +52,23 @@ export default function Patient_payment(props) {
     content: () => componentRef.current,
   });
 
+  const getStatusBadgeClass = (status) => {
+    switch (status) {
+      case 'open':
+        return 'ala-status-badge ala-status-open';
+      case 'waiting':
+        return 'ala-status-badge ala-status-wait';
+      case 'diagnose':
+        return 'ala-status-badge ala-status-diagnose';
+      case 'operate':
+        return 'ala-status-badge ala-status-operate';
+      case 'payment':
+        return 'ala-status-badge ala-status-payment';
+      default:
+        return 'ala-status-badge ala-status-open';
+    }
+  }
+
   useEffect(() => {
     doGetPatientData()
     doGetPaymentList()
@@ -452,75 +469,106 @@ export default function Patient_payment(props) {
 
   const renderPatientData = () => {
     return (
-      <div className="card card-dark">
+      <div className="card" style={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(233, 192, 112, 0.35)', boxShadow: '0 6px 20px rgba(30, 36, 48, 0.06)' }}>
+        <div className="card-header d-flex align-items-center justify-content-between" style={{ background: 'linear-gradient(135deg, #1E2430 0%, #2A3242 100%)', color: '#E9C070', borderBottom: '2px solid #C5953A', padding: '0.9rem 1.25rem' }}>
+          <h3 className="card-title mb-0 font-weight-bold" style={{ fontSize: '1.05rem' }}>
+            <i className="fas fa-user-check mr-2" /> ข้อมูลลูกค้าและการชำระเงิน (Customer Billing Info)
+          </h3>
+          <span className={getStatusBadgeClass(patientData.status)}>{patientData.status}</span>
+        </div>
         <div className="card-body box-profile">
-          <p className="text-muted text-center">{patientData.job}</p>
-          <ul className="list-group list-group-unbordered mb-3">
-            <div className="row">
-              <div className="col-sm-6">
-                <li class="list-group-item">
-                  <b>ชื่อ - นามสกุล </b> <label className="float-right text-muted text-center">{patientData.first_name + ' ' + patientData.last_name}</label>
+          <div className="row">
+            <div className="col-sm-6">
+              <ul className="list-group list-group-unbordered mb-3 mb-sm-0">
+                <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+                  <span><i className="fas fa-user mr-2 text-muted" /><b>ชื่อ - นามสกุล</b></span>
+                  <span className="font-weight-bold text-dark">{patientData.first_name + ' ' + patientData.last_name}</span>
                 </li>
-                <li class="list-group-item">
-                  <b>เพศ </b> <label className="float-right text-muted text-center">{patientData.sex}</label>
+                <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+                  <span><i className="fas fa-venus-mars mr-2 text-muted" /><b>เพศ</b></span>
+                  <span className="text-muted">{patientData.sex}</span>
                 </li>
-                <li class="list-group-item">
-                  <b>โทรศัพท์ </b> <label className="float-right text-muted text-center">{patientData.telephone_number}</label>
+                <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+                  <span><i className="fas fa-phone-alt mr-2 text-muted" /><b>โทรศัพท์</b></span>
+                  <span className="text-dark font-weight-bold">{patientData.telephone_number}</span>
                 </li>
-                <li class="list-group-item">
-                  <b>อายุ </b> <label className="float-right text-muted text-center">{moment().format('yyyy') - patientData.year_of_birth}</label>
+                <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+                  <span><i className="fas fa-birthday-cake mr-2 text-muted" /><b>อายุ</b></span>
+                  <span className="text-muted">{moment().format('yyyy') - patientData.year_of_birth} ปี</span>
                 </li>
-                <li class="list-group-item">
-                  <b>สถานะ </b> <label style={{ color: 'red' }} className={patientData.status != 'operate' ? 'float-right text-center' : 'float-right text-center text-muted'}>{patientData.status}</label>
+                <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+                  <span><i className="fas fa-heartbeat mr-2 text-muted" /><b>สถานะ</b></span>
+                  <span className={getStatusBadgeClass(patientData.status)}>{patientData.status}</span>
                 </li>
-                <li class="list-group-item">
-                  <b>นัดหมาย </b> <label className={'float-right text-center text-muted'}><Link to={"/appointment/" + patientData.patient_id} className="btn btn-primary btn-xs">นัดหมาย</Link></label>
+                <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+                  <span><i className="fas fa-calendar-check mr-2 text-muted" /><b>นัดหมาย</b></span>
+                  <Link to={"/appointment/" + patientData.patient_id} className="btn btn-sm px-3" style={{ background: 'linear-gradient(135deg, #E9C070 0%, #C5953A 100%)', color: '#1E2430', fontWeight: 600, borderRadius: '8px' }}>
+                    <i className="fas fa-calendar-alt mr-1" /> นัดหมาย
+                  </Link>
                 </li>
-
-              </div>
-              <div className="col-sm-6">
-                <div className="card card-default">
-                  {/* /.card-header */}
-                  <div className="card-body">
-                    <strong><i className="fas fa-skull-crossbones" /> ยาหรืออาหารที่แพ้</strong>
-                    <p className="text-muted">
-                      {patientData.drug_allergy == '' ? 'ไม่มี' : patientData.drug_allergy}
-                    </p>
-                    <hr />
-                    <strong><i className="fas fa-pills" /> ยาที่ใช้ประจำ</strong>
-                    <p className="text-muted">
-                      {patientData.drug_allergy == '' ? 'ไม่มี' : patientData.regular_medication}
-                    </p>
-                    <hr />
-                    <strong><i className="fas fa-disease" /> โรคประจำตัว</strong>
-                    <p className="text-muted">
-                      {patientData.drug_allergy == '' ? 'ไม่มี' : patientData.chronic_disease}
-                    </p>
-                  </div>
-                  {/* /.card-body */}
+              </ul>
+            </div>
+            <div className="col-sm-6">
+              <div className="card h-100 mb-0" style={{ borderRadius: '12px', backgroundColor: '#FAF8F5', border: '1px solid rgba(233, 192, 112, 0.4)' }}>
+                <div className="card-body">
+                  <strong className="d-block mb-1" style={{ color: '#bd2130' }}>
+                    <i className="fas fa-skull-crossbones mr-1" /> ยาหรืออาหารที่แพ้
+                  </strong>
+                  <p className="text-muted mb-2">
+                    {patientData.drug_allergy == '' ? 'ไม่มี' : patientData.drug_allergy}
+                  </p>
+                  <hr className="my-2" />
+                  <strong className="d-block mb-1" style={{ color: '#1b7f91' }}>
+                    <i className="fas fa-pills mr-1" /> ยาที่ใช้ประจำ
+                  </strong>
+                  <p className="text-muted mb-2">
+                    {patientData.drug_allergy == '' ? 'ไม่มี' : patientData.regular_medication}
+                  </p>
+                  <hr className="my-2" />
+                  <strong className="d-block mb-1" style={{ color: '#966919' }}>
+                    <i className="fas fa-disease mr-1" /> โรคประจำตัว
+                  </strong>
+                  <p className="text-muted mb-0">
+                    {patientData.drug_allergy == '' ? 'ไม่มี' : patientData.chronic_disease}
+                  </p>
                 </div>
               </div>
             </div>
-          </ul>
+          </div>
         </div>
-        {/* /.card-body */}
       </div>
     )
   }
   const renderPaymentHistory = () => {
     const renderOptionpaymentHistory = () => {
       return paymentHistory.map(item => (
-        <option value={item.payment_id}>วันที่ออกบิล : {moment(item.createdAt).format('DD-MM-YYYY')} , เลขที่บิล : {item.payment_id}</option>
+        <option key={item.payment_id} value={item.payment_id} className="py-2 px-2">
+          วันที่ออกบิล : {moment(item.createdAt).format('DD-MM-YYYY')} , เลขที่บิล : {item.payment_id} {item.payment_type ? `(ชำระแล้ว - ${item.payment_type})` : '(รอชำระเงิน)'}
+        </option>
       ))
     }
     return (
-      <div className="form-group">
-        <label>เลือกบิล</label>
-        <select id='selectedPayment' onChange={(e) => {
-          doGetPaymentData(e.target.value, paymentHistory, true)
-        }} multiple className="form-control">
-          {renderOptionpaymentHistory()}
-        </select>
+      <div className="card" style={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(233, 192, 112, 0.35)', boxShadow: '0 4px 16px rgba(30, 36, 48, 0.05)' }}>
+        <div className="card-header d-flex align-items-center" style={{ background: 'linear-gradient(135deg, #1E2430 0%, #2A3242 100%)', color: '#E9C070', borderBottom: '2px solid #C5953A', padding: '0.85rem 1.25rem' }}>
+          <h3 className="card-title mb-0 font-weight-bold" style={{ fontSize: '1.05rem' }}>
+            <i className="fas fa-receipt mr-2" /> เลือกบิลชำระเงิน (Select Invoice)
+          </h3>
+        </div>
+        <div className="card-body">
+          <div className="form-group mb-0">
+            <select
+              id='selectedPayment'
+              onChange={(e) => {
+                doGetPaymentData(e.target.value, paymentHistory, true)
+              }}
+              multiple
+              className="form-control"
+              style={{ borderRadius: '12px', borderColor: '#E9C070', minHeight: '120px', fontSize: '0.95rem' }}
+            >
+              {renderOptionpaymentHistory()}
+            </select>
+          </div>
+        </div>
       </div>
     )
   }
@@ -529,13 +577,21 @@ export default function Patient_payment(props) {
 
       const renderPrintPayment = () => {
         return (
-          <div className="card card-dark">
-            <div className="card-header">
-              <h1 className="card-title">ใบเสร็จรับเงิน</h1>
-              <button className="btn btn-default float-right" onClick={handlePrint}>ปริ้นใบเสร็จ</button>
+          <div className="card" style={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(233, 192, 112, 0.35)', boxShadow: '0 6px 20px rgba(30, 36, 48, 0.06)' }}>
+            <div className="card-header d-flex align-items-center justify-content-between" style={{ background: 'linear-gradient(135deg, #1E2430 0%, #2A3242 100%)', color: '#E9C070', borderBottom: '2px solid #C5953A', padding: '0.9rem 1.25rem' }}>
+              <h3 className="card-title mb-0 font-weight-bold" style={{ fontSize: '1.1rem' }}>
+                <i className="fas fa-file-invoice mr-2" /> ใบเสร็จรับเงิน (Official Receipt)
+              </h3>
+              <button
+                className="btn btn-sm px-4 py-2 ml-auto"
+                style={{ background: 'linear-gradient(135deg, #E9C070 0%, #C5953A 100%)', color: '#1E2430', fontWeight: 700, borderRadius: '10px', border: 'none' }}
+                onClick={handlePrint}
+              >
+                <i className="fas fa-print mr-2" /> ปริ้นใบเสร็จ
+              </button>
             </div>
 
-            <div className='card-body'>
+            <div className='card-body bg-light overflow-auto'>
               <ComponentToPrint
                 patientData={patientData}
                 listPantientHistory={listPantientHistory}
@@ -549,35 +605,33 @@ export default function Patient_payment(props) {
       if (payment_type == null) {
         const renderTableData = () => {
           return listPantientHistory.map((item, index) => (
-            <tr>
-              <td>
-                {index + 1}
-              </td>
-              <td>
+            <tr key={item.history_id || index}>
+              <td>{index + 1}</td>
+              <td className="font-weight-bold text-dark">
                 {item.promotionMaster.promotion_name + ' ' + item.promotionMaster.unit_quantity + ' ' + item.promotionMaster.unit_suffix}
               </td>
               <td>
                 <CurrencyFormat value={item.promotionMaster.promotion_price} displayType={'text'} thousandSeparator={true} suffix={' บาท'} renderText={value => <>{value}</>} />
               </td>
               <td>
-                <CurrencyFormat value={item.promotion_price} displayType={'text'} thousandSeparator={true} suffix={' บาท'} renderText={value => <b style={{ color: 'blue' }}>{value}</b>} />
+                <CurrencyFormat value={item.promotion_price} displayType={'text'} thousandSeparator={true} suffix={' บาท'} renderText={value => <b style={{ color: '#1b7f91' }}>{value}</b>} />
               </td>
               <td>
-                <CurrencyFormat value={item.discount} displayType={'text'} thousandSeparator={true} suffix={' บาท'} renderText={value => <b style={{ color: 'green' }}>{value}</b>} />
+                <CurrencyFormat value={item.discount} displayType={'text'} thousandSeparator={true} suffix={' บาท'} renderText={value => <b className="text-success">{value}</b>} />
               </td>
+              <td>{item.agent || '-'}</td>
               <td>
-                {item.agent}
-              </td>
-              <td>
-                <button className="btn btn-warning btn-xs" onClick={(e) => {
+                <button className="btn btn-warning btn-xs px-2 py-1 mr-2" style={{ borderRadius: '6px', fontWeight: 600 }} onClick={(e) => {
                   e.preventDefault()
                   prepareEditPantientHistory(index)
-                }}><i className="fas fa-edit" /> แก้ไข
+                }}>
+                  <i className="fas fa-edit mr-1" /> แก้ไข
                 </button>
-                <button className="btn btn-danger btn-xs float-right" onClick={(e) => {
+                <button className="btn btn-outline-danger btn-xs px-2 py-1" style={{ borderRadius: '6px', fontWeight: 600 }} onClick={(e) => {
                   e.preventDefault()
                   doDeletePantientHistory(index)
-                }}><i className="fas fa-trash-alt" /> ลบ
+                }}>
+                  <i className="fas fa-trash-alt mr-1" /> ลบ
                 </button>
               </td>
             </tr>
@@ -600,28 +654,37 @@ export default function Patient_payment(props) {
         const renderPaymentTypeSelector = () => {
           if (payment_id != null) {
             return (
-              <div className="form-group">
-                <div className="form-check">
-                  <input style={{ width: 20, height: 20, }} onChange={(e) => {
+              <div className="form-group mb-0">
+                <label className="font-weight-bold text-dark mb-2">
+                  <i className="fas fa-wallet mr-2" style={{ color: '#C5953A' }} /> เลือกช่องทางการชำระเงิน
+                </label>
+                <label className="ala-payment-method-card">
+                  <input style={{ width: 20, height: 20 }} onChange={(e) => {
                     setSelected_payment_type('cash')
                     setCredit_add_price(0)
-                  }} className="form-check-input" type="radio" name="payment_type" required />
-                  <label style={{ marginLeft: 5, fontSize: 25 }} className="form-check-label">เงินสด</label>
-                </div>
-                <div className="form-check">
-                  <input style={{ width: 20, height: 20, }} onChange={(e) => {
+                  }} className="mr-3" type="radio" name="payment_type" required />
+                  <span style={{ fontSize: '1.15rem', fontWeight: 600, color: '#1E2430' }}>
+                    <i className="fas fa-money-bill-wave mr-2 text-success" /> เงินสด (Cash)
+                  </span>
+                </label>
+                <label className="ala-payment-method-card">
+                  <input style={{ width: 20, height: 20 }} onChange={(e) => {
                     setSelected_payment_type('transfer')
                     setCredit_add_price(0)
-                  }} className="form-check-input" type="radio" name="payment_type" required />
-                  <label style={{ marginLeft: 5, fontSize: 25 }} className="form-check-label">โอน</label>
-                </div>
-                <div className="form-check">
-                  <input style={{ width: 20, height: 20, }} onChange={(e) => {
+                  }} className="mr-3" type="radio" name="payment_type" required />
+                  <span style={{ fontSize: '1.15rem', fontWeight: 600, color: '#1E2430' }}>
+                    <i className="fas fa-mobile-alt mr-2" style={{ color: '#55C5D9' }} /> โอนเงิน (Bank Transfer / QR)
+                  </span>
+                </label>
+                <label className="ala-payment-method-card mb-0">
+                  <input style={{ width: 20, height: 20 }} onChange={(e) => {
                     setSelected_payment_type('credit')
                     setCredit_add_price((totalPayment.totalPayment * 0.03).toFixed(2))
-                  }} className="form-check-input" type="radio" name="payment_type" required />
-                  <label style={{ marginLeft: 5, fontSize: 25 }} className="form-check-label">บัตรเครดิต</label>
-                </div>
+                  }} className="mr-3" type="radio" name="payment_type" required />
+                  <span style={{ fontSize: '1.15rem', fontWeight: 600, color: '#1E2430' }}>
+                    <i className="far fa-credit-card mr-2" style={{ color: '#C5953A' }} /> บัตรเครดิต (Credit Card +3%)
+                  </span>
+                </label>
               </div>
             )
           }
@@ -630,69 +693,73 @@ export default function Patient_payment(props) {
         const cashCalculator = () => {
           if (selected_payment_type === 'cash') {
             return (
-              <>
+              <div className="p-3" style={{ backgroundColor: '#FAF8F5', borderRadius: '12px', border: '1px solid rgba(233,192,112,0.4)' }}>
                 <div className="form-group">
-                  <label for="exampleInputEmail1">รับเงินมา</label>
+                  <label className="font-weight-bold text-dark">
+                    <i className="fas fa-hand-holding-usd mr-1 text-success" /> รับเงินมา
+                  </label>
                   <CurrencyFormat value={cash} onValueChange={(values) => {
                     setCash(values.value)
                   }}
-                    className="form-control" thousandSeparator={true} suffix={' บาท'} />
+                    className="form-control form-control-lg" style={{ borderRadius: '10px', fontWeight: 600 }} thousandSeparator={true} suffix={' บาท'} />
                 </div>
-                <div className="form-group">
-                  <label style={{ marginRight: 5 }}>ต้องทอน</label>
+                <div className="form-group mb-0">
+                  <label className="font-weight-bold text-dark mr-2">เงินทอน (ต้องทอน)</label>
                   <CurrencyFormat value={cash - totalPayment.totalPayment}
                     className="form-control"
                     displayType={'text'}
                     thousandSeparator={true}
                     suffix={' บาท'}
-                    renderText={value => <b className='doubleUnderline'>{value}</b>} />
-
+                    renderText={value => <div className="p-2 bg-white text-center" style={{ borderRadius: '10px', border: '1px solid #55C5D9', fontSize: '1.25rem', color: '#1b7f91' }}><b className='doubleUnderline'>{value}</b></div>} />
                 </div>
-              </>
+              </div>
             )
           }
         }
         const creditAddPrice = () => {
           if (selected_payment_type === 'credit') {
             return (
-              <>
+              <div className="p-3" style={{ backgroundColor: '#FAF8F5', borderRadius: '12px', border: '1px solid rgba(233,192,112,0.4)' }}>
                 <div className="form-group">
-                  <label for="exampleInputEmail1">ค่าบัตรเครดิต 3%</label>
+                  <label className="font-weight-bold text-dark">ค่าธรรมเนียมบัตรเครดิต 3%</label>
                   <CurrencyFormat value={credit_add_price} onValueChange={(values) => {
                     setCredit_add_price(values.value)
                   }}
-                    className="form-control" thousandSeparator={true} suffix={' บาท'} />
+                    className="form-control" style={{ borderRadius: '10px' }} thousandSeparator={true} suffix={' บาท'} />
                 </div>
-                <div className="form-group">
-                  <label style={{ marginRight: 5 }}>รวมทั้งสิ้น</label>
+                <div className="form-group mb-0">
+                  <label className="font-weight-bold text-dark mr-2">ยอดชำระรวมทั้งสิ้น</label>
                   <CurrencyFormat value={parseFloat(credit_add_price) + totalPayment.totalPayment}
                     className="form-control"
                     displayType={'text'}
                     thousandSeparator={true}
                     suffix={' บาท'}
-                    renderText={value => <h3 style={{ color: 'blue' }}><b className='doubleUnderline'>{value}</b></h3>} />
-
+                    renderText={value => <h3 className="mb-0 mt-1" style={{ color: '#1b7f91' }}><b className='doubleUnderline'>{value}</b></h3>} />
                 </div>
-              </>
+              </div>
             )
           }
         }
         return (
-          <div className="card card-default">
-            <div className="card-header" style={{ backgroundColor: '#E9C070' }}>
-              <h3 className="card-title">รวมรายการใบเสร็จ</h3>
-              <div className="card-tools">
+          <div className="card" style={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(233, 192, 112, 0.35)', boxShadow: '0 6px 20px rgba(30, 36, 48, 0.06)' }}>
+            <div className="card-header d-flex align-items-center justify-content-between" style={{ background: 'linear-gradient(135deg, #E9C070 0%, #C5953A 100%)', color: '#1E2430', padding: '0.9rem 1.25rem' }}>
+              <h3 className="card-title mb-0 font-weight-bold" style={{ fontSize: '1.1rem' }}>
+                <i className="fas fa-file-invoice-dollar mr-2" /> รวมรายการใบเสร็จ (Invoice Summary)
+              </h3>
+              <div className="card-tools ml-auto">
                 <button onClick={(e) => {
                   e.preventDefault()
                   prepareAddPantientHistory()
-                }} className="btn btn-success btn-xs"><i className="fas fa-plus-square" style={{ marginRight: 5 }} />เพิ่มรายการ</button>
+                }} className="btn btn-dark btn-sm px-3 py-1" style={{ borderRadius: '8px', fontWeight: 600, color: '#E9C070' }}>
+                  <i className="fas fa-plus-circle mr-1" /> เพิ่มรายการ
+                </button>
               </div>
             </div>
             {/* /.card-header */}
             <div className="card-body table-responsive p-0">
-              <table className="table table-head-fixed text-nowrap" >
-                <thead >
-                  <tr >
+              <table className="table table-hover text-nowrap mb-0">
+                <thead style={{ backgroundColor: '#1E2430', color: '#E9C070' }}>
+                  <tr>
                     <th>ลำดับที่</th>
                     <th>รายการ</th>
                     <th>ราคาโปรโมชั่น</th>
@@ -704,28 +771,20 @@ export default function Patient_payment(props) {
                 </thead>
                 <tbody>
                   {renderTableData()}
-                  <tr style={{ backgroundColor: '#55C5D9' }}>
-                    <th >
-
-                    </th>
-                    <th >
-                      รวมจำนวนเงิน
-                    </th>
-                    <th >
+                  <tr style={{ backgroundColor: 'rgba(85, 197, 217, 0.18)', borderTop: '2px solid #55C5D9' }}>
+                    <th></th>
+                    <th style={{ color: '#1E2430', fontSize: '1.05rem' }}>รวมจำนวนเงิน</th>
+                    <th>
                       <CurrencyFormat value={totalPayment.totalPromotion} displayType={'text'} thousandSeparator={true} suffix={' บาท'} renderText={value => <b className='doubleUnderline'>{value}</b>} />
                     </th>
-                    <th >
-                      <CurrencyFormat value={totalPayment.totalPayment} displayType={'text'} thousandSeparator={true} suffix={' บาท'} renderText={value => <b style={{ color: 'blue' }} className='doubleUnderline'>{value}</b>} />
+                    <th>
+                      <CurrencyFormat value={totalPayment.totalPayment} displayType={'text'} thousandSeparator={true} suffix={' บาท'} renderText={value => <b style={{ color: '#1b7f91', fontSize: '1.1rem' }} className='doubleUnderline'>{value}</b>} />
                     </th>
-                    <th >
-                      <CurrencyFormat value={totalPayment.totalDiscount} displayType={'text'} thousandSeparator={true} suffix={' บาท'} renderText={value => <b style={{ color: 'green' }} className='doubleUnderline'>{value}</b>} />
+                    <th>
+                      <CurrencyFormat value={totalPayment.totalDiscount} displayType={'text'} thousandSeparator={true} suffix={' บาท'} renderText={value => <b className="text-success doubleUnderline">{value}</b>} />
                     </th>
-                    <th >
-
-                    </th>
-                    <th >
-
-                    </th>
+                    <th></th>
+                    <th></th>
                   </tr>
                 </tbody>
               </table>
@@ -735,25 +794,25 @@ export default function Patient_payment(props) {
               doSubmitPayment(totalPayment.totalPayment)
             }}>
               <div className="card-body">
-                <div className="row">
+                <div className="row align-items-center">
                   <div className="col-sm-6">
                     {renderPaymentTypeSelector()}
                   </div>
-                  <div className="col-sm-6">
+                  <div className="col-sm-6 mt-3 mt-sm-0">
                     {cashCalculator()}
                     {creditAddPrice()}
                   </div>
                 </div>
               </div>
-              <div className='card-footer'>
-                <button className="btn btn-success" type="submit">
-                  ตกลง
+              <div className='card-footer bg-light px-4 py-3 d-flex justify-content-between align-items-center'>
+                <button className="btn px-4 py-2" style={{ background: 'linear-gradient(135deg, #E9C070 0%, #C5953A 100%)', color: '#1E2430', fontWeight: 700, borderRadius: '10px', border: 'none' }} type="submit">
+                  <i className="fas fa-check-circle mr-2" /> ยืนยันการชำระเงิน (ตกลง)
                 </button>
-                <button className="btn btn-danger float-right" type="reset" onClick={(e) => {
+                <button className="btn btn-outline-danger px-4 py-2 ml-auto" style={{ borderRadius: '10px', fontWeight: 600 }} type="reset" onClick={(e) => {
                   e.preventDefault()
                   doCancelPayment()
                 }}>
-                  ยกเลิก
+                  <i className="fas fa-times-circle mr-1" /> ยกเลิกบิล
                 </button>
               </div>
             </form>
@@ -766,19 +825,20 @@ export default function Patient_payment(props) {
     } else {
       if (payment_id) {
         return (
-          <div className="card card-default">
-            <div className="card-header" style={{ backgroundColor: '#E9C070' }}>
-              <h3 className="card-title">รวมรายการใบเสร็จ</h3>
-              <div className="card-tools">
+          <div className="card" style={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(233, 192, 112, 0.35)' }}>
+            <div className="card-header d-flex align-items-center justify-content-between" style={{ background: 'linear-gradient(135deg, #E9C070 0%, #C5953A 100%)', color: '#1E2430' }}>
+              <h3 className="card-title mb-0 font-weight-bold">รวมรายการใบเสร็จ</h3>
+              <div className="card-tools ml-auto">
                 <button onClick={(e) => {
                   e.preventDefault()
                   prepareAddPantientHistory()
-                }} className="btn btn-success btn-xs"><i className="fas fa-plus-square" style={{ marginRight: 5 }} />เพิ่มรายการ</button>
+                }} className="btn btn-dark btn-sm px-3" style={{ color: '#E9C070', borderRadius: '8px' }}>
+                  <i className="fas fa-plus-square mr-1" /> เพิ่มรายการ
+                </button>
               </div>
             </div>
-            <div className='card-footer'>
-              
-              <button className="btn btn-danger float-right" type="reset" onClick={(e) => {
+            <div className='card-footer bg-light'>
+              <button className="btn btn-outline-danger float-right" style={{ borderRadius: '10px' }} type="reset" onClick={(e) => {
                 e.preventDefault()
                 doCancelPayment()
               }}>
@@ -794,13 +854,13 @@ export default function Patient_payment(props) {
   const renderEditPayment = () => {
     const renderAgentList = () => {
       return listAgent.map((item) => (
-        <option value={item.username}>{item.username}</option>
+        <option key={item.username} value={item.username}>{item.username}</option>
       ))
     }
     const renderPromotions = () => {
       const searchPromotions = () => {
         return listPromotions.map((item) => (
-          <div className="form-check">
+          <div className="form-check py-1" key={item.promotion_id}>
             <input className="form-check-input"
               type="radio"
               checked={resetRadio ? false : null}
@@ -814,14 +874,14 @@ export default function Patient_payment(props) {
                 findPromotionPrice(item.promotion_id)
               }} />
             <label className="form-check-label"><b>{item.promotion_name + ' ' + item.unit_quantity + ' ' + item.unit_suffix + ' '}</b>
-              <CurrencyFormat value={item.promotion_price} displayType={'text'} thousandSeparator={true} suffix={'฿'} renderText={value => <label>{','}<b style={{ color: 'blue' }}>{' ' + value}</b></label>} />
+              <CurrencyFormat value={item.promotion_price} displayType={'text'} thousandSeparator={true} suffix={'฿'} renderText={value => <label>{','}<b style={{ color: '#1b7f91' }}>{' ' + value}</b></label>} />
               {' , ' + item.promotion_detail}</label>
           </div>
         ))
       }
       const renderCategories = () => {
         return listPromotion_category.map((item) => (
-          <option value={item.promotion_category}>{item.promotion_category}</option>
+          <option key={item.promotion_category} value={item.promotion_category}>{item.promotion_category}</option>
         )
         )
       }
@@ -836,10 +896,11 @@ export default function Patient_payment(props) {
       return (
         <>
           <div className="form-group">
-            <label>โปรโมชั่น</label>
+            <label className="font-weight-bold text-dark">โปรโมชั่น</label>
             <div className="row">
-              <div className="col-4">
+              <div className="col-sm-4 mb-2 mb-sm-0">
                 <select className="form-control"
+                  style={{ borderRadius: '10px', borderColor: '#E9C070' }}
                   value={selectedPromotion_category}
                   onChange={async (e) => {
                     await setSelectedPromotion_category(e.target.value)
@@ -850,7 +911,7 @@ export default function Patient_payment(props) {
                   {renderCategories()}
                 </select>
               </div>
-              <div className="col-8">
+              <div className="col-sm-8">
                 <input
                   onChange={(e) => {
                     e.preventDefault()
@@ -862,19 +923,20 @@ export default function Patient_payment(props) {
                       setResetRadio(true)
                       searchChanged(e, mode == 'diagnose' ? 'true' : 'all', selectedPromotion_category)
                     }
-                  }
-                  }
+                  }}
                   type="search"
-                  className="form-control input-lg"
-                  placeholder="ค้นหาโปรโมชั่น"
-                  style={{ borderRadius: 10, marginRight: 10 }}
+                  className="form-control"
+                  placeholder="ค้นหาโปรโมชั่น..."
+                  style={{ borderRadius: '10px', borderColor: '#E9C070' }}
                 />
               </div>
             </div>
           </div>
-          <div className="form-group">
-            {searchPromotions()}
-          </div>
+          {listPromotions.length > 0 && (
+            <div className="form-group p-3" style={{ maxHeight: '200px', overflowY: 'auto', backgroundColor: '#fafbfc', borderRadius: '12px', border: '1px solid rgba(233,192,112,0.35)' }}>
+              {searchPromotions()}
+            </div>
+          )}
         </>
       )
     }
@@ -885,20 +947,27 @@ export default function Patient_payment(props) {
         style={{
           content: {
             transform: 'translate(0%, 0%)',
-            overlfow: 'scroll' // <-- This tells the modal to scrol
+            overflow: 'auto',
+            borderRadius: '20px',
+            border: 'none',
+            padding: 0,
+            backgroundColor: 'transparent'
           },
         }}
-        className="content-wrapper"
+        className="ReactModal__Content"
       >
-        <div style={{ margin: '5%', marginTop: '10%', padding: '0%', backgroundColor: 'rgba(0,0,0,0)', overflow: 'auto' }}>
-          <div className={'card'}>
-            <div className="card-header" style={{ backgroundColor: mode === 'add' ? themeColor2 : themeColor1 }}>
-              <h2 className="card-title">{mode === 'add' ? 'เพิ่มรายการโปรโมชั่น' : 'แก้ไขราคาโปรโมชั่นของลูกค้า'}</h2>
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool" onClick={(e) => {
+        <div style={{ padding: '0.5rem', backgroundColor: 'transparent', overflow: 'auto' }}>
+          <div className="card mb-0" style={{ borderRadius: '20px', overflow: 'hidden', border: '1px solid #E9C070', boxShadow: '0 20px 50px rgba(0,0,0,0.3)' }}>
+            <div className="card-header d-flex align-items-center justify-content-between" style={{ background: 'linear-gradient(135deg, #1E2430 0%, #2A3242 100%)', color: '#E9C070', borderBottom: '2px solid #C5953A', padding: '1rem 1.25rem' }}>
+              <h3 className="card-title mb-0 font-weight-bold" style={{ fontSize: '1.15rem' }}>
+                <i className={mode === 'add' ? 'fas fa-plus-circle mr-2' : 'fas fa-edit mr-2'} />
+                {mode === 'add' ? 'เพิ่มรายการโปรโมชั่น' : 'แก้ไขราคาโปรโมชั่นของลูกค้า'}
+              </h3>
+              <div className="card-tools ml-auto">
+                <button type="button" className="btn btn-tool text-white" onClick={(e) => {
                   e.preventDefault()
                   closeModal();
-                }}><i class="fas fa-times"></i>
+                }}><i className="fas fa-times"></i>
                 </button>
               </div>
             </div>
@@ -915,17 +984,17 @@ export default function Patient_payment(props) {
                   <div className='col-12'>
                     {mode === 'add' ? renderPromotions() :
                       <div className="form-group">
-                        <label>
+                        <label className="font-weight-bold text-dark">
                           ถ้าจะเปลี่ยนโปรโมชั่นให้ลบออกแล้วเพิ่มใหม่
                         </label>
-                        <input value={promotion_name} disabled class="form-control" />
+                        <input value={promotion_name} disabled className="form-control" style={{ borderRadius: '10px' }} />
                       </div>
                     }
                   </div>
                   <div className='col-12'>
                     <div className="form-group">
-                      <label>ผู้แนะนำ</label>
-                      <select className="form-control" value={agent} onChange={(e) => {
+                      <label className="font-weight-bold text-dark">ผู้แนะนำ</label>
+                      <select className="form-control" style={{ borderRadius: '10px' }} value={agent} onChange={(e) => {
                         setAgent(e.target.value)
                       }}>
                         <option value=''>ไม่มี</option>
@@ -933,11 +1002,12 @@ export default function Patient_payment(props) {
                       </select>
                     </div>
                   </div>
-                  <div className='col-6'>
+                  <div className='col-sm-6'>
                     <div className="form-group">
-                      <label>ราคาโปรโมชั่นเริ่มต้น</label>
+                      <label className="font-weight-bold text-dark">ราคาโปรโมชั่นเริ่มต้น</label>
                       <CurrencyFormat
                         className="form-control"
+                        style={{ borderRadius: '10px' }}
                         value={promotion_startPrice}
                         thousandSeparator={true} suffix={'฿'}
                         isNumericString={true}
@@ -945,11 +1015,12 @@ export default function Patient_payment(props) {
                       />
                     </div>
                   </div>
-                  <div className='col-6'>
+                  <div className='col-sm-6'>
                     <div className="form-group">
-                      <label>ราคาโปรโมชั่นของลูกค้า</label>
+                      <label className="font-weight-bold text-dark">ราคาโปรโมชั่นของลูกค้า</label>
                       <CurrencyFormat
                         className="form-control"
+                        style={{ borderRadius: '10px', borderColor: '#55C5D9', fontWeight: 600 }}
                         value={promotion_price} thousandSeparator={true} suffix={'฿'}
                         isNumericString={true}
                         onValueChange={(values) => {
@@ -959,18 +1030,20 @@ export default function Patient_payment(props) {
                     </div>
                   </div>
                   <div className='col-12'>
-                    <div className="form-group">
-                      <label>รายละเอียด</label>
-                      <textarea className='form-control' value={details} onChange={(e) => {
+                    <div className="form-group mb-0">
+                      <label className="font-weight-bold text-dark">รายละเอียด</label>
+                      <textarea className='form-control' rows="2" style={{ borderRadius: '10px' }} value={details} onChange={(e) => {
                         setDetails(e.target.value)
                       }} />
                     </div>
                   </div>
                 </div>
               </div>
-              <div className='card-footer'>
-                <button className='btn btn-primary' type='submit'>ตกลง</button>
-                <button className='btn btn-default float-right' onClick={(e) => {
+              <div className='card-footer bg-light px-4 py-3 d-flex justify-content-between align-items-center'>
+                <button className='btn px-4' style={{ background: 'linear-gradient(135deg, #E9C070 0%, #C5953A 100%)', color: '#1E2430', fontWeight: 700, borderRadius: '10px', border: 'none' }} type='submit'>
+                  <i className="fas fa-check-circle mr-1" /> ตกลง
+                </button>
+                <button className='btn btn-secondary px-4 ml-auto' style={{ borderRadius: '10px' }} onClick={(e) => {
                   e.preventDefault()
                   closeModal();
                 }}>ยกเลิก</button>
@@ -1004,15 +1077,20 @@ export default function Patient_payment(props) {
     <div className="content-wrapper">
       <div className="content-header">
         <div className="container-fluid">
-          <div className="row mb-2">
+          <div className="row mb-2 align-items-center">
             <div className="col-sm-6">
-              <h1 className="m-0">ขั้นตอนการจ่ายเงิน</h1>
-            </div>{/* /.col */}
+              <h1 className="m-0 font-weight-bold" style={{ color: '#1E2430', fontSize: '1.6rem' }}>
+                <i className="fas fa-file-invoice-dollar mr-2" style={{ color: '#C5953A' }} />
+                ขั้นตอนการจ่ายเงิน
+              </h1>
+              <p className="text-muted mb-0 mt-1" style={{ fontSize: '0.9rem' }}>
+                ตรวจสอบรายการหัตถการ คำนวณยอดชำระ และพิมพ์ใบเสร็จรับเงิน
+              </p>
+            </div>
             <div className="col-sm-6">
-
-            </div>{/* /.col */}
-          </div>{/* /.row */}
-        </div>{/* /.container-fluid */}
+            </div>
+          </div>
+        </div>
       </div>
       <section className='content'>
         <div className='container-fluid'>
@@ -1038,7 +1116,7 @@ export default function Patient_payment(props) {
 class ComponentToPrint extends Component {
   renderPaymentList = () => {
     return this.props.listPantientHistory.map((item, index) => (
-      <tr>
+      <tr key={index}>
         <td>{index + 1}</td>
         <td>{item.promotionMaster.promotion_name + ' ' + item.promotionMaster.unit_quantity + ' ' + item.promotionMaster.unit_suffix}</td>
         <td><CurrencyFormat value={item.promotion_price} displayType={'text'} thousandSeparator={true} suffix={' บาท'} renderText={value => <b>{value}</b>} /></td>
@@ -1076,7 +1154,7 @@ class ComponentToPrint extends Component {
       <div className="page">
         <div className="subpage">
           <div style={{ float: 'left', width: '5.5cm', height: '6cm', marginTop: '1cm', marginLeft: '0.5cm' }}>
-            <img style={{ height: '5cm' }} src='/img/ALA_logo.png' />
+            <img style={{ height: '5cm' }} src='/img/ALA_logo.png' alt="ALA Logo" />
           </div>
           <div style={{ float: 'left', width: '14.5cm', height: '6cm', marginTop: '1cm', marginLeft: '0.5cm' }}>
             <h3 style={{ fontSize: '1cm' }}><b>อัลลาคลินิคเวชกรรม</b></h3>
@@ -1120,15 +1198,15 @@ class ComponentToPrint extends Component {
             </tbody>
           </table>
           <div style={{ float: 'left', width: '20cm', fontSize: '0.6cm', textAlign: 'left', marginLeft: '0.5cm' }}>
-            <input style={{ width: '0.6cm', height: '0.6cm' }} checked={this.props.paymentData.payment_type === 'cash' ? true : false} type="checkbox" />
+            <input style={{ width: '0.6cm', height: '0.6cm' }} checked={this.props.paymentData.payment_type === 'cash' ? true : false} readOnly type="checkbox" />
             <label style={{ marginLeft: '0.5cm' }}>{"เงินสด"}</label>
           </div>
           <div style={{ float: 'left', width: '20cm', fontSize: '0.6cm', textAlign: 'left', marginLeft: '0.5cm' }}>
-            <input style={{ width: '0.6cm', height: '0.6cm' }} checked={this.props.paymentData.payment_type === 'transfer' ? true : false} type="checkbox" />
+            <input style={{ width: '0.6cm', height: '0.6cm' }} checked={this.props.paymentData.payment_type === 'transfer' ? true : false} readOnly type="checkbox" />
             <label style={{ marginLeft: '0.5cm' }}>{"โอน"}</label>
           </div>
           <div style={{ float: 'left', width: '20cm', fontSize: '0.6cm', textAlign: 'left', marginLeft: '0.5cm' }}>
-            <input style={{ width: '0.6cm', height: '0.6cm' }} checked={this.props.paymentData.payment_type === 'credit' ? true : false} type="checkbox" />
+            <input style={{ width: '0.6cm', height: '0.6cm' }} checked={this.props.paymentData.payment_type === 'credit' ? true : false} readOnly type="checkbox" />
             <label style={{ marginLeft: '0.5cm' }}>{"บัตรเครดิต"}</label>
           </div>
           <div style={{ float: 'left', width: '20cm', fontSize: '0.5cm', textAlign: 'right', marginLeft: '0.5cm' }}>

@@ -4,8 +4,7 @@ import Swal from "sweetalert2";
 import { key, server, OK } from "../../../constants";
 import { httpClient } from "../../../utils/HttpClient";
 import * as action from "../../../actions/app.action";
-import { Navigate } from "react-router-dom";
-
+import ContentHeader from "../../../utils/ContentHeader";
 
 class ChangePassword extends Component {
   constructor(props) {
@@ -21,135 +20,112 @@ class ChangePassword extends Component {
 
   doChangePassword = async () => {
     if (this.state.confirmPassword === this.state.newPassword) {
-      let result = await httpClient.patch(server.USER_URL, this.state)
+      let result = await httpClient.patch(server.USER_URL, this.state);
       if (result.data.api_result === OK) {
         Swal.fire({
-          icon: 'success',
-          title: 'Yeah...',
-          text: 'Your password has been changed',
+          icon: "success",
+          title: "เปลี่ยนรหัสผ่านสำเร็จ",
+          text: "กรุณาเข้าสู่ระบบใหม่อีกครั้งด้วยรหัสผ่านใหม่",
         }).then(() => {
-          // this.props.history.push("/Login");
-          window.location.replace("/Login")
+          window.location.replace("/Login");
           localStorage.removeItem(key.LOGIN_PASSED);
           localStorage.removeItem(key.API_KEY);
           localStorage.removeItem(key.USER_NAME);
           localStorage.removeItem(key.USER_LV);
           localStorage.removeItem(key.USER_EMP);
           localStorage.removeItem(key.TOKEN);
-          this.props.appReducer.app.forceUpdate();
-        })
+          this.props.appReducer.app && this.props.appReducer.app.forceUpdate();
+        });
       } else {
-        console.log(result.data.error);
         Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
+          icon: "error",
+          title: "ไม่สามารถเปลี่ยนรหัสผ่านได้",
           text: result.data.error,
-        })
+        });
       }
     } else {
       Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Password not match!',
-      })
+        icon: "error",
+        title: "รหัสผ่านไม่ตรงกัน",
+        text: "กรุณาตรวจสอบรหัสผ่านใหม่และการยืนยันรหัสผ่านให้ตรงกัน",
+      });
     }
-  }
+  };
 
   render() {
     return (
-      <div class="content-wrapper">
-        <section className="content-header">
-          <div className="container-fluid">
-            <div className="row mb-2">
-              <div className="col-sm-6">
-                <h1>
-                  Change password{" "}
-                  <span
-                    className="iconify"
-                    data-icon="vaadin:password"
-                    data-inline="false"
-                  />
-                </h1>
-              </div>
-              <div className="col-sm-6">
-                <ol className="breadcrumb float-sm-right">
-                </ol>
-              </div>
-            </div>
-          </div>
-          {/* /.container-fluid */}
-        </section>
+      <div className="content-wrapper">
+        <ContentHeader header="เปลี่ยนรหัสผ่าน (Change Password)" />
         <section className="content">
           <div className="container-fluid">
-            <div className="card card-dark">
-              <div className="card-header">
-                <h3 className="card-title">Change password form</h3>
+            <div className="row justify-content-center">
+              <div className="col-12 col-md-7 col-lg-5">
+                <div className="card card-dark">
+                  <div className="card-header">
+                    <h3 className="card-title">
+                      <i className="fas fa-shield-alt text-warning" /> ตั้งค่ารหัสผ่านใหม่สำหรับ{" "}
+                      <b>{this.state.username}</b>
+                    </h3>
+                  </div>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      this.doChangePassword();
+                    }}
+                  >
+                    <div className="card-body">
+                      <div className="form-group">
+                        <label>รหัสผ่านเดิม (Old Password)</label>
+                        <input
+                          type="password"
+                          className="form-control"
+                          placeholder="กรอกรหัสผ่านเดิม"
+                          onChange={(e) => {
+                            this.setState({ oldPassword: e.target.value });
+                          }}
+                          required
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>รหัสผ่านใหม่ (New Password)</label>
+                        <input
+                          type="password"
+                          className="form-control"
+                          placeholder="กรอกรหัสผ่านใหม่"
+                          onChange={(e) => {
+                            this.setState({ newPassword: e.target.value });
+                          }}
+                          required
+                        />
+                      </div>
+                      <div className="form-group mb-0">
+                        <label>ยืนยันรหัสผ่านใหม่ (Confirm Password)</label>
+                        <input
+                          type="password"
+                          className="form-control"
+                          placeholder="กรอกรหัสผ่านใหม่อีกครั้ง"
+                          onChange={(e) => {
+                            this.setState({ confirmPassword: e.target.value });
+                          }}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="card-footer d-flex justify-content-between">
+                      <button
+                        type="button"
+                        onClick={() => window.history.go(-1)}
+                        className="btn btn-default"
+                      >
+                        <i className="fas fa-arrow-left" /> ย้อนกลับ
+                      </button>
+                      <button type="submit" className="btn btn-primary">
+                        <i className="fas fa-save" /> บันทึกรหัสผ่านใหม่
+                      </button>
+                    </div>
+                  </form>
+                </div>
               </div>
-              {/* /.card-header */}
-              {/* form start */}
-              <form role="form">
-                <div className="card-body">
-                  <div className="form-group">
-                    <label htmlFor="exampleInputEmail1">Old password</label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      placeholder="Old password"
-                      onChange={(e) => {
-                        this.setState({ oldPassword: e.target.value });
-                      }}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="exampleInputPassword1">New Password</label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      placeholder="New password"
-                      onChange={(e) => {
-                        this.setState({ newPassword: e.target.value });
-                      }}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="exampleInputPassword1">
-                      Confirm Password
-                    </label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      placeholder="Confirm new password"
-                      onChange={(e) => {
-                        this.setState({ confirmPassword: e.target.value });
-                      }}
-                    />
-                  </div>
-                </div>
-                {/* /.card-body */}
-                <div className="card-footer">
-                  <button
-                    type="submit"
-                    className="btn btn-primary"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      this.doChangePassword()
-                    }}
-                  >
-                    Submit
-                  </button>
-                  <button
-                    type="submit"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      // this.props.history.goBack();
-                      window.history.go(-1)
-                    }}
-                    className="btn btn-default float-right"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
             </div>
           </div>
         </section>
@@ -166,5 +142,4 @@ const mapDispatchToProps = {
   ...action,
 };
 
-// export default ChangePassword;
 export default connect(mapStateToProps, mapDispatchToProps)(ChangePassword);

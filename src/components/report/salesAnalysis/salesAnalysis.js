@@ -33,11 +33,13 @@ export default function SalesAnalysis() {
 
   const renderOption = () => {
     return (
-      <>
-        <div className="input-group">
-          <label>วันที่ใช้บริการ</label>
+      <div className="d-flex flex-wrap align-items-center">
+        <label className="mr-3 mb-0" style={{ fontWeight: 600, color: '#E9C070' }}>
+          <i className="far fa-calendar-alt mr-2" /> ช่วงวันที่ต้องการวิเคราะห์:
+        </label>
+        <div style={{ minWidth: '260px' }}>
           <DatePicker
-            className="form-control input-lg"
+            className="form-control"
             dateFormat="dd-MMM-yyyy"
             selected={startDate}
             onChange={onChange}
@@ -51,7 +53,7 @@ export default function SalesAnalysis() {
             }}
           />
         </div>
-      </>
+      </div>
     )
   }
 
@@ -110,11 +112,10 @@ export default function SalesAnalysis() {
           type: 'bar',
           stacked: true,
         },
-        colors: ['#FF8811', '#392F5A'],
+        colors: ['#C5953A', '#1E2430'],
         plotOptions: {
           bar: {
-            // horizontal: true,
-            // barHeight: '80%',
+            borderRadius: 4,
           },
         },
         dataLabels: {
@@ -181,21 +182,20 @@ export default function SalesAnalysis() {
           }]
         },
         title: {
-          text: 'promotion analysis chart'
+          text: 'Promotion Performance Analysis'
         },
         xaxis: {
           categories: promotionsNameList,
           labels: {
             rotate: -30,
             offsetX: 0,
-            // offsetY: -100,
             maxHeight: 200,
           }
         },
       }
 
       return (
-        <ReactApexChart options={options} series={series} type="bar" height={500} />
+        <ReactApexChart options={options} series={series} type="bar" height={450} />
       )
     }
   }
@@ -227,11 +227,10 @@ export default function SalesAnalysis() {
           type: 'bar',
           stacked: true,
         },
-        colors: ['#DE6B48', '#7DBBC3'],
+        colors: ['#E9C070', '#55C5D9'],
         plotOptions: {
           bar: {
-            // horizontal: true,
-            // barHeight: '80%',
+            borderRadius: 4,
           },
         },
         dataLabels: {
@@ -307,21 +306,20 @@ export default function SalesAnalysis() {
           }
         },
         title: {
-          text: 'Customer payment analysis chart'
+          text: 'Top Customer Spend Analysis'
         },
         xaxis: {
           categories: customerNameList,
           labels: {
             rotate: -30,
             offsetX: 0,
-            // offsetY: -100,
             maxHeight: 200,
           }
         },
       }
 
       return (
-        <ReactApexChart options={options} series={series} type="bar" height={500} />
+        <ReactApexChart options={options} series={series} type="bar" height={450} />
       )
     }
   }
@@ -353,11 +351,10 @@ export default function SalesAnalysis() {
           type: 'bar',
           stacked: true,
         },
-        colors: ['#F092DD', '#392F5A'],
+        colors: ['#55C5D9', '#1E2430'],
         plotOptions: {
           bar: {
-            // horizontal: true,
-            // barHeight: '80%',
+            borderRadius: 4,
           },
         },
         dataLabels: {
@@ -433,21 +430,20 @@ export default function SalesAnalysis() {
           }
         },
         title: {
-          text: 'Customer payment analysis chart'
+          text: 'Demographics by Gender'
         },
         xaxis: {
           categories: customerNameList,
           labels: {
             rotate: -30,
             offsetX: 0,
-            // offsetY: -100,
             maxHeight: 200,
           }
         },
       }
 
       return (
-        <ReactApexChart options={options} series={series} type="bar" height={500} />
+        <ReactApexChart options={options} series={series} type="bar" height={450} />
       )
     }
   }
@@ -466,12 +462,12 @@ export default function SalesAnalysis() {
       }
       //series
       const series = [{
-        name: 'ยอดขายรวมจากลูกค้าที่มาใช้บริการ	',
+        name: 'ยอดขายรวมจากลูกค้าที่มาใช้บริการ',
         data: totalPaymentList,
         type: 'column',
       },
       {
-        name: 'จำนวนครั้งที่ลูกค้ามาใช้บริการ	',
+        name: 'จำนวนครั้งที่ลูกค้ามาใช้บริการ',
         data: countCustomerList,
         type: 'column',
       },
@@ -479,7 +475,7 @@ export default function SalesAnalysis() {
         name: 'ยอดขายเฉลี่ยต่อคน',
         data: averageSpendPerCustomerList,
         type: 'line',
-        color: '#402E2A',
+        color: '#1E2430',
       }
       ]
 
@@ -489,11 +485,10 @@ export default function SalesAnalysis() {
           type: 'bar',
           stacked: true,
         },
-        colors: ['#CEA0AE', '#9CD08F', '#402E2A'],
+        colors: ['#C5953A', '#55C5D9', '#1E2430'],
         plotOptions: {
           bar: {
-            // horizontal: true,
-            // barHeight: '80%',
+            borderRadius: 4,
           },
         },
         dataLabels: {
@@ -541,7 +536,6 @@ export default function SalesAnalysis() {
           },
         },
         {
-          // opposite: true,
           title: {
             text: 'ยอดขายเฉลี่ยต่อคน',
           },
@@ -582,45 +576,42 @@ export default function SalesAnalysis() {
           }
         },
         title: {
-          text: 'Customer payment analysis chart'
+          text: 'Demographics by Age Group'
         },
         xaxis: {
           categories: range_ageList,
           labels: {
             rotate: -30,
             offsetX: 0,
-            // offsetY: -100,
             maxHeight: 200,
           }
         },
       }
 
       return (
-        <ReactApexChart options={options} series={series} type="bar" height={500} />
+        <ReactApexChart options={options} series={series} type="bar" height={450} />
       )
     }
   }
 
   //Table
   const renderTableHeader = (header) => {
-    return header.map((item) => (
-      <th>
+    return header.map((item, idx) => (
+      <th key={idx}>
         {item}
       </th>
-    )
-    )
+    ))
   }
   const renderTableRow = (header, data) => {
     const renderTableRowData = (data) => {
-      return header.map((item) => (
-        <td>
+      return header.map((item, idx) => (
+        <td key={idx} style={{ padding: '12px 16px' }}>
           {data[item]}
         </td>
-      )
-      )
+      ))
     }
-    return data.map((item) => (
-      <tr>
+    return data.map((item, idx) => (
+      <tr key={idx}>
         {renderTableRowData(item)}
       </tr>
     ))
@@ -628,18 +619,16 @@ export default function SalesAnalysis() {
 
   const renderPromotionTable = () => {
     if (analysisData.promotionPareto) {
-      //tableData
       var header = Object.keys(analysisData.promotionPareto[0])
 
       return (
-        <div className="card-body table-responsive p-0">
-          <table className="table table-hover text-nowrap" role="grid">
+        <div className="table-responsive mt-3" style={{ borderRadius: '12px', border: '1px solid #EDF2F7' }}>
+          <table className="table table-hover text-nowrap mb-0" role="grid">
             <thead>
-              <tr role="row">
-                {/* {renderTableHeader(header)} */}
-                <th>ชื่อโปรโมชั่น</th>
-                <th>ราคาโปรโมชั่น</th>
-                <th>จำนวนการใช้บริการ</th>
+              <tr role="row" style={{ backgroundColor: '#1E2430', color: '#E9C070' }}>
+                <th style={{ padding: '14px 16px', borderBottom: '2px solid #C5953A' }}>ชื่อโปรโมชั่น</th>
+                <th style={{ padding: '14px 16px', borderBottom: '2px solid #C5953A' }}>ราคาโปรโมชั่น</th>
+                <th style={{ padding: '14px 16px', borderBottom: '2px solid #C5953A' }}>จำนวนการใช้บริการ</th>
               </tr>
             </thead>
             <tbody>
@@ -648,24 +637,21 @@ export default function SalesAnalysis() {
           </table>
         </div>
       )
-
     }
   }
   const renderCustomerPaymentTable = () => {
     if (analysisData.paymentPareto) {
-      //tableData
       var header = Object.keys(analysisData.paymentPareto[0])
 
       return (
-        <div className="card-body table-responsive p-0">
-          <table className="table table-hover text-nowrap" role="grid">
+        <div className="table-responsive mt-3" style={{ borderRadius: '12px', border: '1px solid #EDF2F7' }}>
+          <table className="table table-hover text-nowrap mb-0" role="grid">
             <thead>
-              <tr role="row">
-                {/* {renderTableHeader(header)} */}
-                <th>ยอดขายจากลูกค้าที่มาใช้บริการ</th>
-                <th>จำนวนโปรโมชั่นที่ลูกค้าใช้บริการ</th>
-                <th>ชื่อลูกค้า</th>
-                <th>นามสกุลลูกค้า</th>
+              <tr role="row" style={{ backgroundColor: '#1E2430', color: '#E9C070' }}>
+                <th style={{ padding: '14px 16px', borderBottom: '2px solid #C5953A' }}>ยอดขายจากลูกค้าที่มาใช้บริการ</th>
+                <th style={{ padding: '14px 16px', borderBottom: '2px solid #C5953A' }}>จำนวนโปรโมชั่นที่ลูกค้าใช้บริการ</th>
+                <th style={{ padding: '14px 16px', borderBottom: '2px solid #C5953A' }}>ชื่อลูกค้า</th>
+                <th style={{ padding: '14px 16px', borderBottom: '2px solid #C5953A' }}>นามสกุลลูกค้า</th>
               </tr>
             </thead>
             <tbody>
@@ -674,23 +660,20 @@ export default function SalesAnalysis() {
           </table>
         </div>
       )
-
     }
   }
   const renderCustomerSexTable = () => {
     if (analysisData.sexPareto) {
-      //tableData
       var header = Object.keys(analysisData.sexPareto[0])
 
       return (
-        <div className="card-body table-responsive p-0">
-          <table className="table table-hover text-nowrap" role="grid">
+        <div className="table-responsive mt-3" style={{ borderRadius: '12px', border: '1px solid #EDF2F7' }}>
+          <table className="table table-hover text-nowrap mb-0" role="grid">
             <thead>
-              <tr role="row">
-                {/* {renderTableHeader(header)} */}
-                <th>ยอดขายจากลูกค้าที่มาใช้บริการ</th>
-                <th>จำนวนครั้งที่ลูกค้ามาใช้บริการ</th>
-                <th>เพศของลูกค้า</th>
+              <tr role="row" style={{ backgroundColor: '#1E2430', color: '#E9C070' }}>
+                <th style={{ padding: '14px 16px', borderBottom: '2px solid #C5953A' }}>ยอดขายจากลูกค้าที่มาใช้บริการ</th>
+                <th style={{ padding: '14px 16px', borderBottom: '2px solid #C5953A' }}>จำนวนครั้งที่ลูกค้ามาใช้บริการ</th>
+                <th style={{ padding: '14px 16px', borderBottom: '2px solid #C5953A' }}>เพศของลูกค้า</th>
               </tr>
             </thead>
             <tbody>
@@ -699,24 +682,21 @@ export default function SalesAnalysis() {
           </table>
         </div>
       )
-
     }
   }
   const renderCustomerAgeTable = () => {
     if (analysisData.agePareto) {
-      //tableData
       var header = Object.keys(analysisData.agePareto[0])
 
       return (
-        <div className="card-body table-responsive p-0">
-          <table className="table table-hover text-nowrap" role="grid">
+        <div className="table-responsive mt-3" style={{ borderRadius: '12px', border: '1px solid #EDF2F7' }}>
+          <table className="table table-hover text-nowrap mb-0" role="grid">
             <thead>
-              <tr role="row">
-                {/* {renderTableHeader(header)} */}
-                <th>ยอดขายรวมจากลูกค้าที่มาใช้บริการ</th>
-                <th>ยอดขายเฉลี่ยต่อคน</th>
-                <th>จำนวนครั้งที่ลูกค้ามาใช้บริการ</th>
-                <th>ช่วงอายุของลูกค้า</th>
+              <tr role="row" style={{ backgroundColor: '#1E2430', color: '#E9C070' }}>
+                <th style={{ padding: '14px 16px', borderBottom: '2px solid #C5953A' }}>ยอดขายรวมจากลูกค้าที่มาใช้บริการ</th>
+                <th style={{ padding: '14px 16px', borderBottom: '2px solid #C5953A' }}>ยอดขายเฉลี่ยต่อคน</th>
+                <th style={{ padding: '14px 16px', borderBottom: '2px solid #C5953A' }}>จำนวนครั้งที่ลูกค้ามาใช้บริการ</th>
+                <th style={{ padding: '14px 16px', borderBottom: '2px solid #C5953A' }}>ช่วงอายุของลูกค้า</th>
               </tr>
             </thead>
             <tbody>
@@ -725,7 +705,6 @@ export default function SalesAnalysis() {
           </table>
         </div>
       )
-
     }
   }
 
@@ -752,17 +731,15 @@ export default function SalesAnalysis() {
 
 
   return (
-    <div className="content-wrapper">
+    <div className="content-wrapper" style={{ backgroundColor: '#F8F9FC', minHeight: '100vh', paddingBottom: '2rem' }}>
       <section className="content-header">
         <div className="container-fluid">
-          <div className="row mb-2">
+          <div className="row mb-3 align-items-center">
             <div className="col-sm-6">
-              <h1>รายงานวิเคราะห์ข้อมูลจากยอดขาย</h1>
-            </div>
-            <div className="col-sm-6">
-              <ol className="breadcrumb float-sm-right">
-
-              </ol>
+              <h1 className="m-0" style={{ color: '#1E2430', fontWeight: 700, fontSize: '1.75rem' }}>
+                <i className="fas fa-chart-pie mr-2" style={{ color: '#C5953A' }} />
+                รายงานวิเคราะห์ข้อมูลจากยอดขาย (Sales Analytics)
+              </h1>
             </div>
           </div>
         </div>
@@ -770,79 +747,119 @@ export default function SalesAnalysis() {
       <section className="content">
         <div className="container-fluid">
           <div className="row">
-            <div className="col-12">
-              <div className='card card-default'>
-                <div className="card-header">
+            <div className="col-12 mb-4">
+              <div className="card shadow-sm border-0 m-0" style={{ borderRadius: '16px', overflow: 'hidden' }}>
+                <div
+                  className="card-header d-flex align-items-center justify-content-between"
+                  style={{ backgroundColor: '#1E2430', color: '#E9C070', padding: '16px 24px', borderBottom: '3px solid #E9C070' }}
+                >
                   <div className="overlay-wrapper" style={{ visibility: isLoad ? 'visible' : 'hidden' }}>
                     <div className="overlay">
-                      <i className="fas fa-3x fa-sync-alt fa-spin">
-                      </i>
+                      <i className="fas fa-3x fa-sync-alt fa-spin" />
                       <div className="text-bold pt-2">Loading...</div>
                     </div>
                   </div>
                   {renderOption()}
                 </div>
-                <div className="card-body">
-                  <div>
-                    <h3 style={{ textAlign: 'center' }}>รายงานวิเคราะห์การใช้บริการ</h3>
-                    {renderPromotionChart()}
-                    <div style={{ textAlign: 'center' }}>
-                      <button onClick={() => {
-                        doExportExcel(analysisData.promotionPareto, 'รายงานวิเคราะห์การใช้บริการ ' + moment(startDate).format('DD-MMM-yyyy') + ' ถึง ' + moment(endDate).format('DD-MMM-yyyy'))
-                      }} className="btn btn-primary" >
-                        <i className="fas fa-file-excel" style={{ marginRight: 5 }} />
-                        ส่งออกรายงาน
-                      </button>
-                    </div>
-                    {renderPromotionTable()}
-                  </div>
-                  <hr style={{ border: '2px solid ' }} />
-                  <div>
-                    <h3 style={{ textAlign: 'center' }}>รายงานวิเคราะห์ยอดขายลูกค้า</h3>
-                    {renderCustomerPaymentChart()}
-                    <div style={{ textAlign: 'center' }}>
-                      <button onClick={() => {
-                        doExportExcel(analysisData.paymentPareto, 'รายงานวิเคราะห์ยอดขายลูกค้า ' + moment(startDate).format('DD-MMM-yyyy') + ' ถึง ' + moment(endDate).format('DD-MMM-yyyy'))
-                      }} className="btn btn-primary" >
-                        <i className="fas fa-file-excel" style={{ marginRight: 5 }} />
-                        ส่งออกรายงาน
-                      </button>
-                    </div>
-                    {renderCustomerPaymentTable()}
-                  </div>
-                  <hr style={{ border: '2px solid ' }} />
-                  <div>
-                    <h3 style={{ textAlign: 'center' }}>รายงานเพศของลูกค้าที่มาใช้บริการ</h3>
-                    {renderCustomerSexChart()}
-                    <div style={{ textAlign: 'center' }}>
-                      <button onClick={() => {
-                        doExportExcel(analysisData.sexPareto, 'รายงานเพศของลูกค้าที่มาใช้บริการ ' + moment(startDate).format('DD-MMM-yyyy') + ' ถึง ' + moment(endDate).format('DD-MMM-yyyy'))
-                      }} className="btn btn-primary" >
-                        <i className="fas fa-file-excel" style={{ marginRight: 5 }} />
-                        ส่งออกรายงาน
-                      </button>
-                    </div>
-                    {renderCustomerSexTable()}
-                  </div>
-                  <hr style={{ border: '2px solid ' }} />
-                  <div>
-                    <h3 style={{ textAlign: 'center' }}>รายงานช่วงอายุของลูกค้าที่มาใช้บริการ</h3>
-                    {renderCustomerAgeChart()}
-                    <div style={{ textAlign: 'center' }}>
-                      <button onClick={() => {
-                        doExportExcel(analysisData.agePareto, 'รายงานช่วงอายุของลูกค้าที่มาใช้บริการ ' + moment(startDate).format('DD-MMM-yyyy') + ' ถึง ' + moment(endDate).format('DD-MMM-yyyy'))
-                      }} className="btn btn-primary" >
-                        <i className="fas fa-file-excel" style={{ marginRight: 5 }} />
-                        ส่งออกรายงาน
-                      </button>
-                    </div>
-                    {renderCustomerAgeTable()}
-                  </div>
-                  <hr style={{ border: '2px solid ' }} />
-                </div>
-                <div className="card-footer"></div>
               </div>
             </div>
+
+            {/* Section 1: Promotion Analysis */}
+            <div className="col-12 mb-4">
+              <div className="card shadow-sm border-0 m-0" style={{ borderRadius: '16px', overflow: 'hidden' }}>
+                <div className="card-header d-flex align-items-center justify-content-between" style={{ backgroundColor: '#1E2430', color: '#E9C070', padding: '16px 24px', borderBottom: '3px solid #C5953A' }}>
+                  <h3 className="card-title m-0" style={{ fontWeight: 600, fontSize: '1.15rem', color: '#E9C070' }}>
+                    <i className="fas fa-award mr-2" /> รายงานวิเคราะห์การใช้บริการ (Promotion Analysis)
+                  </h3>
+                  <button
+                    onClick={() => {
+                      doExportExcel(analysisData.promotionPareto, 'รายงานวิเคราะห์การใช้บริการ ' + moment(startDate).format('DD-MMM-yyyy') + ' ถึง ' + moment(endDate).format('DD-MMM-yyyy'))
+                    }}
+                    className="btn btn-sm px-3"
+                    style={{ backgroundColor: '#C5953A', color: '#FFFFFF', borderRadius: '8px', fontWeight: 600 }}
+                  >
+                    <i className="fas fa-file-excel mr-1" /> ส่งออกรายงาน
+                  </button>
+                </div>
+                <div className="card-body" style={{ padding: '24px' }}>
+                  {renderPromotionChart()}
+                  {renderPromotionTable()}
+                </div>
+              </div>
+            </div>
+
+            {/* Section 2: Customer Spend Analysis */}
+            <div className="col-12 mb-4">
+              <div className="card shadow-sm border-0 m-0" style={{ borderRadius: '16px', overflow: 'hidden' }}>
+                <div className="card-header d-flex align-items-center justify-content-between" style={{ backgroundColor: '#1E2430', color: '#E9C070', padding: '16px 24px', borderBottom: '3px solid #55C5D9' }}>
+                  <h3 className="card-title m-0" style={{ fontWeight: 600, fontSize: '1.15rem', color: '#E9C070' }}>
+                    <i className="fas fa-crown mr-2" style={{ color: '#55C5D9' }} /> รายงานวิเคราะห์ยอดขายลูกค้า (Customer Spend Pareto)
+                  </h3>
+                  <button
+                    onClick={() => {
+                      doExportExcel(analysisData.paymentPareto, 'รายงานวิเคราะห์ยอดขายลูกค้า ' + moment(startDate).format('DD-MMM-yyyy') + ' ถึง ' + moment(endDate).format('DD-MMM-yyyy'))
+                    }}
+                    className="btn btn-sm px-3"
+                    style={{ backgroundColor: '#C5953A', color: '#FFFFFF', borderRadius: '8px', fontWeight: 600 }}
+                  >
+                    <i className="fas fa-file-excel mr-1" /> ส่งออกรายงาน
+                  </button>
+                </div>
+                <div className="card-body" style={{ padding: '24px' }}>
+                  {renderCustomerPaymentChart()}
+                  {renderCustomerPaymentTable()}
+                </div>
+              </div>
+            </div>
+
+            {/* Section 3: Customer Sex Analysis */}
+            <div className="col-12 mb-4">
+              <div className="card shadow-sm border-0 m-0" style={{ borderRadius: '16px', overflow: 'hidden' }}>
+                <div className="card-header d-flex align-items-center justify-content-between" style={{ backgroundColor: '#1E2430', color: '#E9C070', padding: '16px 24px', borderBottom: '3px solid #E9C070' }}>
+                  <h3 className="card-title m-0" style={{ fontWeight: 600, fontSize: '1.15rem', color: '#E9C070' }}>
+                    <i className="fas fa-venus-mars mr-2" /> รายงานเพศของลูกค้าที่มาใช้บริการ (Gender Analysis)
+                  </h3>
+                  <button
+                    onClick={() => {
+                      doExportExcel(analysisData.sexPareto, 'รายงานเพศของลูกค้าที่มาใช้บริการ ' + moment(startDate).format('DD-MMM-yyyy') + ' ถึง ' + moment(endDate).format('DD-MMM-yyyy'))
+                    }}
+                    className="btn btn-sm px-3"
+                    style={{ backgroundColor: '#C5953A', color: '#FFFFFF', borderRadius: '8px', fontWeight: 600 }}
+                  >
+                    <i className="fas fa-file-excel mr-1" /> ส่งออกรายงาน
+                  </button>
+                </div>
+                <div className="card-body" style={{ padding: '24px' }}>
+                  {renderCustomerSexChart()}
+                  {renderCustomerSexTable()}
+                </div>
+              </div>
+            </div>
+
+            {/* Section 4: Customer Age Analysis */}
+            <div className="col-12 mb-4">
+              <div className="card shadow-sm border-0 m-0" style={{ borderRadius: '16px', overflow: 'hidden' }}>
+                <div className="card-header d-flex align-items-center justify-content-between" style={{ backgroundColor: '#1E2430', color: '#E9C070', padding: '16px 24px', borderBottom: '3px solid #55C5D9' }}>
+                  <h3 className="card-title m-0" style={{ fontWeight: 600, fontSize: '1.15rem', color: '#E9C070' }}>
+                    <i className="fas fa-users mr-2" style={{ color: '#55C5D9' }} /> รายงานช่วงอายุของลูกค้าที่มาใช้บริการ (Age Group Analysis)
+                  </h3>
+                  <button
+                    onClick={() => {
+                      doExportExcel(analysisData.agePareto, 'รายงานช่วงอายุของลูกค้าที่มาใช้บริการ ' + moment(startDate).format('DD-MMM-yyyy') + ' ถึง ' + moment(endDate).format('DD-MMM-yyyy'))
+                    }}
+                    className="btn btn-sm px-3"
+                    style={{ backgroundColor: '#C5953A', color: '#FFFFFF', borderRadius: '8px', fontWeight: 600 }}
+                  >
+                    <i className="fas fa-file-excel mr-1" /> ส่งออกรายงาน
+                  </button>
+                </div>
+                <div className="card-body" style={{ padding: '24px' }}>
+                  {renderCustomerAgeChart()}
+                  {renderCustomerAgeTable()}
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>

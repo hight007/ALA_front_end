@@ -1,38 +1,399 @@
-.App {
-  text-align: center;
+/* ALA Clinic Luxury Aesthetic Component Styles */
+.card {
+  overflow: visible !important;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.ala-hero-banner {
+  background: linear-gradient(135deg, #1E2430 0%, #2B3346 60%, #3A3224 100%);
+  border-radius: 18px;
+  padding: 1.65rem 2rem;
+  color: #FFFFFF;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(233, 192, 112, 0.35);
+  box-shadow: 0 12px 32px rgba(20, 24, 33, 0.14);
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-.App-link {
-  color: #61dafb;
+.ala-hero-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  color: var(--ala-gold);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.ala-hero-subtitle {
+  margin: 0;
+  font-size: 0.92rem;
+  color: #CBD5E1;
+}
+
+.ala-quick-actions {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.ala-chart-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.ala-segmented-group {
+  display: inline-flex;
+  background: #F4EFE6;
+  padding: 4px;
+  border-radius: 10px;
+  gap: 4px;
+}
+
+.ala-segmented-btn {
+  border: none;
+  background: transparent;
+  padding: 0.35rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ala-segmented-btn.active {
+  background: var(--ala-gold-gradient);
+  color: #1E2430;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(212, 162, 76, 0.25);
+}
+
+.ala-kanban-col {
+  background: #FAF8F4;
+  border: 1px solid var(--ala-border);
+  border-radius: 16px;
+  padding: 1rem;
+  height: 100%;
+}
+
+.ala-patient-item-card {
+  background: #FFFFFF;
+  border: 1px solid var(--ala-border);
+  border-left: 4px solid var(--ala-gold);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.75rem;
+  box-shadow: var(--ala-shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.ala-patient-item-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ala-shadow-md);
+}
+
+/* =========================================================
+   LUXURY REACT-DATEPICKER THEME (CALENDAR & INPUT DROPDOWN)
+   ========================================================= */
+.react-datepicker-wrapper {
+  width: 100%;
+  display: block;
+}
+
+.react-datepicker__input-container {
+  position: relative;
+  display: block !important;
+  width: 100%;
+}
+
+.react-datepicker__input-container::before {
+  content: "\f073";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  position: absolute;
+  left: 14px;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  color: #C5953A;
+  font-size: 0.95rem;
+  pointer-events: none;
+  z-index: 3;
+  line-height: 1 !important;
+}
+
+.react-datepicker__input-container input.form-control,
+.react-datepicker__input-container input {
+  width: 100% !important;
+  display: block !important;
+  padding-left: 2.5rem !important;
+  padding-right: 2.4rem !important;
+  border-radius: 12px !important;
+  border: 1.5px solid #E5D5B5 !important;
+  background-color: #FFFFFF !important;
+  color: #1E2430 !important;
+  font-weight: 600 !important;
+  font-size: 0.92rem !important;
+  height: 42px !important;
+  line-height: normal !important;
+  box-shadow: 0 2px 8px rgba(30, 36, 48, 0.06) !important;
+  cursor: pointer;
+  box-sizing: border-box !important;
+  transition: all 0.2s ease !important;
+}
+
+.react-datepicker__input-container input:hover {
+  border-color: #E9C070 !important;
+  background-color: #FFFDF9 !important;
+}
+
+.react-datepicker__input-container input:focus {
+  border-color: #C5953A !important;
+  box-shadow: 0 0 0 3px rgba(233, 192, 112, 0.28) !important;
+  outline: none !important;
+}
+
+/* Clear button (x) inside DatePicker input */
+.react-datepicker__close-icon {
+  position: absolute !important;
+  right: 10px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  height: 20px !important;
+  width: 20px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 4 !important;
+}
+
+.react-datepicker__close-icon::after {
+  background: linear-gradient(135deg, #E9C070 0%, #C5953A 100%) !important;
+  color: #1E2430 !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  height: 20px !important;
+  width: 20px !important;
+  line-height: 20px !important;
+  text-align: center !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  box-shadow: 0 2px 6px rgba(197, 149, 58, 0.35) !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.react-datepicker__close-icon:hover::after {
+  background: #1E2430 !important;
+  color: #E9C070 !important;
+  transform: scale(1.08);
+}
+
+/* Popper & Calendar Container */
+.react-datepicker-popper {
+  z-index: 9999 !important;
+  padding-top: 8px !important;
+}
+
+.react-datepicker__triangle {
+  display: none !important;
+}
+
+.react-datepicker {
+  font-family: 'Prompt', 'Plus Jakarta Sans', sans-serif !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #E5D5B5 !important;
+  border-radius: 18px !important;
+  box-shadow: 0 20px 48px rgba(20, 24, 33, 0.22), 0 4px 14px rgba(197, 149, 58, 0.14) !important;
+  overflow: hidden !important;
+  padding-bottom: 10px !important;
+}
+
+/* Calendar Header */
+.react-datepicker__header {
+  background: linear-gradient(135deg, #1E2430 0%, #141821 100%) !important;
+  border-bottom: 2px solid #E9C070 !important;
+  padding: 16px 14px 10px 14px !important;
+  border-top-left-radius: 17px !important;
+  border-top-right-radius: 17px !important;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+  color: #E9C070 !important;
+  font-weight: 600 !important;
+  font-size: 1.02rem !important;
+  letter-spacing: 0.4px;
+  margin-bottom: 10px !important;
+}
+
+.react-datepicker__day-names {
+  margin-top: 4px !important;
+  margin-bottom: 0 !important;
+  display: flex;
+  justify-content: space-around;
+}
+
+.react-datepicker__day-name {
+  color: #CBD5E1 !important;
+  font-weight: 500 !important;
+  font-size: 0.8rem !important;
+  width: 2.35rem !important;
+  line-height: 1.9rem !important;
+  margin: 0.15rem !important;
+}
+
+/* Navigation Arrows */
+.react-datepicker__navigation {
+  top: 14px !important;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 8px !important;
+  transition: background 0.2s ease !important;
+}
+
+.react-datepicker__navigation:hover {
+  background: rgba(233, 192, 112, 0.16) !important;
+}
+
+.react-datepicker__navigation-icon::before {
+  border-color: #E9C070 !important;
+  border-width: 2.5px 2.5px 0 0 !important;
+  height: 8px !important;
+  width: 8px !important;
+  top: 10px !important;
+}
+
+.react-datepicker__navigation:hover .react-datepicker__navigation-icon::before {
+  border-color: #FFFFFF !important;
+}
+
+/* Month & Days Grid */
+.react-datepicker__month {
+  margin: 0.65rem 0.75rem 0.25rem 0.75rem !important;
+}
+
+.react-datepicker__week {
+  display: flex;
+  justify-content: space-around;
+}
+
+.react-datepicker__day {
+  width: 2.35rem !important;
+  height: 2.35rem !important;
+  line-height: 2.35rem !important;
+  margin: 0.15rem !important;
+  border-radius: 10px !important;
+  color: #1E293B !important;
+  font-weight: 500 !important;
+  font-size: 0.88rem !important;
+  transition: all 0.15s ease !important;
+}
+
+.react-datepicker__day:hover {
+  background-color: #FAF3E3 !important;
+  color: #C5953A !important;
+  transform: translateY(-1px);
+}
+
+.react-datepicker__day--today {
+  border: 1.5px solid #55C5D9 !important;
+  font-weight: 700 !important;
+  color: #0F766E !important;
+}
+
+/* Range & Selected Day States */
+.react-datepicker__day--in-range,
+.react-datepicker__day--in-selecting-range {
+  background-color: #FBF3E0 !important;
+  color: #1E2430 !important;
+  border-radius: 8px !important;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--range-start,
+.react-datepicker__day--range-end,
+.react-datepicker__day--selecting-range-start,
+.react-datepicker__day--selecting-range-end {
+  background: linear-gradient(135deg, #E9C070 0%, #C5953A 100%) !important;
+  color: #1E2430 !important;
+  font-weight: 700 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 10px rgba(197, 149, 58, 0.35) !important;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: rgba(233, 192, 112, 0.28) !important;
+  color: #1E2430 !important;
+}
+
+.react-datepicker__day--outside-month {
+  color: #CBD5E1 !important;
+  opacity: 0.6;
+}
+
+/* =========================================================
+   LUXURY SELECT & DROPDOWN STYLING (NATIVE & REACT-SELECT)
+   ========================================================= */
+select.form-control,
+select.custom-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #FFFFFF !important;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C5953A' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.85rem center !important;
+  background-size: 16px 16px !important;
+  padding-right: 2.5rem !important;
+  border: 1.5px solid #E5D5B5 !important;
+  border-radius: 12px !important;
+  font-weight: 500 !important;
+  color: #1E2430 !important;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(30, 36, 48, 0.04);
+  transition: all 0.2s ease !important;
+}
+
+select.form-control:hover,
+select.custom-select:hover {
+  border-color: #E9C070 !important;
+  background-color: #FFFDF9 !important;
+}
+
+select.form-control:focus,
+select.custom-select:focus {
+  border-color: #C5953A !important;
+  box-shadow: 0 0 0 3px rgba(233, 192, 112, 0.25) !important;
+  outline: none !important;
+}
+
+/* React-Select Overrides */
+div[class*="-control"] {
+  border-radius: 12px !important;
+  border: 1.5px solid #E5D5B5 !important;
+  min-height: 42px !important;
+  box-shadow: 0 2px 8px rgba(30, 36, 48, 0.04) !important;
+  transition: all 0.2s ease !important;
+}
+
+div[class*="-control"]:hover {
+  border-color: #E9C070 !important;
+}
+
+div[class*="-menu"] {
+  border-radius: 14px !important;
+  border: 1px solid #E5D5B5 !important;
+  box-shadow: 0 14px 34px rgba(20, 24, 33, 0.16) !important;
+  overflow: hidden !important;
+  z-index: 9999 !important;
 }

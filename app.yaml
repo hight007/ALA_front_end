@@ -1,0 +1,13 @@
+runtime: nodejs24
+instance_class: F1
+
+handlers:
+  # Serve static files with extensions from the React build directory
+  - url: /(.*\..+)$
+    static_files: build/\1
+    upload: build/(.*\..+)$
+
+  # Route all other URLs to index.html (SPA client-side routing)
+  - url: /.*
+    static_files: build/index.html
+    upload: build/index.html

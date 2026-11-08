@@ -1,23 +1,36 @@
+.react-datepicker-wrapper,
+.react-datepicker__input-container,
+.react-datepicker__input-container input {
+  display: block;
+  width: 100%;
+}
+
 .react-calendar {
   width: 100%;
   max-width: 100%;
-  background: white;
-  border: 0.2em solid #00496b;
-  border-radius: 1em;
-  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  border: 1px solid rgba(233, 192, 112, 0.45);
+  border-radius: 16px;
+  font-family: inherit;
   line-height: 1.5em;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(30, 36, 48, 0.04);
 }
+
 .react-calendar--doubleView {
   width: 700px;
 }
+
 .react-calendar--doubleView .react-calendar__viewContainer {
   display: flex;
   margin: -0.5em;
 }
+
 .react-calendar--doubleView .react-calendar__viewContainer > * {
   width: 50%;
   margin: 0.5em;
 }
+
 .react-calendar,
 .react-calendar *,
 .react-calendar *:before,
@@ -26,107 +39,180 @@
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
+
 .react-calendar button {
   margin: 0;
   border: 0;
   outline: none;
 }
+
 .react-calendar button:enabled:hover {
   cursor: pointer;
 }
+
 .react-calendar__navigation {
-  height: 3em;
+  height: 3.5rem;
   display: flex;
-  justify-content: space-evenly;
-  margin: 0.3em;
-  font-size: 1.5em;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0.5rem;
+  background: linear-gradient(135deg, #1E2430 0%, #2A3242 100%);
+  color: #E9C070;
+  font-size: 1.2rem;
+  font-weight: 700;
 }
+
 .react-calendar__navigation button {
-  min-width: 2em;
+  min-width: 2.75rem;
+  height: 2.5rem;
   background: none;
+  color: #E9C070;
+  border-radius: 8px;
+  font-weight: 700;
+  transition: background-color 0.2s ease;
 }
+
 .react-calendar__navigation button:enabled:hover,
 .react-calendar__navigation button:enabled:focus {
-  background-color: #e6e6e6;
+  background-color: rgba(233, 192, 112, 0.18);
 }
+
 .react-calendar__navigation button[disabled] {
-  background-color: #f0f0f0;
+  opacity: 0.4;
 }
+
 .react-calendar__month-view__weekdays {
   text-align: center;
   text-transform: uppercase;
-  font-weight: bold;
-  font-size: 1.25em;
-  
+  font-weight: 700;
+  font-size: 0.9rem;
+  background-color: #FAF8F5;
+  color: #1E2430;
+  border-bottom: 1px solid rgba(233, 192, 112, 0.35);
 }
-.react-calendar__month-view__weekdays__weekday {
-  padding: 0.5em;
-}
-.react-calendar__month-view__weekNumbers {
-    
-  font-weight: bold;
-}
-.react-calendar__month-view__weekNumbers .react-calendar__tile {
 
+.react-calendar__month-view__weekdays__weekday {
+  padding: 0.75em 0.5em;
+}
+
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none;
+}
+
+.react-calendar__month-view__weekNumbers {
+  font-weight: bold;
+}
+
+.react-calendar__month-view__weekNumbers .react-calendar__tile {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.05em;
+  font-size: 1rem;
   padding: calc(0.75em / 0.75) calc(0.5em / 0.75);
 }
+
 .react-calendar__month-view__days__day--weekend {
-  color: #d10000;
+  color: #C5953A;
 }
+
 .react-calendar__month-view__days__day--neighboringMonth {
-  color: #757575;
+  color: #b0b5be;
 }
+
 .react-calendar__year-view .react-calendar__tile,
 .react-calendar__decade-view .react-calendar__tile,
 .react-calendar__century-view .react-calendar__tile {
-  padding: 2em 0.5em;
+  padding: 1.5em 0.5em;
 }
+
 .react-calendar__tile {
   max-width: 100%;
+  min-height: 85px;
   text-align: center;
-  padding: 0.75em 0.5em;
+  padding: 0.65em 0.4em;
   background: none;
+  border: 1px solid rgba(0, 0, 0, 0.03) !important;
+  transition: all 0.15s ease;
+  font-weight: 500;
 }
+
 .react-calendar__tile:disabled {
-  background-color: #f0f0f0;
+  background-color: #f8f9fa;
+  color: #ced4da;
 }
+
 .react-calendar__tile:enabled:hover,
 .react-calendar__tile:enabled:focus {
-  background-color: #e6e6e6;
+  background-color: rgba(233, 192, 112, 0.14);
 }
+
 .react-calendar__tile--now {
-  color : #000000 !important;
-  background: #ffff76 !important;
+  color: #1E2430 !important;
+  background: rgba(85, 197, 217, 0.18) !important;
+  font-weight: 700;
 }
+
 .react-calendar__tile--now:enabled:hover,
 .react-calendar__tile--now:enabled:focus {
-  background: #ffffa9;
+  background: rgba(85, 197, 217, 0.28) !important;
 }
+
 .react-calendar__tile--hasActive {
-  background: #76baff;
+  background: #E9C070;
 }
-.react-calendar__tile--hasActive:enabled:hover,
-.react-calendar__tile--hasActive:enabled:focus {
-  background: #a9d4ff;
-}
+
 .react-calendar__tile--active {
-  background: #006edc;
-  color: white;
+  background: #1E2430 !important;
+  color: #E9C070 !important;
+  border-radius: 10px;
 }
-.react-calendar__tile--active:enabled:hover,
-.react-calendar__tile--active:enabled:focus {
-  background: #1087ff;
-}
-.react-calendar--selectRange .react-calendar__tile--hover {
-  background-color: #e6e6e6;
-}
+
 .highlight {
-  color: white;
-  background-color: red;
-  border: 0.2em solid black !important;
-  border-radius: 50%;
+  color: #1E2430 !important;
+  background: linear-gradient(135deg, rgba(233, 192, 112, 0.35) 0%, rgba(197, 149, 58, 0.25) 100%) !important;
+  border: 2px solid #C5953A !important;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+/* Status Badges */
+.ala-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: capitalize;
+}
+
+.ala-status-open {
+  background-color: rgba(40, 167, 69, 0.12);
+  color: #1e7e34;
+  border: 1px solid rgba(40, 167, 69, 0.3);
+}
+
+.ala-status-wait {
+  background-color: rgba(233, 192, 112, 0.22);
+  color: #966919;
+  border: 1px solid #E9C070;
+}
+
+.ala-status-diagnose {
+  background-color: rgba(85, 197, 217, 0.18);
+  color: #1b7f91;
+  border: 1px solid #55C5D9;
+}
+
+.ala-status-operate {
+  background-color: rgba(197, 149, 58, 0.18);
+  color: #7d5a18;
+  border: 1px solid #C5953A;
+}
+
+.ala-status-payment {
+  background-color: rgba(220, 53, 69, 0.12);
+  color: #bd2130;
+  border: 1px solid rgba(220, 53, 69, 0.3);
 }

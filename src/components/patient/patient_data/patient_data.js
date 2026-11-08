@@ -58,6 +58,23 @@ export default function Patient_data(props) {
     }
   }
 
+  const getStatusBadgeClass = (status) => {
+    switch (status) {
+      case 'open':
+        return 'ala-status-badge ala-status-open';
+      case 'waiting':
+        return 'ala-status-badge ala-status-wait';
+      case 'diagnose':
+        return 'ala-status-badge ala-status-diagnose';
+      case 'operate':
+        return 'ala-status-badge ala-status-operate';
+      case 'payment':
+        return 'ala-status-badge ala-status-payment';
+      default:
+        return 'ala-status-badge ala-status-open';
+    }
+  }
+
   //add or edit  patient
   const closeModal = () => {
     setPatient_id('')
@@ -80,24 +97,34 @@ export default function Patient_data(props) {
         style={{
           content: {
             transform: 'translate(0%, 0%)',
-            overlfow: 'scroll' // <-- This tells the modal to scrol
+            overflow: 'auto',
+            borderRadius: '20px',
+            border: 'none',
+            padding: 0,
+            backgroundColor: 'transparent'
           },
         }}
-        className="content-wrapper"
+        className="ReactModal__Content"
       >
-        <div style={{ margin: '5%', marginTop: '10%', padding: '0%', backgroundColor: 'rgba(0,0,0,0)', overflow: 'auto' }}>
-          <div className={modalStatus == 'add' ? "card card-success" : 'card card-warning'}>
-            <div className="card-header">
-              <h2 className="card-title">{modalStatus == 'add' ? 'ข้อมูลคนไข้ใหม่' : 'แก้ไขข้อมูลคนไข้'}</h2>
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool" onClick={(e) => {
+        <div style={{ padding: '0.5rem', backgroundColor: 'transparent', overflow: 'auto' }}>
+          <div className="card mb-0" style={{ borderRadius: '20px', overflow: 'hidden', border: '1px solid #E9C070', boxShadow: '0 20px 50px rgba(0,0,0,0.3)' }}>
+            <div className="card-header ala-card-header-dark d-flex align-items-center justify-content-between">
+              <h3 className="card-title mb-0 font-weight-bold" style={{ fontSize: '1.2rem', color: '#E9C070' }}>
+                <i className={modalStatus == 'add' ? "fas fa-user-plus mr-2" : "fas fa-user-edit mr-2"} />
+                {modalStatus == 'add' ? 'ลงทะเบียนคนไข้ใหม่ (New Patient)' : 'แก้ไขข้อมูลคนไข้ (Edit Patient)'}
+              </h3>
+              <div className="card-tools ml-auto">
+                <button type="button" className="btn btn-tool text-white" onClick={(e) => {
                   e.preventDefault()
                   closeModal();
-                }}><i class="fas fa-times"></i>
+                }}>
+                  <i className="fas fa-times" style={{ fontSize: '1.1rem' }}></i>
                 </button>
               </div>
             </div>
-            <div className='card-body' style={{ textAlign: 'center' }}><img src="/img/ALA_logo.png" /></div>
+            <div className="card-body pb-0 pt-3" style={{ textAlign: 'center', background: 'linear-gradient(180deg, rgba(233,192,112,0.08) 0%, rgba(255,255,255,0) 100%)' }}>
+              <img src="/img/ALA_logo.png" alt="ALA Clinic" style={{ maxHeight: '72px', objectFit: 'contain' }} />
+            </div>
             <form onSubmit={(e) => {
               e.preventDefault();
               if (modalStatus === 'add') {
@@ -105,14 +132,14 @@ export default function Patient_data(props) {
               } else {
                 doUpdatePatient()
               }
-
-
             }}>
-              <div className="card-body">
+              <div className="card-body pt-3">
                 <div className="row">
                   <div className="col-sm-6">
                     <div className="form-group">
-                      <label>เลขประจำตัวคนไข้/ลูกค้า (patient id)</label>
+                      <label className="font-weight-bold text-dark">
+                        <i className="fas fa-id-card mr-1" style={{ color: '#C5953A' }} /> เลขประจำตัวคนไข้/ลูกค้า (Patient ID)
+                      </label>
                       <input type="text"
                         required
                         value={patient_id}
@@ -120,13 +147,16 @@ export default function Patient_data(props) {
                           setPatient_id(e.target.value)
                         }}
                         className="form-control"
+                        style={{ borderRadius: '10px' }}
                       />
                     </div>
                   </div>
 
                   <div className="col-sm-6">
                     <div className="form-group">
-                      <label>เพศ (Sex) <i className="fas fa-venus" /><i className="fas fa-mars" /></label>
+                      <label className="font-weight-bold text-dark">
+                        <i className="fas fa-venus-mars mr-1" style={{ color: '#C5953A' }} /> เพศ (Sex)
+                      </label>
                       <select type="text"
                         required
                         value={sex}
@@ -134,6 +164,7 @@ export default function Patient_data(props) {
                           setSex(e.target.value)
                         }}
                         className="form-control"
+                        style={{ borderRadius: '10px' }}
                         placeholder="เลือกเพศ (Select sex)"
                       >
                         <option value={null}></option>
@@ -149,7 +180,9 @@ export default function Patient_data(props) {
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
-                      <label>ชื่อจริง (First name)</label>
+                      <label className="font-weight-bold text-dark">
+                        <i className="fas fa-user mr-1" style={{ color: '#C5953A' }} /> ชื่อจริง (First name)
+                      </label>
                       <input type="text"
                         required
                         value={first_name}
@@ -157,12 +190,15 @@ export default function Patient_data(props) {
                           setFirst_name(e.target.value)
                         }}
                         className="form-control"
+                        style={{ borderRadius: '10px' }}
                         placeholder="กรอกชื่อจริง (Enter first name)" />
                     </div>
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
-                      <label>นามสกุล (Last name)</label>
+                      <label className="font-weight-bold text-dark">
+                        <i className="fas fa-user-tag mr-1" style={{ color: '#C5953A' }} /> นามสกุล (Last name)
+                      </label>
                       <input
                         required
                         value={last_name}
@@ -171,12 +207,15 @@ export default function Patient_data(props) {
                         }}
                         type="text"
                         className="form-control"
+                        style={{ borderRadius: '10px' }}
                         placeholder="กรอกนามสกุล (Enter last name)" />
                     </div>
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
-                      <label>เบอร์โทรศัพท์ (Telephone number)</label><i style={{ marginLeft: 5 }} className="fas fa-mobile-alt" />
+                      <label className="font-weight-bold text-dark">
+                        <i className="fas fa-mobile-alt mr-1" style={{ color: '#C5953A' }} /> เบอร์โทรศัพท์ (Telephone number)
+                      </label>
                       <PhoneInput
                         className="form-control"
                         disableCountryCode={true}
@@ -186,14 +225,15 @@ export default function Patient_data(props) {
                         country={'th'}
                         value={telephone_number}
                         onChange={phone => setTelephone_number(phone)}
-                        inputStyle={{ width: '100%' }}
+                        inputStyle={{ width: '100%', borderRadius: '10px' }}
                       />
                     </div>
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
-                      <label>ปีเกิด คศ. (Year of birth)</label><i style={{ marginLeft: 5 }} className="fas fa-calendar-week" />
-                      <br></br>
+                      <label className="font-weight-bold text-dark">
+                        <i className="fas fa-calendar-week mr-1" style={{ color: '#C5953A' }} /> ปีเกิด คศ. (Year of birth)
+                      </label>
                       <div>
                         <DatePicker
                           selected={year_of_birth}
@@ -211,10 +251,12 @@ export default function Patient_data(props) {
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
-                      <label>ยาหรืออาหารที่แพ้ (Drug allergy)</label>
-                      <i style={{ marginLeft: 5 }} className="fas fa-skull-crossbones" />
-                      <br></br>
+                      <label className="font-weight-bold text-dark">
+                        <i className="fas fa-allergies mr-1 text-danger" /> ยาหรืออาหารที่แพ้ (Drug allergy)
+                      </label>
                       <textarea className="form-control"
+                        rows="2"
+                        style={{ borderRadius: '10px' }}
                         type="text"
                         placeholder="กรอกยาหรืออาหารที่แพ้ (Enter drug allergy)"
                         value={drug_allergy}
@@ -225,9 +267,12 @@ export default function Patient_data(props) {
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
-                      <label>ยาที่ใช้ประจำ (Regular medication)</label><i style={{ marginLeft: 5 }} className="fas fa-pills" />
-                      <br></br>
+                      <label className="font-weight-bold text-dark">
+                        <i className="fas fa-pills mr-1" style={{ color: '#55C5D9' }} /> ยาที่ใช้ประจำ (Regular medication)
+                      </label>
                       <textarea className="form-control"
+                        rows="2"
+                        style={{ borderRadius: '10px' }}
                         type="text"
                         placeholder="กรอกยาที่ใช้ประจำ (Enter regular medication)"
                         value={regular_medication}
@@ -237,10 +282,13 @@ export default function Patient_data(props) {
                     </div>
                   </div>
                   <div className="col-sm-6">
-                    <div className="form-group">
-                      <label>โรคประจำตัว (Chronic disease)</label><i style={{ marginLeft: 5 }} className="fas fa-disease" />
-                      <br></br>
+                    <div className="form-group mb-0">
+                      <label className="font-weight-bold text-dark">
+                        <i className="fas fa-heartbeat mr-1 text-warning" /> โรคประจำตัว (Chronic disease)
+                      </label>
                       <textarea className="form-control"
+                        rows="2"
+                        style={{ borderRadius: '10px' }}
                         type="text"
                         placeholder="กรอกโรคประจำตัว (Enter chronic disease)"
                         value={chronic_disease}
@@ -250,10 +298,13 @@ export default function Patient_data(props) {
                     </div>
                   </div>
                   <div className="col-sm-6">
-                    <div className="form-group">
-                      <label>อาชีพ (Job)</label><i style={{ marginLeft: 5 }} className="fas fa-briefcase" />
-                      <br></br>
+                    <div className="form-group mb-0">
+                      <label className="font-weight-bold text-dark">
+                        <i className="fas fa-briefcase mr-1" style={{ color: '#C5953A' }} /> อาชีพ (Job)
+                      </label>
                       <textarea className="form-control"
+                        rows="2"
+                        style={{ borderRadius: '10px' }}
                         type="text"
                         placeholder="กรอกอาชีพ (Job)"
                         value={patientjob}
@@ -265,24 +316,31 @@ export default function Patient_data(props) {
                 </div>
               </div>
               {/* /.card-body */}
-              <div className="card-footer">
-                <div className="row">
+              <div className="card-footer bg-light px-4 py-3" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+                <div className="row align-items-center">
                   <div className="col-4">
-                    <button type="submit" className="btn btn-primary">ตกลง (Submit)</button>
+                    <button type="submit" className="btn ala-btn-gold px-4">
+                      <i className="fas fa-check-circle mr-1" /> ตกลง (Submit)
+                    </button>
                   </div>
                   <div className="col-4" style={{ textAlign: 'center' }}>
-                    {modalStatus == 'edit' ? <button onClick={(e) => {
-                      e.preventDefault()
-                      doDeletePatient()
-                    }} className="btn btn-danger">ลบข้อมูลคนไข้ (delete)</button> : <></>}
+                    {modalStatus == 'edit' ? (
+                      <button onClick={(e) => {
+                        e.preventDefault()
+                        doDeletePatient()
+                      }} className="btn btn-outline-danger" style={{ borderRadius: '10px' }}>
+                        <i className="fas fa-trash-alt mr-1" /> ลบข้อมูลคนไข้
+                      </button>
+                    ) : <></>}
                   </div>
                   <div className="col-4">
-                    <button type="reset" class="btn btn-default float-right" onClick={(e) => {
+                    <button type="reset" className="btn btn-secondary float-right px-4" style={{ borderRadius: '10px' }} onClick={(e) => {
                       e.preventDefault()
                       closeModal();
-                    }}>ยกเลิก (Cancel)</button>
+                    }}>
+                      ยกเลิก (Cancel)
+                    </button>
                   </div>
-
                 </div>
               </div>
             </form>
@@ -462,128 +520,188 @@ export default function Patient_data(props) {
     }
     const renderPatientData = (item, idx) => {
       return (
-        <div className="col-md-4">
-          <div className='card card-dark'>
-            <div className="card-header" style={{}}>
-              <h3 นอำพ className="card-title">ผลการค้นหาที่ {idx + 1}</h3>
-              <div className="card-tools">
-                <button type="button" className="btn btn-tool" data-card-widget="collapse">
+        <div className="col-lg-4 col-md-6 mb-4" key={item.patient_id || idx}>
+          <div className="card ala-patient-card h-100 mb-0">
+            <div className="card-header ala-card-header-dark d-flex align-items-center justify-content-between">
+              <h3 className="card-title mb-0 font-weight-bold" style={{ fontSize: '1rem' }}>
+                <i className="fas fa-user-circle mr-2" style={{ color: '#E9C070' }} />
+                ผลการค้นหาที่ {idx + 1}
+              </h3>
+              <div className="card-tools ml-auto">
+                <button type="button" className="btn btn-tool text-white" data-card-widget="collapse">
                   <i className="fas fa-minus" />
                 </button>
               </div>
-              {/* /.card-tools */}
             </div>
-            {/* /.card-header */}
-            <div className="card-body box-profile">
-              <h3 class="profile-username text-center">{item.first_name + ' ' + item.last_name}</h3>
-              <p class="text-muted text-center">{'หมายเลขประจำตัวลูกค้า : ' + item.patient_id}</p>
-              <li class="list-group-item">
-                <b>เพศ </b> <label className="float-right text-muted text-center">{item.sex}</label>
-              </li>
-              <li class="list-group-item">
-                <b>โทรศัพท์ </b> <label className="float-right text-muted text-center">{item.telephone_number}</label>
-              </li>
-              <li class="list-group-item">
-                <b>อายุ </b> <label className="float-right text-muted text-center">{moment().format('yyyy') - item.year_of_birth}</label>
-              </li>
-              <li class="list-group-item">
-                <b>อาชีพ </b> <label className="float-right text-muted text-center">{item.job}</label>
-              </li>
-              <li class="list-group-item">
-                <b>สถานะ </b> <label style={{ color: 'red' }} className={item.status != 'open' ? 'float-right text-center' : 'float-right text-center text-muted'}>{item.status}</label>
-                <button className="btn btn-primary btn-xs" onClick={(e) => {
-                  e.preventDefault()
-                  resetPantientStatus(item.patient_id)
-                }
-                }
-                ><i className="fas fa-redo" /></button>
-              </li>
-              <button className="btn btn-primary btn-block" onClick={(e) => {
-                e.preventDefault();
-                preparingProcess(item)
-              }}>
-                <b>นัดตรวจ</b>
-              </button>
-              <Link to={'/appointment/' + item.patient_id} className="btn btn-secondary btn-block">นัดหมาย</Link>
-              <Link to={'/patient/patient_history/' + item.patient_id} className="btn btn-dark btn-block">ประวัติการใช้บริการ</Link>
-              <Link to={'/patient/payment/' + item.patient_id} className="btn btn-success btn-block">ประวัติการจ่ายเงิน</Link>
-              <button onClick={(e) => {
-                e.preventDefault()
-                Swal.fire({
-                  title: 'ต้องการแก้ไขข้อมูล?',
-                  text: "ต้องการแก้ไขข้อมูลลูกค้า " + item.first_name + ' ' + item.last_name + ' หรือไม่',
-                  icon: 'question',
-                  showCancelButton: true,
-                  confirmButtonColor: '#3085d6',
-                  cancelButtonColor: '#d33',
-                  confirmButtonText: 'ตกลง',
-                  cancelButtonText: 'ยกเลิก',
-                }).then(async (result) => {
-                  if (result.isConfirmed) {
-                    setModalStatus('edit')
-                    setPatient_id(item.patient_id)
-                    setFirst_name(item.first_name)
-                    setLast_name(item.last_name)
-                    setSex(item.sex)
-                    setTelephone_number(item.telephone_number)
-                    setYear_of_birth(moment('01/01/' + item.year_of_birth).toDate())
-                    setDrug_allergy(item.setDrug_allergy)
-                    setRegular_medication(item.regular_medication)
-                    setChronic_disease(item.chronic_disease)
-                    setPatientJob(item.job)
-                    setIsModalOpen(true)
-                  }
-                })
+            <div className="card-body box-profile d-flex flex-column">
+              <h3 className="profile-username text-center font-weight-bold mb-1" style={{ color: '#1E2430', fontSize: '1.3rem' }}>
+                {item.first_name + ' ' + item.last_name}
+              </h3>
+              <p className="text-center mb-3">
+                <span className="badge px-3 py-1" style={{ backgroundColor: 'rgba(233, 192, 112, 0.18)', color: '#8A6421', border: '1px solid #E9C070', borderRadius: '20px', fontSize: '0.85rem' }}>
+                  <i className="fas fa-id-badge mr-1" /> HN: {item.patient_id}
+                </span>
+              </p>
 
-              }}
-                className="btn btn-warning btn-block">
-                แก้ไขข้อมูล
-              </button>
+              <ul className="list-group list-group-unbordered mb-3">
+                <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+                  <span><i className="fas fa-venus-mars mr-2 text-muted" style={{ width: '18px' }} /><b>เพศ</b></span>
+                  <span className="text-muted font-weight-bold">{item.sex || '-'}</span>
+                </li>
+                <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+                  <span><i className="fas fa-phone-alt mr-2 text-muted" style={{ width: '18px' }} /><b>โทรศัพท์</b></span>
+                  <span className="text-dark font-weight-bold">{item.telephone_number || '-'}</span>
+                </li>
+                <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+                  <span><i className="fas fa-birthday-cake mr-2 text-muted" style={{ width: '18px' }} /><b>อายุ</b></span>
+                  <span className="text-muted">{moment().format('yyyy') - item.year_of_birth} ปี</span>
+                </li>
+                <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+                  <span><i className="fas fa-briefcase mr-2 text-muted" style={{ width: '18px' }} /><b>อาชีพ</b></span>
+                  <span className="text-muted">{item.job || '-'}</span>
+                </li>
+                <li className="list-group-item d-flex justify-content-between align-items-center py-2">
+                  <span><i className="fas fa-heartbeat mr-2 text-muted" style={{ width: '18px' }} /><b>สถานะ</b></span>
+                  <div className="d-flex align-items-center">
+                    <span className={getStatusBadgeClass(item.status)}>{item.status}</span>
+                    <button
+                      className="btn btn-outline-secondary btn-xs ml-2"
+                      title="รีเซ็ตสถานะเป็น open"
+                      style={{ borderRadius: '6px' }}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        resetPantientStatus(item.patient_id)
+                      }}
+                    >
+                      <i className="fas fa-redo" />
+                    </button>
+                  </div>
+                </li>
+              </ul>
 
+              <div className="mt-auto">
+                <button className="btn ala-btn-gold btn-block py-2 mb-2" onClick={(e) => {
+                  e.preventDefault();
+                  preparingProcess(item)
+                }}>
+                  <i className="fas fa-stethoscope mr-2" /><b>ส่งตัวนัดตรวจ (Send to Queue)</b>
+                </button>
+
+                <div className="row mx-n1">
+                  <div className="col-6 px-1 mb-2">
+                    <Link to={'/appointment/' + item.patient_id} className="btn btn-outline-dark btn-block btn-sm py-2" style={{ borderRadius: '10px', fontWeight: 600 }}>
+                      <i className="fas fa-calendar-check mr-1" style={{ color: '#C5953A' }} /> นัดหมาย
+                    </Link>
+                  </div>
+                  <div className="col-6 px-1 mb-2">
+                    <Link to={'/patient/patient_history/' + item.patient_id} className="btn btn-outline-dark btn-block btn-sm py-2" style={{ borderRadius: '10px', fontWeight: 600 }}>
+                      <i className="fas fa-notes-medical mr-1" style={{ color: '#55C5D9' }} /> ประวัติบริการ
+                    </Link>
+                  </div>
+                  <div className="col-6 px-1">
+                    <Link to={'/patient/payment/' + item.patient_id} className="btn btn-outline-success btn-block btn-sm py-2" style={{ borderRadius: '10px', fontWeight: 600 }}>
+                      <i className="fas fa-file-invoice-dollar mr-1" /> ประวัติชำระเงิน
+                    </Link>
+                  </div>
+                  <div className="col-6 px-1">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault()
+                        Swal.fire({
+                          title: 'ต้องการแก้ไขข้อมูล?',
+                          text: "ต้องการแก้ไขข้อมูลลูกค้า " + item.first_name + ' ' + item.last_name + ' หรือไม่',
+                          icon: 'question',
+                          showCancelButton: true,
+                          confirmButtonColor: '#3085d6',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'ตกลง',
+                          cancelButtonText: 'ยกเลิก',
+                        }).then(async (result) => {
+                          if (result.isConfirmed) {
+                            setModalStatus('edit')
+                            setPatient_id(item.patient_id)
+                            setFirst_name(item.first_name)
+                            setLast_name(item.last_name)
+                            setSex(item.sex)
+                            setTelephone_number(item.telephone_number)
+                            setYear_of_birth(moment('01/01/' + item.year_of_birth).toDate())
+                            setDrug_allergy(item.setDrug_allergy)
+                            setRegular_medication(item.regular_medication)
+                            setChronic_disease(item.chronic_disease)
+                            setPatientJob(item.job)
+                            setIsModalOpen(true)
+                          }
+                        })
+                      }}
+                      className="btn btn-outline-warning btn-block btn-sm py-2 text-dark"
+                      style={{ borderRadius: '10px', fontWeight: 600, borderColor: '#E9C070' }}
+                    >
+                      <i className="fas fa-user-edit mr-1" style={{ color: '#C5953A' }} /> แก้ไขข้อมูล
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-            {/* /.card-body */}
           </div>
         </div>
       );
     }
     return (
-      <div className="card card-default">
-        <div className="card-body">
-          <div className="input-group input-group-sm">
+      <div className="card" style={{ borderRadius: '16px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+        <div className="card-header ala-card-header-dark d-flex align-items-center justify-content-between" style={{ borderTopLeftRadius: '16px', borderTopRightRadius: '16px' }}>
+          <h3 className="card-title mb-0 font-weight-bold" style={{ fontSize: '1.05rem' }}>
+            <i className="fas fa-search mr-2" style={{ color: '#E9C070' }} /> ค้นหาและจัดการข้อมูลคนไข้
+          </h3>
+          <button
+            onClick={async (e) => {
+              e.preventDefault();
+              //get last patient id
+              const response = await httpClient.get(server.LAST_PATIENT_ID_URL)
+              if (response.data.api_result === OK) {
+                setPatient_id(response.data.result)
+                setModalStatus('add')
+                setIsModalOpen(true)
+              }
+            }}
+            className="btn ala-btn-gold btn-sm px-3 py-1 ml-auto"
+          >
+            <i className="fas fa-user-plus mr-1" /> เพิ่มข้อมูลคนไข้ใหม่
+          </button>
+        </div>
+        <div className="card-body pb-2">
+          <div className="input-group">
+            <div className="input-group-prepend">
+              <span className="input-group-text bg-white border-right-0" style={{ borderTopLeftRadius: '12px', borderBottomLeftRadius: '12px', borderColor: '#E9C070' }}>
+                <i className="fas fa-search" style={{ color: '#C5953A' }} />
+              </span>
+            </div>
             <input
               onChange={(e) => searchChanged(e)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   searchChanged(e)
                 }
-              }
-              }
+              }}
               type="search"
-              className="form-control input-lg"
-              placeholder="ค้นหาคนไข้ (ชื่อ หรือ นามสกุล หรือ เบอร์โทรศัพท์)"
-              style={{ borderRadius: 10, marginRight: 10 }}
+              className="form-control form-control-lg border-left-0"
+              placeholder="ค้นหาคนไข้ (ชื่อ, นามสกุล, เลขประจำตัว หรือ เบอร์โทรศัพท์)..."
+              style={{ borderTopRightRadius: '12px', borderBottomRightRadius: '12px', borderColor: '#E9C070', fontSize: '1rem' }}
             />
-            <button
-              onClick={async (e) => {
-                e.preventDefault();
-                //get last patient id
-                const response = await httpClient.get(server.LAST_PATIENT_ID_URL)
-                if (response.data.api_result === OK) {
-                  setPatient_id(response.data.result)
-                  setModalStatus('add')
-                  setIsModalOpen(true)
-                }
-              }} className="btn btn-success btn-sm">
-              เพิ่มข้อมูลคนไข้ใหม่
-            </button>
           </div>
         </div>
-        <div className="card-body">
+        <div className="card-body pt-3">
           <div className="row">
             <FlatList
               list={patientData}
               renderItem={renderPatientData}
-              renderWhenEmpty={() => { return <></> }}
+              renderWhenEmpty={() => {
+                return (
+                  <div className="col-12 text-center py-5 text-muted">
+                    <i className="fas fa-users fa-3x mb-3" style={{ color: '#E9C070', opacity: 0.6 }} />
+                    <p className="mb-0" style={{ fontSize: '1rem' }}>พิมพ์ชื่อ นามสกุล หรือเบอร์โทรศัพท์ด้านบนเพื่อค้นหาข้อมูลคนไข้</p>
+                  </div>
+                )
+              }}
             />
           </div>
         </div>
@@ -651,23 +769,28 @@ export default function Patient_data(props) {
     <div className="content-wrapper">
       <div className="content-header">
         <div className="container-fluid">
-          <div className="row mb-2">
-            <div className="col-sm-6">
-              <h1 className="m-0">ข้อมูลคนไข้ / ลูกค้า</h1>
-            </div>{/* /.col */}
-            <div className="col-sm-6">
-
-            </div>{/* /.col */}
-          </div>{/* /.row */}
-        </div>{/* /.container-fluid */}
+          <div className="row mb-2 align-items-center">
+            <div className="col-sm-8">
+              <h1 className="m-0 font-weight-bold" style={{ color: '#1E2430', fontSize: '1.6rem' }}>
+                <i className="fas fa-id-card-alt mr-2" style={{ color: '#C5953A' }} />
+                ข้อมูลคนไข้ / ลูกค้า
+              </h1>
+              <p className="text-muted mb-0 mt-1" style={{ fontSize: '0.9rem' }}>
+                ระบบสืบค้นเวชระเบียน ลงทะเบียนคนไข้ใหม่ และส่งตัวเข้าคิวตรวจ
+              </p>
+            </div>
+            <div className="col-sm-4">
+            </div>
+          </div>
+        </div>
       </div>
       <section className="content">
         <div className="container-fluid">
-          <div className='rows'>
-            <div className='col-12'>
+          <div className="row">
+            <div className="col-12">
               {renderPatientForm()}
             </div>
-            <div className='col-12'>
+            <div className="col-12">
               {renderFindPatientData()}
             </div>
           </div>

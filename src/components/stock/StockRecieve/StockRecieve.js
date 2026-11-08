@@ -66,7 +66,7 @@ export default function StockRecieve() {
       text: `ต้องการเพิ่มสต๊อก ${productName[0]?.product_name} `,
       icon: 'question',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
+      confirmButtonColor: '#C5953A',
       cancelButtonColor: '#d33',
       confirmButtonText: 'ตกลง',
       cancelButtonText: 'ยกเลิก'
@@ -154,58 +154,92 @@ export default function StockRecieve() {
 
   }
 
-
-
   //render
   const renderStockByProduct = () => {
     return (
-      <div className=" col-sm-12">
+      <div className="col-sm-12 mb-4">
         <form onSubmit={(e) => {
           e.preventDefault()
           doRecieveStock()
-        }} className="card card-dark">
-          <div className="card-header"></div>
-          <div className="card-body">
-            <div className="form-group col-sm-12">
-              <label >เลือกชนิดสินค้า</label>
-              <Select
-                key={key}
-                className="basic-single"
-                classNamePrefix="select"
-                isClearable={false}
-                isSearchable={true}
-                options={productTypeDropDown}
-                required={true}
-                onChange={(data) => {
-                  setproduct_id(data.value)
-                }}
-              />
-            </div>
-            <div className="form-group col-sm-12">
-              <label >จำนวนที่รับเข้า</label>
-              <CurrencyFormat
-                className="form-control"
-                onValueChange={values => {
-                  const { formattedValue, value } = values
-                  setquantity(value)
-                }} required
-                value={quantity}
-                suffix={` ${(productsData.filter(item => item.product_id === product_id))[0]?.product_unit}`} />
-            </div>
-            <div className="input-group col-sm-12">
-              <label>วันที่หมดอายุ (ถ้ามีให้ใส่ด้วย)</label>
-              <DatePicker
-                className="form-control input-lg"
-                dateFormat="dd-MMM-yyyy"
-                selected={expireDate}
-                onChange={(date) => setexpireDate(date)}
-                isClearable={true}
-              />
+        }} className="card shadow-sm border-0 m-0" style={{ borderRadius: '16px', overflow: 'hidden' }}>
+          <div
+            className="card-header d-flex align-items-center"
+            style={{ backgroundColor: '#1E2430', color: '#E9C070', padding: '16px 24px', borderBottom: '3px solid #E9C070' }}
+          >
+            <h3 className="card-title m-0" style={{ fontWeight: 600, fontSize: '1.1rem', color: '#E9C070' }}>
+              <i className="fas fa-dolly-flatbed mr-2" /> บันทึกรับสินค้าเข้าสต๊อก (Receive Stock)
+            </h3>
+          </div>
+          <div className="card-body" style={{ padding: '24px' }}>
+            <div className="row">
+              <div className="form-group col-md-5">
+                <label style={{ fontWeight: 600, color: '#1E2430' }}>
+                  <i className="fas fa-box mr-1" style={{ color: '#C5953A' }} /> เลือกชนิดสินค้า
+                </label>
+                <Select
+                  key={key}
+                  className="basic-single"
+                  classNamePrefix="select"
+                  isClearable={false}
+                  isSearchable={true}
+                  options={productTypeDropDown}
+                  required={true}
+                  placeholder="ค้นหาและเลือกสินค้า..."
+                  onChange={(data) => {
+                    setproduct_id(data.value)
+                  }}
+                />
+              </div>
+              <div className="form-group col-md-4">
+                <label style={{ fontWeight: 600, color: '#1E2430' }}>
+                  <i className="fas fa-sort-numeric-up mr-1" style={{ color: '#55C5D9' }} /> จำนวนที่รับเข้า
+                </label>
+                <CurrencyFormat
+                  className="form-control"
+                  style={{ borderRadius: '10px', height: '38px' }}
+                  placeholder="ระบุจำนวนที่รับเข้า"
+                  onValueChange={values => {
+                    const { formattedValue, value } = values
+                    setquantity(value)
+                  }}
+                  required
+                  value={quantity}
+                  suffix={` ${(productsData.filter(item => item.product_id === product_id))[0]?.product_unit || ''}`}
+                />
+              </div>
+              <div className="form-group col-md-3">
+                <label style={{ fontWeight: 600, color: '#1E2430' }}>
+                  <i className="far fa-calendar-alt mr-1" style={{ color: '#C5953A' }} /> วันที่หมดอายุ (ถ้ามี)
+                </label>
+                <div>
+                  <DatePicker
+                    className="form-control"
+                    dateFormat="dd-MMM-yyyy"
+                    placeholderText="เลือกวันหมดอายุ"
+                    selected={expireDate}
+                    onChange={(date) => setexpireDate(date)}
+                    isClearable={true}
+                  />
+                </div>
+              </div>
             </div>
           </div>
-          <div className="card-footer">
-            <button type="submit" className="btn btn-primary">ตกลง</button>
-            <button type="reset" onClick={() => doReset()} className="btn btn-default float-right">ยกเลิก</button>
+          <div className="card-footer d-flex justify-content-end" style={{ backgroundColor: '#F8F9FC', padding: '14px 24px' }}>
+            <button
+              type="reset"
+              onClick={() => doReset()}
+              className="btn btn-light px-4 mr-2"
+              style={{ borderRadius: '10px', fontWeight: 500, border: '1px solid #CBD5E0' }}
+            >
+              ยกเลิก
+            </button>
+            <button
+              type="submit"
+              className="btn px-4"
+              style={{ backgroundColor: '#C5953A', color: '#FFFFFF', borderRadius: '10px', fontWeight: 600 }}
+            >
+              <i className="fas fa-check-circle mr-1" /> ตกลงรับสต๊อก
+            </button>
           </div>
         </form>
       </div>
@@ -216,61 +250,72 @@ export default function StockRecieve() {
     const columns = [
       {
         header: 'ชื่อสินค้า',
-        accessorKey: 'product_name', //simple accessorKey pointing to flat data
+        accessorKey: 'product_name',
+        Cell: ({ cell }) => <strong style={{ color: '#1E2430' }}>{cell.getValue()}</strong>
       },
       {
         header: 'ชนิดสินค้า',
-        accessorKey: 'product_type', //simple accessorKey pointing to flat data
+        accessorKey: 'product_type',
       },
       {
         header: 'จำนวนสินค้า',
-        accessorKey: 'quantity', //simple accessorKey pointing to flat data
-        Cell: ({ cell, row }) => cell.getValue() + ' ' + row.original.product_unit
+        accessorKey: 'quantity',
+        Cell: ({ cell, row }) => (
+          <span className="badge px-2 py-1" style={{ backgroundColor: 'rgba(85, 197, 217, 0.15)', color: '#1E2430', borderRadius: '6px', fontSize: '0.9rem' }}>
+            {cell.getValue() + ' ' + row.original.product_unit}
+          </span>
+        )
       },
       {
         header: 'สเปคสินค้า',
-        accessorKey: 'spec', //simple accessorKey pointing to flat data
+        accessorKey: 'spec',
       },
       {
         header: 'รายละเอียดสินค้า',
-        accessorKey: 'description', //simple accessorKey pointing to flat data
+        accessorKey: 'description',
       },
       {
         header: 'สร้างโดย',
-        accessorKey: 'createdByName', //simple accessorKey pointing to flat data
+        accessorKey: 'createdByName',
       },
       {
         header: 'วันที่สร้าง',
-        accessorKey: 'createdAt', //simple accessorKey pointing to flat data
-        Cell: ({ cell, row }) => moment(cell.getValue()).format("DD-MMM-yyyy HH:mm:ss")
+        accessorKey: 'createdAt',
+        Cell: ({ cell }) => moment(cell.getValue()).format("DD-MMM-yyyy HH:mm:ss")
       },
       {
         header: 'แก้ไขโดย',
-        accessorKey: 'updatedByName', //simple accessorKey pointing to flat data
+        accessorKey: 'updatedByName',
       },
       {
         header: 'วันที่แก้ไขล่าสุด',
-        accessorKey: 'updatedAt', //simple accessorKey pointing to flat data
-        Cell: ({ cell, row }) => moment(cell.getValue()).format("DD-MMM-yyyy HH:mm:ss")
+        accessorKey: 'updatedAt',
+        Cell: ({ cell }) => moment(cell.getValue()).format("DD-MMM-yyyy HH:mm:ss")
       },
     ]
     if (stockDetail.length > 0) {
       return (
-        <div className="card card-default col-sm-12">
-          <div className="card-header">
-            <div className="card-title">
-              รายละเอียดสต๊อก
+        <div className="col-sm-12 mb-4">
+          <div className="card shadow-sm border-0 m-0" style={{ borderRadius: '16px', overflow: 'hidden' }}>
+            <div className="card-header" style={{ backgroundColor: '#1E2430', color: '#E9C070', padding: '16px 24px', borderBottom: '3px solid #55C5D9' }}>
+              <h3 className="card-title m-0" style={{ fontWeight: 600, fontSize: '1.1rem', color: '#E9C070' }}>
+                <i className="fas fa-clipboard-list mr-2" style={{ color: '#55C5D9' }} /> รายละเอียดสต๊อก (Stock Lot Details)
+              </h3>
             </div>
-          </div>
-          <div className="card-body" style={{ zIndex: 0 }}>
-            <MaterialReactTable
-              columns={columns}
-              data={stockDetail}
-              enableColumnOrdering
-              enableStickyHeader
-              enableStickyFooter
-              initialState={{ pagination: { pageSize: 100, } }}
-            />
+            <div className="card-body" style={{ zIndex: 0, padding: '20px' }}>
+              <MaterialReactTable
+                columns={columns}
+                data={stockDetail}
+                enableColumnOrdering
+                enableStickyHeader
+                enableStickyFooter
+                initialState={{ pagination: { pageSize: 100 } }}
+                muiTablePaperProps={{
+                  elevation: 0,
+                  sx: { borderRadius: '12px', border: '1px solid #EDF2F7' }
+                }}
+              />
+            </div>
           </div>
         </div>
       )
@@ -282,35 +327,45 @@ export default function StockRecieve() {
       const columns = [
         {
           header: 'ชื่อสินค้า',
-          accessorKey: 'product_name', //simple accessorKey pointing to flat data
+          accessorKey: 'product_name',
+          Cell: ({ cell }) => <strong style={{ color: '#1E2430' }}>{cell.getValue()}</strong>
         },
         {
           header: 'สเปค',
-          accessorKey: 'spec', //simple accessorKey pointing to flat data
+          accessorKey: 'spec',
         },
         {
           header: 'จำนวนทั้งหมด',
-          accessorKey: 'total', //simple accessorKey pointing to flat data
-          Cell: ({ cell, row }) => cell.getValue() + ' ' + row.original.product_unit
+          accessorKey: 'total',
+          Cell: ({ cell, row }) => (
+            <strong style={{ color: '#C5953A', fontSize: '1rem' }}>
+              {cell.getValue() + ' ' + row.original.product_unit}
+            </strong>
+          )
         },
       ]
       return (
-        <div className="card card-default col-sm-12">
-          <div className="card-header">
-            <div className="card-title">
-              สรุปจำนวนสต๊อก
+        <div className="col-sm-12 mb-4">
+          <div className="card shadow-sm border-0 m-0" style={{ borderRadius: '16px', overflow: 'hidden' }}>
+            <div className="card-header" style={{ backgroundColor: '#1E2430', color: '#E9C070', padding: '16px 24px', borderBottom: '3px solid #E9C070' }}>
+              <h3 className="card-title m-0" style={{ fontWeight: 600, fontSize: '1.1rem', color: '#E9C070' }}>
+                <i className="fas fa-layer-group mr-2" /> สรุปจำนวนสต๊อกคงเหลือ (Stock Summary)
+              </h3>
             </div>
-          </div>
-          <div className="card-body" style={{ zIndex: 0 }}>
-            <MaterialReactTable
-             
-              columns={columns}
-              data={summaryStock}
-              enableColumnOrdering
-              enableStickyHeader
-              enableStickyFooter
-              initialState={{ pagination: { pageSize: 100, } }}
-            />
+            <div className="card-body" style={{ zIndex: 0, padding: '20px' }}>
+              <MaterialReactTable
+                columns={columns}
+                data={summaryStock}
+                enableColumnOrdering
+                enableStickyHeader
+                enableStickyFooter
+                initialState={{ pagination: { pageSize: 100 } }}
+                muiTablePaperProps={{
+                  elevation: 0,
+                  sx: { borderRadius: '12px', border: '1px solid #EDF2F7' }
+                }}
+              />
+            </div>
           </div>
         </div>
       )
@@ -318,9 +373,9 @@ export default function StockRecieve() {
   }, [summaryStock])
 
   return (
-    <div className="content-wrapper resizeable">
-      <ContentHeader header="รับสต๊อก" />
-      <section className="content ">
+    <div className="content-wrapper resizeable" style={{ backgroundColor: '#F8F9FC', minHeight: '100vh', paddingBottom: '2rem' }}>
+      <ContentHeader header="รับสต๊อกสินค้า (Stock Receive)" />
+      <section className="content">
         <div className="container-fluid">
           <LoadingScreen isLoad={isLoad} />
           <div className="row" style={{ minHeight: '100%' }}>

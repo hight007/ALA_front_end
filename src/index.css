@@ -1,13 +1,629 @@
-body {
+:root {
+  --ala-gold: #E9C070;
+  --ala-gold-dark: #C5953A;
+  --ala-gold-light: #F9F1E1;
+  --ala-gold-gradient: linear-gradient(135deg, #E9C070 0%, #D4A24C 100%);
+  --ala-teal: #55C5D9;
+  --ala-teal-dark: #36A2B7;
+  --ala-teal-light: #EAF8FB;
+  --ala-teal-gradient: linear-gradient(135deg, #55C5D9 0%, #38A3B8 100%);
+  --ala-dark: #1E2430;
+  --ala-sidebar-bg: linear-gradient(180deg, #1A1F29 0%, #12161F 100%);
+  --ala-bg: #F7F5F0;
+  --ala-surface: #FFFFFF;
+  --ala-border: #EAE4D7;
+  --ala-text: #1E293B;
+  --ala-text-muted: #64748B;
+  --ala-shadow-sm: 0 2px 10px rgba(30, 36, 48, 0.04);
+  --ala-shadow-md: 0 8px 26px rgba(30, 36, 48, 0.07);
+  --ala-shadow-lg: 0 16px 40px rgba(30, 36, 48, 0.12);
+  --ala-radius-sm: 10px;
+  --ala-radius-md: 16px;
+  --ala-radius-lg: 22px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body,
+html {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Prompt', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  background-color: var(--ala-bg) !important;
+  color: var(--ala-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* =========================================================
+   GLOBAL LAYOUT & ADMINLTE OVERRIDES (LUXURY AESTHETIC)
+   ========================================================= */
+.content-wrapper {
+  background: var(--ala-bg) !important;
+  padding-bottom: 2rem;
+}
+
+.content-wrapper > .content {
+  padding: 0 1.25rem 1.5rem 1.25rem;
+}
+
+/* Top Navbar */
+.main-header.navbar {
+  background: rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--ala-border) !important;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.03);
+  min-height: 62px;
+  padding: 0.4rem 1.25rem;
+}
+
+.main-header .nav-link {
+  color: var(--ala-text) !important;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: var(--ala-radius-sm);
+  transition: all 0.2s ease;
+}
+
+.main-header .nav-link:hover {
+  background: var(--ala-gold-light);
+  color: var(--ala-gold-dark) !important;
+}
+
+/* Sidebar */
+.main-sidebar {
+  background: var(--ala-sidebar-bg) !important;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.14) !important;
+  border-right: 1px solid rgba(233, 192, 112, 0.14);
+}
+
+.main-sidebar .brand-link {
+  border-bottom: 1px solid rgba(233, 192, 112, 0.15) !important;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 1rem 1.15rem !important;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.main-sidebar .brand-text {
+  color: #FFF !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.4px;
+  font-size: 1.1rem;
+}
+
+.nav-sidebar .nav-item > .nav-link {
+  border-radius: 11px !important;
+  margin-bottom: 4px;
+  padding: 0.62rem 0.9rem;
+  color: #CBD5E1 !important;
+  font-weight: 400;
+  transition: all 0.2s ease;
+}
+
+.nav-sidebar .nav-item > .nav-link:hover {
+  background: rgba(233, 192, 112, 0.12) !important;
+  color: var(--ala-gold) !important;
+}
+
+.nav-sidebar .nav-item > .nav-link.active {
+  background: var(--ala-gold-gradient) !important;
+  color: #1A1F29 !important;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(233, 192, 112, 0.32) !important;
+}
+
+.nav-sidebar .nav-item > .nav-link.active i {
+  color: #1A1F29 !important;
+}
+
+.nav-sidebar .nav-treeview {
+  padding-left: 0.5rem;
+}
+
+.nav-sidebar .nav-treeview > .nav-item > .nav-link {
+  font-size: 0.9rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 9px !important;
+}
+
+.nav-sidebar .nav-treeview > .nav-item > .nav-link.active {
+  background: rgba(233, 192, 112, 0.18) !important;
+  color: var(--ala-gold) !important;
+  box-shadow: none !important;
+  border-left: 3px solid var(--ala-gold);
+}
+
+.nav-sidebar .nav-treeview > .nav-item > .nav-link.active i {
+  color: var(--ala-gold) !important;
+}
+
+/* Footer */
+.main-footer {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--ala-border) !important;
+  color: var(--ala-text-muted) !important;
+  font-size: 0.85rem;
+  padding: 0.7rem 1.5rem !important;
+}
+
+/* =========================================================
+   CARDS, CONTAINERS & HEADERS
+   ========================================================= */
+.card {
+  background: var(--ala-surface) !important;
+  border: 1px solid var(--ala-border) !important;
+  border-radius: var(--ala-radius-md) !important;
+  box-shadow: var(--ala-shadow-sm) !important;
+  margin-bottom: 1.25rem;
+  overflow: visible;
+  transition: box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--ala-shadow-md) !important;
+}
+
+.card-header {
+  background: linear-gradient(90deg, #FDFBF7 0%, #FFFFFF 100%);
+  border-bottom: 1px solid var(--ala-border);
+  border-top-left-radius: calc(var(--ala-radius-md) - 1px) !important;
+  border-top-right-radius: calc(var(--ala-radius-md) - 1px) !important;
+  padding: 1rem 1.35rem !important;
+}
+
+.card-dark:not(.card-outline) > .card-header,
+.card-primary:not(.card-outline) > .card-header,
+.card-info:not(.card-outline) > .card-header {
+  background: linear-gradient(135deg, #232A38 0%, #1A1F29 100%) !important;
+  color: #FFF !important;
+  border-bottom: 2px solid var(--ala-gold) !important;
+}
+
+.card-title {
+  font-weight: 600 !important;
+  font-size: 1.05rem !important;
+  letter-spacing: 0.2px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 !important;
+}
+
+.card-body {
+  padding: 1.35rem !important;
+}
+
+.card-footer {
+  background: #FAF8F4 !important;
+  border-top: 1px solid var(--ala-border) !important;
+  padding: 0.95rem 1.35rem !important;
+}
+
+/* Content Header */
+.ala-page-header {
+  padding: 1.35rem 1.25rem 0.85rem 1.25rem;
+}
+
+.ala-page-header-inner {
+  background: linear-gradient(135deg, #FFFFFF 0%, #FCF9F2 100%);
+  border: 1px solid var(--ala-border);
+  border-left: 5px solid var(--ala-gold);
+  border-radius: var(--ala-radius-md);
+  padding: 1rem 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--ala-shadow-sm);
+}
+
+.ala-page-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--ala-dark);
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.ala-page-badge {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--ala-gold-dark);
+  background: var(--ala-gold-light);
+  border: 1px solid rgba(233, 192, 112, 0.45);
+  padding: 0.28rem 0.75rem;
+  border-radius: 999px;
+}
+
+/* =========================================================
+   FORMS, INPUTS & BUTTONS
+   ========================================================= */
+.form-group label,
+label {
+  font-weight: 500 !important;
+  color: #334155;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+}
+
+.form-control {
+  border-radius: var(--ala-radius-sm) !important;
+  border: 1px solid #DCE0E6 !important;
+  padding: 0.55rem 0.9rem !important;
+  height: auto !important;
+  min-height: 42px;
+  font-size: 0.93rem !important;
+  color: var(--ala-text) !important;
+  background-color: #FFFFFF !important;
+  transition: all 0.2s ease !important;
+}
+
+.form-control:focus {
+  border-color: var(--ala-gold-dark) !important;
+  box-shadow: 0 0 0 3px rgba(233, 192, 112, 0.22) !important;
+  outline: none;
+}
+
+.input-group-text {
+  background: #FAF7F0 !important;
+  border: 1px solid #DCE0E6 !important;
+  color: var(--ala-gold-dark) !important;
+  border-radius: var(--ala-radius-sm) !important;
+}
+
+/* Buttons */
+.btn {
+  border-radius: var(--ala-radius-sm) !important;
+  font-weight: 500 !important;
+  padding: 0.5rem 1.1rem;
+  letter-spacing: 0.2px;
+  transition: all 0.2s ease !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.btn-xs,
+.btn-sm {
+  padding: 0.32rem 0.75rem !important;
+  font-size: 0.82rem !important;
+  border-radius: 8px !important;
+}
+
+.btn-primary {
+  background: var(--ala-gold-gradient) !important;
+  border: none !important;
+  color: #1E2430 !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 12px rgba(212, 162, 76, 0.28);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(212, 162, 76, 0.4) !important;
+  filter: brightness(1.03);
+}
+
+.btn-info {
+  background: var(--ala-teal-gradient) !important;
+  border: none !important;
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 12px rgba(85, 197, 217, 0.28);
+}
+
+.btn-info:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(85, 197, 217, 0.38) !important;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+  border: none !important;
+  color: #FFF !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.24);
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important;
+  border: none !important;
+  color: #FFF !important;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%) !important;
+  border: none !important;
+  color: #FFF !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.22);
+}
+
+.btn-default,
+.btn-secondary {
+  background: #F1F5F9 !important;
+  border: 1px solid #CBD5E1 !important;
+  color: #334155 !important;
+}
+
+.btn-default:hover,
+.btn-secondary:hover {
+  background: #E2E8F0 !important;
+}
+
+/* =========================================================
+   STAT CARDS & DASHBOARD WIDGETS
+   ========================================================= */
+.info-box,
+.ala-stat-card {
+  background: var(--ala-surface) !important;
+  border-radius: var(--ala-radius-md) !important;
+  border: 1px solid var(--ala-border) !important;
+  box-shadow: var(--ala-shadow-sm) !important;
+  padding: 1.1rem 1.2rem !important;
+  min-height: 96px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.info-box:hover,
+.ala-stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--ala-shadow-md) !important;
+}
+
+.info-box .info-box-icon,
+.ala-stat-icon {
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 14px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.55rem !important;
+  flex-shrink: 0;
+}
+
+.info-box .info-box-text {
+  font-size: 0.86rem;
+  color: var(--ala-text-muted);
+  font-weight: 500;
+}
+
+.info-box .info-box-number {
+  font-size: 1.4rem !important;
+  font-weight: 700 !important;
+  color: var(--ala-dark);
+  margin-top: 2px;
+}
+
+/* =========================================================
+   TABLES & MATERIAL REACT TABLE OVERRIDES
+   ========================================================= */
+.MuiPaper-root {
+  border-radius: var(--ala-radius-md) !important;
+  border: 1px solid var(--ala-border) !important;
+  box-shadow: none !important;
+  font-family: 'Prompt', sans-serif !important;
+}
+
+.MuiTableCell-head {
+  background-color: #FAF7F0 !important;
+  color: #1E2430 !important;
+  font-weight: 600 !important;
+  font-family: 'Prompt', sans-serif !important;
+  border-bottom: 2px solid var(--ala-gold) !important;
+}
+
+.MuiTableCell-body {
+  font-family: 'Prompt', sans-serif !important;
+  color: #334155 !important;
+  font-size: 0.9rem !important;
+}
+
+.MuiTableRow-root:hover {
+  background-color: #FDFBF6 !important;
+}
+
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+
+.table thead th {
+  background: #FAF7F0;
+  color: var(--ala-dark);
+  font-weight: 600;
+  border-bottom: 2px solid var(--ala-gold) !important;
+  padding: 0.85rem 0.9rem;
+}
+
+.table tbody td {
+  vertical-align: middle !important;
+  padding: 0.8rem 0.9rem;
+  border-top: 1px solid #F1EDE4;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #FDFBF6 !important;
+}
+
+/* =========================================================
+   MODALS & SWEETALERT2 LUXURY STYLING
+   ========================================================= */
+.ReactModal__Overlay {
+  background-color: rgba(18, 22, 31, 0.55) !important;
+  backdrop-filter: blur(4px);
+  z-index: 1050 !important;
+}
+
+.ReactModal__Content {
+  border-radius: var(--ala-radius-lg) !important;
+  border: 1px solid var(--ala-border) !important;
+  box-shadow: var(--ala-shadow-lg) !important;
+  padding: 0 !important;
+}
+
+.swal2-popup {
+  border-radius: var(--ala-radius-lg) !important;
+  font-family: 'Prompt', sans-serif !important;
+  padding: 1.75rem !important;
+  border: 1px solid var(--ala-border);
+}
+
+.swal2-confirm {
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+}
+
+/* =========================================================
+   AUTH PAGES (LOGIN / REGISTER)
+   ========================================================= */
+.ala-auth-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 15% 20%, rgba(233, 192, 112, 0.22), transparent 45%),
+              radial-gradient(circle at 85% 80%, rgba(85, 197, 217, 0.18), transparent 45%),
+              linear-gradient(135deg, #161B24 0%, #222938 100%);
+  padding: 1.5rem;
+}
+
+.ala-auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(16px);
+  border-radius: 24px;
+  border: 1px solid rgba(233, 192, 112, 0.4);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.ala-auth-header {
+  background: linear-gradient(135deg, #1E2430 0%, #141821 100%);
+  padding: 2rem 2rem 1.5rem;
+  text-align: center;
+  border-bottom: 3px solid var(--ala-gold);
+}
+
+.ala-auth-logo {
+  max-width: 210px;
+  height: auto;
+  margin-bottom: 0.5rem;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
+}
+
+.ala-auth-subtitle {
+  color: var(--ala-gold);
+  font-size: 0.85rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin: 0;
+  font-weight: 500;
+}
+
+.ala-auth-body {
+  padding: 2rem;
+}
+
+/* Status Queue Board Pills */
+.ala-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.ala-status-open { background: #F1F5F9; color: #475569; }
+.ala-status-wait { background: #FEF3C7; color: #B45309; }
+.ala-status-diagnose { background: #E0F2FE; color: #0369A1; }
+.ala-status-operate { background: #F3E8FF; color: #7E22CE; }
+.ala-status-payment { background: #D1FAE5; color: #047857; }
+
+/* =========================================================
+   IPAD & TABLET RESPONSIVE / TOUCH-FRIENDLY ENHANCEMENTS
+   ========================================================= */
+@media (max-width: 1024px) {
+  /* Allow body & container to touch-scroll smoothly */
+  html, body {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .content-wrapper > .content {
+    padding: 0 0.85rem 1.25rem 0.85rem !important;
+  }
+
+  .ala-hero-banner {
+    padding: 1.25rem 1.4rem;
+    gap: 0.85rem;
+  }
+
+  .ala-hero-title {
+    font-size: 1.25rem;
+  }
+
+  /* Make touch targets on buttons & links larger for fingers */
+  .btn,
+  .nav-link,
+  .dropdown-item {
+    min-height: 40px;
+    touch-action: manipulation;
+  }
+
+  /* Responsive Cards on Tablets */
+  .card-body {
+    padding: 1rem !important;
+  }
+
+  /* Ensure tables scroll smoothly with momentum on iOS / iPadOS */
+  .table-responsive {
+    -webkit-overflow-scrolling: touch !important;
+    overflow-x: auto !important;
+  }
+
+  /* Status Board Kanban view on Tablets */
+  .col-12.mb-3 {
+    margin-bottom: 1rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .ala-hero-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .ala-quick-actions {
+    width: 100%;
+  }
+
+  .ala-quick-actions .btn {
+    flex: 1 1 auto;
+    font-size: 0.82rem;
+  }
+
+  .main-header.navbar {
+    padding: 0.35rem 0.65rem;
+  }
 }
