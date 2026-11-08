@@ -70,8 +70,81 @@ export default function SideMenu() {
     );
   };
 
+  const renderMarketing = () => {
+    const isMarketingActive =
+      location.pathname.includes("/marketing") ||
+      location.pathname.includes("/report/marketing");
+    const currentTab = new URLSearchParams(location.search).get("tab") || "churn";
+
+    return (
+      <li
+        className={`nav-item has-treeview ${
+          isMarketingActive ? "menu-open" : ""
+        }`}
+      >
+        <a
+          href="#marketing"
+          className={isMarketingActive ? "nav-link active" : "nav-link"}
+        >
+          <i className="nav-icon fas fa-bullhorn" style={{ color: "#E9C070" }} />
+          <p>
+            การตลาด (Marketing CRM)
+            <i className="fas fa-angle-left right" />
+          </p>
+        </a>
+        <ul
+          className="nav nav-treeview"
+          style={{ display: isMarketingActive ? "block" : "none" }}
+        >
+          <li className="nav-item">
+            <Link
+              to="/report/marketing?tab=churn"
+              className={
+                isMarketingActive && currentTab === "churn"
+                  ? "nav-link active"
+                  : "nav-link"
+              }
+            >
+              <i className="fas fa-user-clock nav-icon" />
+              <p>ลูกค้าขาดการติดต่อ</p>
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              to="/report/marketing?tab=birthday"
+              className={
+                isMarketingActive && currentTab === "birthday"
+                  ? "nav-link active"
+                  : "nav-link"
+              }
+            >
+              <i className="fas fa-birthday-cake nav-icon" />
+              <p>วันเกิด / สมัครสมาชิก</p>
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              to="/report/marketing?tab=vip"
+              className={
+                isMarketingActive && currentTab === "vip"
+                  ? "nav-link active"
+                  : "nav-link"
+              }
+            >
+              <i className="fas fa-crown nav-icon" />
+              <p>จัดเกรดลูกค้า VIP</p>
+            </Link>
+          </li>
+        </ul>
+      </li>
+    );
+  };
+
   const renderReport = () => {
-    const isActive = location.pathname.includes("/report");
+    const isActive =
+      location.pathname.includes("/report") &&
+      !location.pathname.includes("/report/marketing");
+
     return (
       <li className={`nav-item has-treeview ${isActive ? "menu-open" : ""}`}>
         <a href="#report" className={isActive ? "nav-link active" : "nav-link"}>
@@ -300,6 +373,7 @@ export default function SideMenu() {
           >
             {renderDashboard()}
             {renderPatient()}
+            {renderMarketing()}
             {renderReport()}
             {renderManageMaster()}
             {renderStock()}

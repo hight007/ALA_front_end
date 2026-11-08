@@ -25,8 +25,9 @@ import Patient_payment from './components/patient/patient_payment';
 import Daily_sales_report from './components/report/dailySalesReport';
 import Sales_analysis from './components/report/salesAnalysis';
 import Daily_new_customer from './components/report/dailyNewCustomer';
-import Report_appointment from './components/report/appointment'
+import Report_appointment from './components/report/appointment';
 import Report_stock from './components/report/Stock';
+import MarketingReport from './components/report/marketingReport';
 
 // //appointment
 import Appointment from './components/appointment/appointment';
@@ -133,6 +134,9 @@ class App extends Component {
           <Route path="/report/appointment" element={<RequireAuth><Report_appointment/></RequireAuth>} />
           <Route path="/report/stock" element={<RequireAuth><Report_stock /></RequireAuth>} />
           
+          {/* marketing report */}
+          <Route path="/report/marketing" element={<RequireAuth><MarketingReport /></RequireAuth>} />
+          <Route path="/marketing" element={<RequireAuth><MarketingReport /></RequireAuth>} />
 
           {/* Stock */}
           <Route path="/stock/recieve" element={<RequireAuth><StockRecieve /></RequireAuth>} />

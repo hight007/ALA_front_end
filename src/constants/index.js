@@ -22,10 +22,15 @@ export const NETWORK_TIMEOUT_MESSAGE =
 export const UPLOAD_PHOTO_FAIL_MESSAGE =
   "An error has occurred. The photo was unable to upload.";
 
-// export const apiUrl = "http://localhost:2009/api/ALA_clinic/";
-// export const apiUrl = "http://alaclinic.3bbddns.com:53141/api/ALA_clinic/";
-// export const apiUrl = "https://asia-southeast1-ala-clinic.cloudfunctions.net/alaclinicBackend/api/ALA_clinic/";
-export const apiUrl = "https://asia-southeast1-ala-clinic.cloudfunctions.net/alaclinic-backend/api/ALA_clinic/";
+// Automatic API URL detection:
+// Development (npm start / npm run dev) -> http://localhost:2009/api/ALA_clinic/
+// Production (npm run build / Deploy Cloud) -> Cloud Functions URL
+const isDev = process.env.NODE_ENV === "development";
+export const apiUrl =
+  process.env.REACT_APP_API_URL ||
+  (isDev
+    ? "http://localhost:2009/api/ALA_clinic/"
+    : "https://asia-southeast1-ala-clinic.cloudfunctions.net/alaclinic-backend/api/ALA_clinic/");
 
 
 
@@ -65,6 +70,10 @@ export const server = {
   REPORT_SALES_ANALYSIS_URL: 'report/salesAnalysis',
 
   REPORT_NEW_CUSTOMER_URL: 'report/dailyNewCustomer',
+  REPORT_MARKETING_INACTIVE_URL: 'report/marketing/inactive',
+  REPORT_MARKETING_BIRTHDAYS_URL: 'report/marketing/birthdays',
+  REPORT_MARKETING_VIP_URL: 'report/marketing/vip-tiers',
+
   CUSTOMER_IMAGE_URL: 'customer_images/images',
   CUSTOMER_FULL_IMAGE_URL: 'customer_images/full_images',
 
