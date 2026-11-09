@@ -74,6 +74,8 @@ export const server = {
   REPORT_MARKETING_BIRTHDAYS_URL: 'report/marketing/birthdays',
   REPORT_MARKETING_VIP_URL: 'report/marketing/vip-tiers',
 
+  CHAT_ASK_URL: 'chat/ask',
+
   CUSTOMER_IMAGE_URL: 'customer_images/images',
   CUSTOMER_FULL_IMAGE_URL: 'customer_images/full_images',
 

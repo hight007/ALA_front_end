@@ -29,6 +29,9 @@ import Report_appointment from './components/report/appointment';
 import Report_stock from './components/report/Stock';
 import MarketingReport from './components/report/marketingReport';
 
+// //public chat
+import CustomerChat from './components/chat';
+
 // //appointment
 import Appointment from './components/appointment/appointment';
 
@@ -47,7 +50,10 @@ class App extends Component {
   render() {
     const showElement = (element) => {
       const isLogined = localStorage.getItem(key.LOGIN_PASSED);
-      if (isLogined == YES) {
+      const isChatPage =
+        window.location.pathname.startsWith('/chat') ||
+        window.location.pathname.startsWith('/consult');
+      if (isLogined == YES && !isChatPage) {
         return element;
       }
     };
@@ -107,6 +113,10 @@ class App extends Component {
         {showElement(<Header />)}
         {showElement(<SideMenu />)}
         <Routes>
+          {/* Public Customer AI Chat (No login required) */}
+          <Route path="/chat" element={<CustomerChat />} />
+          <Route path="/consult" element={<CustomerChat />} />
+
           {/* appointment */}
           <Route path="/appointment/:patient_id" element={<RequireAuth><Appointment/></RequireAuth>} />
 
